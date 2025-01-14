@@ -33,22 +33,26 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
   };
 
   const calculateTotalArea = () => {
+    return parentItem.width * parentItem.length;
+  };
+
+  const calculateScrapsArea = () => {
     return scraps.reduce((acc, scrap) => 
       acc + (scrap.width * scrap.length * scrap.quantity), 0
     );
   };
 
   const totalArea = calculateTotalArea();
-  const parentArea = parentItem.width * parentItem.length;
-  const availableArea = parentArea - totalArea;
+  const scrapsArea = calculateScrapsArea();
+  const availableArea = parentItem.remainingArea;
 
   return (
     <Card className="shadow-md border border-muted">
       <CardHeader className="p-4 md:p-6">
         <CardTitle className="text-lg md:text-xl">Retalhos Associados</CardTitle>
         <div className="text-sm text-muted-foreground mt-2">
-          <p>Área Total do Item: {parentArea.toFixed(2)}m²</p>
-          <p>Área Utilizada em Retalhos: {totalArea.toFixed(2)}m²</p>
+          <p>Área Total do Item: {totalArea.toFixed(2)}m²</p>
+          <p>Área Utilizada em Retalhos: {scrapsArea.toFixed(2)}m²</p>
           <p>Área Disponível: {availableArea.toFixed(2)}m²</p>
         </div>
       </CardHeader>
