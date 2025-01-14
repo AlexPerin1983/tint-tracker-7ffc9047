@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { X, Filter as FilterIcon } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { FilterFields } from "./FilterFields";
-import { FilterModal } from "./FilterModal";
+import { FilterSheet } from "./FilterSheet";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -14,7 +14,7 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBarProps) {
-  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -38,15 +38,15 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
     return (
       <div className="mb-6">
         <Button 
-          onClick={() => setShowFilterModal(true)}
+          onClick={() => setShowFilterSheet(true)}
           className="w-full bg-[#3B82F6] text-white hover:bg-[#2563EB]"
         >
           <FilterIcon className="w-4 h-4 mr-2" />
           Filtrar
         </Button>
-        <FilterModal
-          open={showFilterModal}
-          onOpenChange={setShowFilterModal}
+        <FilterSheet
+          open={showFilterSheet}
+          onOpenChange={setShowFilterSheet}
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}

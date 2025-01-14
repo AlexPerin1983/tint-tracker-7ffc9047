@@ -1,9 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { FilterFields } from "./FilterFields";
 import { Button } from "@/components/ui/button";
 import { Filters } from "@/types/inventory";
 
-interface FilterModalProps {
+interface FilterSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   filters: Filters;
@@ -11,24 +11,24 @@ interface FilterModalProps {
   onClearFilters: () => void;
 }
 
-export function FilterModal({
+export function FilterSheet({
   open,
   onOpenChange,
   filters,
   onFilterChange,
   onClearFilters,
-}: FilterModalProps) {
+}: FilterSheetProps) {
   const handleApplyFilters = () => {
     onOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#1E293B] text-white">
-        <DialogHeader>
-          <DialogTitle className="text-white">Filtros Avançados</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="w-full sm:max-w-md bg-[#1E293B] border-none">
+        <SheetHeader>
+          <SheetTitle className="text-white">Filtros Avançados</SheetTitle>
+        </SheetHeader>
+        <div className="mt-6 space-y-6">
           <FilterFields
             filters={filters}
             onFilterChange={onFilterChange}
@@ -50,7 +50,7 @@ export function FilterModal({
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
