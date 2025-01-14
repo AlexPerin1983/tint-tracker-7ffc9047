@@ -102,14 +102,9 @@ export function useItems() {
       if (!item) throw new Error('Item não encontrado');
 
       const consumedArea = data.width * data.length;
-      const existingScraps = items.filter(i => i.originId === id);
-      const scrapsArea = existingScraps.reduce((acc, scrap) => 
-        acc + (scrap.width * scrap.length * scrap.quantity), 0
-      );
-      
-      const totalArea = item.width * item.length;
       const currentConsumedArea = item.consumedArea || 0;
-      const availableArea = totalArea - (scrapsArea + currentConsumedArea);
+      const totalArea = item.width * item.length;
+      const availableArea = totalArea - currentConsumedArea;
 
       if (consumedArea > availableArea) {
         throw new Error('A área solicitada excede a área disponível para consumo');
@@ -124,7 +119,7 @@ export function useItems() {
       }
 
       const newConsumedArea = currentConsumedArea + consumedArea;
-      const newRemainingArea = totalArea - (scrapsArea + newConsumedArea);
+      const newRemainingArea = totalArea - newConsumedArea;
 
       await itemsDB.update(id, {
         ...item,
