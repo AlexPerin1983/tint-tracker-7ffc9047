@@ -1,12 +1,51 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ItemsTable } from "@/components/inventory/ItemsTable";
+import { AddItemDialog } from "@/components/inventory/AddItemDialog";
+import { AddScrapDialog } from "@/components/inventory/AddScrapDialog";
+import { Search, Plus, Scissors } from "lucide-react";
+import { mockItems } from "@/data/mockItems";
+import { Item } from "@/types/inventory";
+
 const Index = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [items] = useState<Item[]>(mockItems);
+  const [showAddItem, setShowAddItem] = useState(false);
+  const [showAddScrap, setShowAddScrap] = useState(false);
+
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="min-h-[calc(100vh-7rem)] flex items-center justify-center p-4">
-      <div className="text-center space-y-4">
-        <h2 className="text-3xl font-bold">Bem-vindo ao Tint Tracker System!</h2>
-        <p className="text-secondary text-lg">
-          Sistema de controle de estoque para lojas de películas
-        </p>
+    <div className="container mx-auto px-4 py-8 space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="relative flex-1 w-full md:max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nome, código ou categoria..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <div className="flex gap-2 w-full md:w-auto">
+          <Button onClick={() => setShowAddItem(true)} className="flex-1 md:flex-none">
+            <Plus className="mr-2" /> Novo Item
+          </Button>
+          <Button onClick={() => setShowAddScrap(true)} variant="secondary" className="flex-1 md:flex-none">
+            <Scissors className="mr-2" /> Novo Retalho
+          </Button>
+        </div>
       </div>
+
+      <ItemsTable items={filteredItems} />
+      
+      <AddItemDialog open={showAddItem} onOpenChange={setShowAddItem} />
+      <AddScrapDialog open={showAddScrap} onOpenChange={setShowAddScrap} />
     </div>
   );
 };
