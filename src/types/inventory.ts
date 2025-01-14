@@ -18,10 +18,6 @@ export interface Item {
   updatedAt: Date;
 }
 
-export interface ItemTableRow extends Item {
-  dimensions: string;
-}
-
 export interface ItemFormData {
   name: string;
   category: Category;
