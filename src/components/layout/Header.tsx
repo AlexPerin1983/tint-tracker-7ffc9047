@@ -13,8 +13,8 @@ export const Header = () => {
             </Button>
           </SidebarTrigger>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🎥</span>
-            <h1 className="text-xl font-semibold">Tint Tracker System</h1>
+            <span className="text-2xl bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">❄️</span>
+            <h1 className="text-xl font-semibold">QRCold System</h1>
           </div>
         </div>
       </div>
