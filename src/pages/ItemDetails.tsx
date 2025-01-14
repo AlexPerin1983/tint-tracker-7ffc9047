@@ -42,7 +42,7 @@ const ItemDetails = () => {
       <ScrapsTable scraps={scraps} parentItem={item} />
 
       <ActionButtons
-        onEdit={() => {}}
+        item={item}
         onAddScrap={() => setShowAddScrap(true)}
       />
 
