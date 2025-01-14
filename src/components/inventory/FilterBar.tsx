@@ -5,7 +5,7 @@ import { Category } from "@/types/inventory";
 import { X } from "lucide-react";
 
 export interface Filters {
-  category: Category | "";
+  category: Category | "all" | "";
   name: string;
   minWidth: string;
   minLength: string;
@@ -33,7 +33,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             <SelectItem value="Window Tinting">Window Tinting</SelectItem>
             <SelectItem value="PPF">PPF</SelectItem>
             <SelectItem value="Wrap">Wrap</SelectItem>

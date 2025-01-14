@@ -17,7 +17,7 @@ import { Item } from "@/types/inventory";
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
   const [filters, setFilters] = useState<Filters>({
-    category: "",
+    category: "all",
     name: "",
     minWidth: "",
     minLength: "",
@@ -28,7 +28,7 @@ export function ItemsTable() {
 
   const filterItems = (items: Item[]) => {
     return items.filter((item) => {
-      const matchCategory = !filters.category || item.category === filters.category;
+      const matchCategory = filters.category === "all" || item.category === filters.category;
       const matchName = !filters.name || 
         item.name.toLowerCase().includes(filters.name.toLowerCase());
       const matchWidth = !filters.minWidth || 
@@ -44,7 +44,7 @@ export function ItemsTable() {
 
   const handleClearFilters = () => {
     setFilters({
-      category: "",
+      category: "all",
       name: "",
       minWidth: "",
       minLength: "",
