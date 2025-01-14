@@ -28,6 +28,9 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
 
   const handleFilterChange = (newFilters: Filters) => {
     onFilterChange(newFilters);
+  };
+
+  const handleApplyFilters = () => {
     toast({
       title: "Filtros aplicados com sucesso!",
       duration: 2000,
@@ -50,6 +53,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onApplyFilters={handleApplyFilters}
         />
       </div>
     );

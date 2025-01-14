@@ -10,6 +10,7 @@ interface FilterSheetProps {
   filters: Filters;
   onFilterChange: (filters: Filters) => void;
   onClearFilters: () => void;
+  onApplyFilters: () => void;
 }
 
 export function FilterSheet({
@@ -18,8 +19,10 @@ export function FilterSheet({
   filters,
   onFilterChange,
   onClearFilters,
+  onApplyFilters,
 }: FilterSheetProps) {
   const handleApplyFilters = () => {
+    onApplyFilters();
     onOpenChange(false);
   };
 
