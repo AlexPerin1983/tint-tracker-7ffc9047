@@ -10,6 +10,9 @@ export interface Item {
   width: number;
   length: number;
   quantity: number;
+  minQuantity?: number;
+  price?: number;
+  observation?: string;
   originId?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -17,4 +20,23 @@ export interface Item {
 
 export interface ItemTableRow extends Item {
   dimensions: string;
+}
+
+export interface ItemFormData {
+  name: string;
+  category: Category;
+  width: number;
+  length: number;
+  quantity: number;
+  minQuantity?: number;
+  price?: number;
+  observation?: string;
+}
+
+export interface ScrapFormData {
+  originId: string;
+  width: number;
+  length: number;
+  quantity: number;
+  observation?: string;
 }
