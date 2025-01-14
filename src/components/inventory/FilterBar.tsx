@@ -1,15 +1,11 @@
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/types/inventory";
-import { X } from "lucide-react";
-
-export interface Filters {
-  category: Category | "all" | "";
-  name: string;
-  minWidth: string;
-  minLength: string;
-}
+import { X, Filter as FilterIcon } from "lucide-react";
+import { Filters } from "@/types/inventory";
+import { FilterFields } from "./FilterFields";
+import { FilterModal } from "./FilterModal";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface FilterBarProps {
   filters: Filters;
@@ -18,61 +14,60 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBarProps) {
-  const handleInputChange = (field: keyof Filters, value: string) => {
-    onFilterChange({ ...filters, [field]: value });
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const { toast } = useToast();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const handleClearFilters = () => {
+    onClearFilters();
+    toast({
+      title: "Filtros limpos!",
+      duration: 2000,
+    });
   };
+
+  const handleFilterChange = (newFilters: Filters) => {
+    onFilterChange(newFilters);
+    toast({
+      title: "Filtros aplicados com sucesso!",
+      duration: 2000,
+    });
+  };
+
+  if (isMobile) {
+    return (
+      <div className="mb-6">
+        <Button 
+          onClick={() => setShowFilterModal(true)}
+          className="w-full bg-[#3B82F6] text-white hover:bg-[#2563EB]"
+        >
+          <FilterIcon className="w-4 h-4 mr-2" />
+          Filtrar
+        </Button>
+        <FilterModal
+          open={showFilterModal}
+          onOpenChange={setShowFilterModal}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onClearFilters={handleClearFilters}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Select
-          value={filters.category}
-          onValueChange={(value) => handleInputChange("category", value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas</SelectItem>
-            <SelectItem value="Window Tinting">Window Tinting</SelectItem>
-            <SelectItem value="PPF">PPF</SelectItem>
-            <SelectItem value="Wrap">Wrap</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Input
-          placeholder="Buscar por nome..."
-          value={filters.name}
-          onChange={(e) => handleInputChange("name", e.target.value)}
-          className="bg-[#273347] text-white placeholder:text-gray-400"
-        />
-
-        <Input
-          type="number"
-          placeholder="Largura mínima (m)"
-          value={filters.minWidth}
-          onChange={(e) => handleInputChange("minWidth", e.target.value)}
-          className="bg-[#273347] text-white placeholder:text-gray-400"
-          min="0"
-          step="0.01"
-        />
-
-        <Input
-          type="number"
-          placeholder="Comprimento mínimo (m)"
-          value={filters.minLength}
-          onChange={(e) => handleInputChange("minLength", e.target.value)}
-          className="bg-[#273347] text-white placeholder:text-gray-400"
-          min="0"
-          step="0.01"
-        />
-      </div>
-
-      <div className="flex justify-end">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="md:col-span-4">
+          <FilterFields
+            filters={filters}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
         <Button
           variant="outline"
-          onClick={onClearFilters}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
+          onClick={handleClearFilters}
+          className="bg-[#3B82F6] hover:bg-[#2563EB] text-white h-10"
         >
           <X className="h-4 w-4 mr-2" />
           Limpar Filtros

@@ -36,3 +36,10 @@ export interface ScrapFormData {
   quantity: number;
   observation?: string;
 }
+
+export interface Filters {
+  category: Category | "all" | "";
+  name: string;
+  minWidth: string;
+  minLength: string;
+}
