@@ -13,7 +13,7 @@ export const Header = () => {
             </Button>
           </SidebarTrigger>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🎥</span>
+            <span className="text-2xl">⬚</span>
             <h1 className="text-xl font-semibold">Tint Tracker System</h1>
           </div>
         </div>
