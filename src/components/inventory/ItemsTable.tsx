@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
 import { Link } from "react-router-dom";
-import { FilterBar, Filters } from "./FilterBar";
+import { FilterBar } from "./FilterBar";
 import { useState } from "react";
-import { Item } from "@/types/inventory";
+import { Item, Filters } from "@/types/inventory";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
