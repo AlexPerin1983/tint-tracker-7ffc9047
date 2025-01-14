@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Item } from "@/types/inventory";
 import { Link } from "react-router-dom";
-import { Trash2 } from "lucide-react";
+import { Trash2, ExternalLink } from "lucide-react";
 
 interface ScrapTableProps {
   scraps: Item[];
@@ -14,21 +14,21 @@ export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
       <div className="rounded-md border border-muted min-w-[600px]">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-muted">
+            <tr className="border-b border-muted bg-muted/50">
               <th className="px-4 py-3 text-left text-sm font-medium">
                 Código
               </th>
               <th className="px-4 py-3 text-left text-sm font-medium">
-                Dimensões
+                Dimensões (m)
+              </th>
+              <th className="px-4 py-3 text-right text-sm font-medium">
+                Área (m²)
+              </th>
+              <th className="px-4 py-3 text-right text-sm font-medium">
+                Qtd.
               </th>
               <th className="px-4 py-3 text-left text-sm font-medium">
-                Área
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium">
-                Quantidade
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium">
-                Observação
+                Obs.
               </th>
               <th className="px-4 py-3 text-right text-sm font-medium">
                 Ações
@@ -36,30 +36,38 @@ export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
             </tr>
           </thead>
           <tbody>
-            {scraps.map((scrap) => (
-              <tr key={scrap.id} className="border-b border-muted">
+            {scraps.map((scrap, index) => (
+              <tr 
+                key={scrap.id} 
+                className={`border-b border-muted ${
+                  index % 2 === 0 ? 'bg-muted/20' : ''
+                }`}
+              >
                 <td className="px-4 py-3 text-sm">
                   <Link 
                     to={`/scrap/${scrap.id}`}
-                    className="text-primary hover:underline"
+                    className="text-primary hover:underline inline-flex items-center gap-1"
                   >
                     {scrap.code}
+                    <ExternalLink className="w-3 h-3" />
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  {scrap.width.toFixed(2)}m x {scrap.length.toFixed(2)}m
+                  {scrap.width.toFixed(2)} x {scrap.length.toFixed(2)}
                 </td>
-                <td className="px-4 py-3 text-sm">
-                  {(scrap.width * scrap.length).toFixed(2)}m²
+                <td className="px-4 py-3 text-sm text-right font-medium">
+                  {(scrap.width * scrap.length).toFixed(2)}
                 </td>
-                <td className="px-4 py-3 text-sm">{scrap.quantity}</td>
+                <td className="px-4 py-3 text-sm text-right font-medium">
+                  {scrap.quantity}
+                </td>
                 <td className="px-4 py-3 text-sm">
                   {scrap.observation || "-"}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
                     <Link to={`/scrap/${scrap.id}`}>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="h-8">
                         Ver Detalhes
                       </Button>
                     </Link>
@@ -67,8 +75,9 @@ export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => onDelete(scrap.id)}
+                      className="h-8 text-destructive hover:text-destructive/90"
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </td>

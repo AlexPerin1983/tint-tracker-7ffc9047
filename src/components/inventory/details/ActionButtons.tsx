@@ -17,14 +17,29 @@ export function ActionButtons({ item, onAddScrap }: ActionButtonsProps) {
   return (
     <>
       <div className="flex flex-col md:flex-row justify-end gap-4 mt-6">
-        <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
-          <Edit className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Editar
+        <Button 
+          variant="outline" 
+          onClick={() => setEditDialogOpen(true)}
+          className="hover:bg-muted/50"
+        >
+          <Edit className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+          Editar
         </Button>
-        <Button variant="outline" onClick={() => setConsumptionDialogOpen(true)}>
-          <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Registrar Consumo
+        <Button 
+          variant="default"
+          onClick={() => setConsumptionDialogOpen(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+          Registrar Consumo
         </Button>
-        <Button onClick={onAddScrap}>
-          <Plus className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Adicionar Retalho
+        <Button 
+          variant="outline"
+          onClick={onAddScrap}
+          className="hover:bg-muted/50"
+        >
+          <Plus className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+          Adicionar Retalho
         </Button>
       </div>
 
