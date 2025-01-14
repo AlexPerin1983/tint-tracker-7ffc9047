@@ -2,6 +2,13 @@ export type Category = "Window Tinting" | "PPF" | "Wrap";
 export type ItemType = "bobina" | "retalho";
 export type TransactionType = "entrada" | "saida" | "corte";
 
+export interface Filters {
+  category: Category | "all";
+  name: string;
+  minWidth: string;
+  minLength: string;
+}
+
 export interface Item {
   id: string;
   code: string;

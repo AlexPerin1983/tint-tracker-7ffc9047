@@ -107,7 +107,7 @@ export function useItems() {
   });
 
   const registerConsumptionMutation = useMutation({
-    mutationFn: async (id: string, data: ConsumptionFormData) => {
+    mutationFn: async ({ id, data }: { id: string; data: ConsumptionFormData }) => {
       const item = items.find(i => i.id === id);
       if (!item) throw new Error('Item não encontrado');
 

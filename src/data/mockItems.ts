@@ -10,6 +10,11 @@ export const mockItems: Item[] = [
     width: 1.52,
     length: 30,
     quantity: 10,
+    remainingWidth: 1.52,
+    remainingLength: 30,
+    remainingArea: 45.6,
+    consumedArea: 0,
+    isAvailable: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -22,6 +27,11 @@ export const mockItems: Item[] = [
     width: 1.22,
     length: 20,
     quantity: 5,
+    remainingWidth: 1.22,
+    remainingLength: 20,
+    remainingArea: 24.4,
+    consumedArea: 0,
+    isAvailable: true,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -35,6 +45,11 @@ export const mockItems: Item[] = [
     length: 1.2,
     quantity: 1,
     originId: "1",
+    remainingWidth: 0.5,
+    remainingLength: 1.2,
+    remainingArea: 0.6,
+    consumedArea: 0,
+    isAvailable: true,
     createdAt: new Date(),
     updatedAt: new Date()
   }

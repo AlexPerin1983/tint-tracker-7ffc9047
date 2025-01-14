@@ -87,7 +87,7 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     }
 
     try {
-      await registerConsumption(item.id, data);
+      await registerConsumption({ id: item.id, data });
       toast({
         title: "Sucesso",
         description: data.createScrap 
