@@ -82,6 +82,11 @@ export const itemsDB = {
     return db.getAllFromIndex('items', 'by-origin', originId);
   },
 
+  async getAllTransactions(): Promise<Transaction[]> {
+    if (!db) await initDB();
+    return db.getAll('transactions');
+  },
+
   async addTransaction(transaction: Omit<Transaction, 'id' | 'createdAt'>): Promise<Transaction> {
     if (!db) await initDB();
     

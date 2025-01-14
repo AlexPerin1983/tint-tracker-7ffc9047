@@ -7,17 +7,19 @@ import { AddScrapDialog } from "@/components/inventory/AddScrapDialog";
 import { BasicInfoCard } from "@/components/inventory/details/BasicInfoCard";
 import { StockInfoCard } from "@/components/inventory/details/StockInfoCard";
 import { ScrapsTable } from "@/components/inventory/details/ScrapsTable";
+import { TransactionsTable } from "@/components/inventory/details/TransactionsTable";
 import { ActionButtons } from "@/components/inventory/details/ActionButtons";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const ItemDetails = () => {
   const { id } = useParams();
-  const { items } = useItems();
+  const { items, transactions } = useItems();
   const [showAddScrap, setShowAddScrap] = useState(false);
   const isMobile = useIsMobile();
 
   const item = items.find((item) => item.id === id);
   const scraps = items.filter((i) => i.originId === id);
+  const itemTransactions = transactions?.filter((t) => t.itemId === id) ?? [];
 
   if (!item) return <div>Item não encontrado</div>;
 
@@ -40,6 +42,8 @@ const ItemDetails = () => {
       </div>
 
       <ScrapsTable scraps={scraps} parentItem={item} />
+      
+      <TransactionsTable transactions={itemTransactions} />
 
       <ActionButtons
         item={item}
@@ -53,6 +57,6 @@ const ItemDetails = () => {
       />
     </div>
   );
-};
+}
 
 export default ItemDetails;

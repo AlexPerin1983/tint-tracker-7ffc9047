@@ -166,13 +166,21 @@ export function useItems() {
     },
   });
 
-  const { data: items = [], isLoading } = useQuery({
+  const { data: items = [], isLoading: itemsLoading } = useQuery({
     queryKey: ['items'],
     queryFn: itemsDB.getAll,
   });
 
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: itemsDB.getAllTransactions,
+  });
+
+  const isLoading = itemsLoading || transactionsLoading;
+
   return {
     items,
+    transactions,
     isLoading,
     addItem: addItemMutation.mutate,
     updateItem: updateItemMutation.mutate,
