@@ -39,14 +39,18 @@ const ItemDetails = () => {
         <StockInfoCard item={item} />
       </div>
 
-      <ScrapsTable scraps={scraps} />
+      <ScrapsTable scraps={scraps} parentItem={item} />
 
       <ActionButtons
         onEdit={() => {}}
         onAddScrap={() => setShowAddScrap(true)}
       />
 
-      <AddScrapDialog open={showAddScrap} onOpenChange={setShowAddScrap} />
+      <AddScrapDialog 
+        open={showAddScrap} 
+        onOpenChange={setShowAddScrap} 
+        parentItemId={item.id}
+      />
     </div>
   );
 };

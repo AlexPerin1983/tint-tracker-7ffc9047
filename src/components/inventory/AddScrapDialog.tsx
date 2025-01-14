@@ -17,21 +17,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrapFormData } from "@/types/inventory";
-import { mockItems } from "@/data/mockItems";
 import { useItems } from "@/hooks/use-items";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  originId: z.string().min(1, "Item pai é obrigatório"),
   width: z.number().min(0.01, "Largura deve ser maior que 0"),
   length: z.number().min(0.01, "Comprimento deve ser maior que 0"),
   quantity: z.number().min(1, "Quantidade deve ser maior que 0"),
@@ -41,10 +33,16 @@ const formSchema = z.object({
 interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  parentItemId: string;
 }
 
-export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
+export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDialogProps) {
   const { addScrap, items } = useItems();
+  const { toast } = useToast();
+  
+  const parentItem = items.find(item => item.id === parentItemId);
+  const existingScraps = items.filter(item => item.originId === parentItemId);
+  
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,12 +53,52 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
   });
 
   const onSubmit = async (data: ScrapFormData) => {
-    addScrap(data);
-    onOpenChange(false);
-    form.reset();
-  };
+    if (!parentItem) {
+      toast({
+        title: "Erro",
+        description: "Item pai não encontrado",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  const availableItems = items.filter((item) => item.type === "bobina");
+    const totalScrapArea = existingScraps.reduce(
+      (acc, scrap) => acc + scrap.width * scrap.length * scrap.quantity,
+      0
+    );
+    const newScrapArea = data.width * data.length * data.quantity;
+    const parentArea = parentItem.width * parentItem.length;
+
+    if (totalScrapArea + newScrapArea > parentArea) {
+      toast({
+        title: "Erro",
+        description: "A área total dos retalhos excede a área disponível do item pai",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await addScrap({
+        ...data,
+        originId: parentItemId,
+      });
+      
+      toast({
+        title: "Sucesso",
+        description: "Retalho adicionado com sucesso!",
+      });
+      
+      onOpenChange(false);
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: error instanceof Error ? error.message : "Erro ao adicionar retalho",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -71,34 +109,6 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="originId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Item Pai</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o item pai" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {availableItems.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.name} ({item.code})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -112,9 +122,7 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
                         step="0.01"
                         placeholder="Ex: 0.5"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -134,9 +142,7 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
                         step="0.01"
                         placeholder="Ex: 1.2"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -155,9 +161,7 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
                         type="number"
                         placeholder="Ex: 1"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value))
-                        }
+                        onChange={(e) => field.onChange(parseInt(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
