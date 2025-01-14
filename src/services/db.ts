@@ -62,7 +62,7 @@ export const itemsDB = {
     return newItem;
   },
 
-  async update(id: string, item: Partial<Item>): Promise<Item> {
+  async update(id: string, data: Partial<Item>): Promise<Item> {
     if (!db) await initDB();
     
     const existingItem = await db.get('items', id);
@@ -70,7 +70,7 @@ export const itemsDB = {
 
     const updatedItem = {
       ...existingItem,
-      ...item,
+      ...data,
       updatedAt: new Date(),
     };
 

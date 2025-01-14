@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { FilterBar } from "./FilterBar";
 import { useState } from "react";
 import { Item, Filters } from "@/types/inventory";
+import { AddItemDialog } from "./AddItemDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -22,6 +23,8 @@ export function ItemsTable() {
     minWidth: "",
     minLength: "",
   });
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
   const formatDimensions = (width: number, length: number) => 
     `${width.toFixed(2)}m x ${length.toFixed(2)}m`;
@@ -49,6 +52,11 @@ export function ItemsTable() {
       minWidth: "",
       minLength: "",
     });
+  };
+
+  const handleEditClick = (item: Item) => {
+    setSelectedItem(item);
+    setEditDialogOpen(true);
   };
 
   return (
@@ -87,7 +95,12 @@ export function ItemsTable() {
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <Button variant="ghost" size="icon" title="Editar">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="Editar"
+                    onClick={() => handleEditClick(item)}
+                  >
                     <Edit className="h-4 w-4" />
                   </Button>
                   <Button 
@@ -108,6 +121,13 @@ export function ItemsTable() {
           </TableBody>
         </Table>
       </div>
+
+      <AddItemDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        mode="edit"
+        itemToEdit={selectedItem}
+      />
     </div>
   );
 }

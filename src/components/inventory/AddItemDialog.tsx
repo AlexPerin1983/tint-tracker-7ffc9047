@@ -26,8 +26,9 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Category, ItemFormData } from "@/types/inventory";
+import { Category, Item, ItemFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -43,10 +44,17 @@ const formSchema = z.object({
 interface AddItemDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  mode?: "add" | "edit";
+  itemToEdit?: Item;
 }
 
-export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
-  const { addItem } = useItems();
+export function AddItemDialog({ 
+  open, 
+  onOpenChange, 
+  mode = "add",
+  itemToEdit 
+}: AddItemDialogProps) {
+  const { addItem, updateItem } = useItems();
   const form = useForm<ItemFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,8 +66,35 @@ export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
     },
   });
 
+  useEffect(() => {
+    if (mode === "edit" && itemToEdit) {
+      form.reset({
+        name: itemToEdit.name,
+        category: itemToEdit.category,
+        width: itemToEdit.width,
+        length: itemToEdit.length,
+        quantity: itemToEdit.quantity,
+        minQuantity: itemToEdit.minQuantity,
+        price: itemToEdit.price,
+        observation: itemToEdit.observation,
+      });
+    } else {
+      form.reset({
+        name: "",
+        category: "Window Tinting",
+        width: 0,
+        length: 0,
+        quantity: 1,
+      });
+    }
+  }, [mode, itemToEdit, form]);
+
   const onSubmit = async (data: ItemFormData) => {
-    addItem(data);
+    if (mode === "edit" && itemToEdit) {
+      updateItem({ id: itemToEdit.id, data });
+    } else {
+      addItem(data);
+    }
     onOpenChange(false);
     form.reset();
   };
@@ -68,7 +103,9 @@ export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Adicionar Novo Item</DialogTitle>
+          <DialogTitle>
+            {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -254,7 +291,9 @@ export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
               >
                 Cancelar
               </Button>
-              <Button type="submit">Salvar</Button>
+              <Button type="submit">
+                {mode === "edit" ? "Salvar Alterações" : "Salvar"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

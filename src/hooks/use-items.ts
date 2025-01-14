@@ -42,6 +42,20 @@ export function useItems() {
     },
   });
 
+  const updateItemMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: ItemFormData }) => {
+      const updatedItem = await itemsDB.update(id, data);
+      return updatedItem;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] });
+      toast({
+        title: "Sucesso!",
+        description: "Item atualizado com sucesso!",
+      });
+    },
+  });
+
   const addScrapMutation = useMutation({
     mutationFn: async (data: ScrapFormData) => {
       const parentItem = items.find(item => item.id === data.originId);
@@ -97,6 +111,7 @@ export function useItems() {
     items,
     isLoading,
     addItem: addItemMutation.mutate,
+    updateItem: updateItemMutation.mutate,
     addScrap: addScrapMutation.mutate,
     deleteItem: deleteItemMutation.mutate,
   };
