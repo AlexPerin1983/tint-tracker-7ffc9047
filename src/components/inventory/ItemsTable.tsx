@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
+import { Link } from "react-router-dom";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -32,7 +33,7 @@ export function ItemsTable() {
         <TableBody>
           {items.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.id}</TableCell>
+              <TableCell className="font-medium">{item.code}</TableCell>
               <TableCell className="hidden md:table-cell">{item.name}</TableCell>
               <TableCell className="hidden md:table-cell">{item.category}</TableCell>
               <TableCell className="hidden md:table-cell">
@@ -40,9 +41,11 @@ export function ItemsTable() {
               </TableCell>
               <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
               <TableCell className="text-right space-x-2">
-                <Button variant="ghost" size="icon" title="Ver Detalhes">
-                  <Eye className="h-4 w-4" />
-                </Button>
+                <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`}>
+                  <Button variant="ghost" size="icon" title="Ver Detalhes">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </Link>
                 <Button variant="ghost" size="icon" title="Editar">
                   <Edit className="h-4 w-4" />
                 </Button>

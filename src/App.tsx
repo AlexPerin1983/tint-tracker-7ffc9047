@@ -8,6 +8,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AppSidebar } from "@/components/layout/Sidebar";
 import Index from "./pages/Index";
+import ItemDetails from "./pages/ItemDetails";
+import ScrapDetails from "./pages/ScrapDetails";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,8 @@ const App = () => (
               <main className="mt-16 mb-12">
                 <Routes>
                   <Route path="/" element={<Index />} />
+                  <Route path="/item/:id" element={<ItemDetails />} />
+                  <Route path="/scrap/:id" element={<ScrapDetails />} />
                 </Routes>
               </main>
               <Footer />
