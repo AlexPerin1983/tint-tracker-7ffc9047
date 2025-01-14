@@ -12,11 +12,24 @@ export function useItems() {
     queryFn: itemsDB.getAll,
   });
 
+  const generateCode = (type: 'bobina' | 'retalho') => {
+    const prefix = type === 'bobina' ? 'BOB' : 'RET';
+    const existingCodes = items
+      .filter(item => item.type === type)
+      .map(item => parseInt(item.code.replace(prefix, '')))
+      .filter(num => !isNaN(num));
+    
+    const maxCode = Math.max(0, ...existingCodes);
+    const newNumber = (maxCode + 1).toString().padStart(3, '0');
+    return `${prefix}${newNumber}`;
+  };
+
   const addItemMutation = useMutation({
     mutationFn: async (data: ItemFormData) => {
       const newItem = await itemsDB.add({
         ...data,
         type: 'bobina',
+        code: generateCode('bobina'),
       });
       return newItem;
     },
@@ -31,7 +44,6 @@ export function useItems() {
 
   const addScrapMutation = useMutation({
     mutationFn: async (data: ScrapFormData) => {
-      // Verificar área disponível
       const parentItem = items.find(item => item.id === data.originId);
       if (!parentItem) throw new Error('Item pai não encontrado');
 
@@ -49,6 +61,7 @@ export function useItems() {
         name: `Retalho de ${parentItem.name}`,
         category: parentItem.category,
         type: 'retalho',
+        code: generateCode('retalho'),
         width: data.width,
         length: data.length,
         quantity: data.quantity,
