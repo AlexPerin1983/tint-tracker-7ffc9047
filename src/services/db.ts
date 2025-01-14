@@ -1,5 +1,5 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { Item } from '@/types/inventory';
+import { Item, Transaction } from '@/types/inventory';
 
 interface TintTrackerDB extends DBSchema {
   items: {
@@ -12,13 +12,7 @@ interface TintTrackerDB extends DBSchema {
   };
   transactions: {
     key: string;
-    value: {
-      id: string;
-      type: 'entrada' | 'saida' | 'corte';
-      itemId: string;
-      quantityUsed: number;
-      date: Date;
-    };
+    value: Transaction;
     indexes: {
       'by-item': string;
     };
@@ -86,5 +80,23 @@ export const itemsDB = {
   async getByOrigin(originId: string): Promise<Item[]> {
     if (!db) await initDB();
     return db.getAllFromIndex('items', 'by-origin', originId);
+  },
+
+  async addTransaction(transaction: Omit<Transaction, 'id' | 'createdAt'>): Promise<Transaction> {
+    if (!db) await initDB();
+    
+    const newTransaction: Transaction = {
+      ...transaction,
+      id: `TRX${Date.now()}`,
+      createdAt: new Date(),
+    };
+
+    await db.add('transactions', newTransaction);
+    return newTransaction;
+  },
+
+  async getTransactionsByItem(itemId: string): Promise<Transaction[]> {
+    if (!db) await initDB();
+    return db.getAllFromIndex('transactions', 'by-item', itemId);
   },
 };

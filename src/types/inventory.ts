@@ -1,5 +1,6 @@
 export type Category = "Window Tinting" | "PPF" | "Wrap";
 export type ItemType = "bobina" | "retalho";
+export type TransactionType = "entrada" | "saida" | "corte";
 
 export interface Item {
   id: string;
@@ -14,6 +15,11 @@ export interface Item {
   price?: number;
   observation?: string;
   originId?: string;
+  remainingWidth: number;
+  remainingLength: number;
+  remainingArea: number;
+  consumedArea: number;
+  isAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,9 +43,20 @@ export interface ScrapFormData {
   observation?: string;
 }
 
-export interface Filters {
-  category: Category | "all" | "";
-  name: string;
-  minWidth: string;
-  minLength: string;
+export interface ConsumptionFormData {
+  width: number;
+  length: number;
+  createScrap: boolean;
+  scrapWidth?: number;
+  scrapLength?: number;
+}
+
+export interface Transaction {
+  id: string;
+  type: TransactionType;
+  itemId: string;
+  width: number;
+  length: number;
+  area: number;
+  createdAt: Date;
 }
