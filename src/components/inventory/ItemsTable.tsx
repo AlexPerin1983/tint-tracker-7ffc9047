@@ -8,20 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Item, ItemTableRow } from "@/types/inventory";
+import { useItems } from "@/hooks/use-items";
 
-interface ItemsTableProps {
-  items: Item[];
-}
+export function ItemsTable() {
+  const { items, deleteItem } = useItems();
 
-export function ItemsTable({ items }: ItemsTableProps) {
   const formatDimensions = (width: number, length: number) => 
     `${width.toFixed(2)}m x ${length.toFixed(2)}m`;
-
-  const tableItems: ItemTableRow[] = items.map(item => ({
-    ...item,
-    dimensions: formatDimensions(item.width, item.length)
-  }));
 
   return (
     <div className="rounded-md border border-muted">
@@ -37,12 +30,14 @@ export function ItemsTable({ items }: ItemsTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tableItems.map((item) => (
+          {items.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.code}</TableCell>
+              <TableCell className="font-medium">{item.id}</TableCell>
               <TableCell className="hidden md:table-cell">{item.name}</TableCell>
               <TableCell className="hidden md:table-cell">{item.category}</TableCell>
-              <TableCell className="hidden md:table-cell">{item.dimensions}</TableCell>
+              <TableCell className="hidden md:table-cell">
+                {formatDimensions(item.width, item.length)}
+              </TableCell>
               <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
               <TableCell className="text-right space-x-2">
                 <Button variant="ghost" size="icon" title="Ver Detalhes">
@@ -51,7 +46,13 @@ export function ItemsTable({ items }: ItemsTableProps) {
                 <Button variant="ghost" size="icon" title="Editar">
                   <Edit className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-destructive" title="Excluir">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-destructive" 
+                  title="Excluir"
+                  onClick={() => deleteItem(item.id)}
+                >
                   <Trash2 className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" title="QR Code">

@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrapFormData } from "@/types/inventory";
 import { mockItems } from "@/data/mockItems";
+import { useItems } from "@/hooks/use-items";
 
 const formSchema = z.object({
   originId: z.string().min(1, "Item pai é obrigatório"),
@@ -43,6 +44,7 @@ interface AddScrapDialogProps {
 }
 
 export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
+  const { addScrap, items } = useItems();
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,13 +55,12 @@ export function AddScrapDialog({ open, onOpenChange }: AddScrapDialogProps) {
   });
 
   const onSubmit = async (data: ScrapFormData) => {
-    console.log("Form submitted:", data);
-    // TODO: Implementar salvamento no IndexedDB e validações de área
+    addScrap(data);
     onOpenChange(false);
     form.reset();
   };
 
-  const availableItems = mockItems.filter((item) => item.type === "bobina");
+  const availableItems = items.filter((item) => item.type === "bobina");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

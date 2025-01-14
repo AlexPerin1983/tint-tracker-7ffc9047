@@ -5,20 +5,11 @@ import { ItemsTable } from "@/components/inventory/ItemsTable";
 import { AddItemDialog } from "@/components/inventory/AddItemDialog";
 import { AddScrapDialog } from "@/components/inventory/AddScrapDialog";
 import { Search, Plus, Scissors } from "lucide-react";
-import { mockItems } from "@/data/mockItems";
-import { Item } from "@/types/inventory";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [items] = useState<Item[]>(mockItems);
   const [showAddItem, setShowAddItem] = useState(false);
   const [showAddScrap, setShowAddScrap] = useState(false);
-
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
@@ -42,7 +33,7 @@ const Index = () => {
         </div>
       </div>
 
-      <ItemsTable items={filteredItems} />
+      <ItemsTable />
       
       <AddItemDialog open={showAddItem} onOpenChange={setShowAddItem} />
       <AddScrapDialog open={showAddScrap} onOpenChange={setShowAddScrap} />

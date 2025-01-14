@@ -27,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Category, ItemFormData } from "@/types/inventory";
+import { useItems } from "@/hooks/use-items";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -45,6 +46,7 @@ interface AddItemDialogProps {
 }
 
 export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
+  const { addItem } = useItems();
   const form = useForm<ItemFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,8 +59,7 @@ export function AddItemDialog({ open, onOpenChange }: AddItemDialogProps) {
   });
 
   const onSubmit = async (data: ItemFormData) => {
-    console.log("Form submitted:", data);
-    // TODO: Implementar salvamento no IndexedDB
+    addItem(data);
     onOpenChange(false);
     form.reset();
   };
