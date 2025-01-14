@@ -68,16 +68,6 @@ export function useItems() {
       const parentItem = items.find(item => item.id === data.originId);
       if (!parentItem) throw new Error('Item pai não encontrado');
 
-      const existingScraps = items.filter(item => item.originId === data.originId);
-      const totalScrapArea = existingScraps.reduce((acc, scrap) => 
-        acc + (scrap.width * scrap.length * scrap.quantity), 0);
-      const newScrapArea = data.width * data.length * data.quantity;
-      const parentArea = parentItem.width * parentItem.length * parentItem.quantity;
-
-      if (totalScrapArea + newScrapArea > parentArea) {
-        throw new Error('Área total dos retalhos excede a área disponível do item pai');
-      }
-
       const newScrap = await itemsDB.add({
         name: `Retalho de ${parentItem.name}`,
         category: parentItem.category,
@@ -107,26 +97,30 @@ export function useItems() {
   });
 
   const registerConsumptionMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: ConsumptionFormData }) => {
+    mutationFn: async ({ id, data }: { id: string, data: ConsumptionFormData }) => {
       const item = items.find(i => i.id === id);
       if (!item) throw new Error('Item não encontrado');
 
       const consumedArea = data.width * data.length;
-      const remainingArea = item.remainingArea - consumedArea;
-
-      if (remainingArea < 0) {
+      
+      // Validar se há área suficiente disponível
+      if (consumedArea > item.remainingArea) {
         throw new Error('Área consumida maior que a área disponível');
       }
 
-      // Registrar o consumo
+      // Calcular nova área disponível
+      const newRemainingArea = item.remainingArea - consumedArea;
+      const newConsumedArea = item.consumedArea + consumedArea;
+
+      // Atualizar o item com o novo consumo
       await itemsDB.update(id, {
         ...item,
-        remainingArea,
-        consumedArea: item.consumedArea + consumedArea,
-        isAvailable: remainingArea > 0,
+        remainingArea: newRemainingArea,
+        consumedArea: newConsumedArea,
+        isAvailable: newRemainingArea > 0,
       });
 
-      // Registrar a transação
+      // Registrar a transação de consumo
       await itemsDB.addTransaction({
         type: 'corte',
         itemId: id,
@@ -135,8 +129,15 @@ export function useItems() {
         area: consumedArea,
       });
 
-      // Criar sobra se necessário
+      // Se houver sobra, criar um novo retalho
       if (data.createScrap && data.scrapWidth && data.scrapLength) {
+        const scrapArea = data.scrapWidth * data.scrapLength;
+        
+        // Validar se a sobra não excede a área consumida
+        if (scrapArea > consumedArea) {
+          throw new Error('Área da sobra maior que a área consumida');
+        }
+
         await addScrapMutation.mutateAsync({
           originId: id,
           width: data.scrapWidth,
