@@ -107,33 +107,34 @@ export function useItems() {
         acc + (scrap.width * scrap.length * scrap.quantity), 0
       );
       
-      // Validar se há área suficiente disponível
-      if (consumedArea > item.remainingArea - scrapsArea) {
-        throw new Error('A área consumida excede a área disponível');
+      const totalArea = item.width * item.length;
+      const currentConsumedArea = item.consumedArea || 0;
+      const availableArea = totalArea - (scrapsArea + currentConsumedArea);
+
+      if (consumedArea > availableArea) {
+        throw new Error('A área solicitada excede a área disponível para consumo');
       }
 
-      // Validar dimensões
       if (data.width > item.remainingWidth) {
-        throw new Error('A largura consumida excede a largura disponível');
+        throw new Error('A largura solicitada excede a largura disponível');
       }
 
       if (data.length > item.remainingLength) {
-        throw new Error('O comprimento consumido excede o comprimento disponível');
+        throw new Error('O comprimento solicitado excede o comprimento disponível');
       }
 
-      // Calcular nova área disponível
-      const newRemainingArea = item.remainingArea - consumedArea;
+      const newConsumedArea = currentConsumedArea + consumedArea;
+      const newRemainingArea = totalArea - (scrapsArea + newConsumedArea);
 
-      // Atualizar o item com o novo consumo
       await itemsDB.update(id, {
         ...item,
         remainingArea: newRemainingArea,
         remainingWidth: item.remainingWidth,
         remainingLength: item.remainingLength - data.length,
+        consumedArea: newConsumedArea,
         isAvailable: newRemainingArea > 0,
       });
 
-      // Registrar a transação de consumo
       await itemsDB.addTransaction({
         type: 'corte',
         itemId: id,
@@ -142,7 +143,6 @@ export function useItems() {
         area: consumedArea,
       });
 
-      // Se houver sobra, criar um novo retalho
       if (data.createScrap && data.scrapWidth && data.scrapLength) {
         const scrapArea = data.scrapWidth * data.scrapLength;
         
