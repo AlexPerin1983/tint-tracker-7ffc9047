@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrapCard } from "./ScrapCard";
 import { ScrapTable } from "./ScrapTable";
+import { Scissors } from "lucide-react";
 
 interface ScrapsTableProps {
   scraps: Item[];
@@ -32,36 +33,12 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
     }
   };
 
-  const calculateTotalArea = () => {
-    return parentItem.width * parentItem.length;
-  };
-
-  const calculateScrapsArea = () => {
-    return scraps.reduce((acc, scrap) => 
-      acc + (scrap.width * scrap.length * scrap.quantity), 0
-    );
-  };
-
-  const calculateConsumedArea = () => {
-    return parentItem.consumedArea || 0;
-  };
-
-  const totalArea = calculateTotalArea();
-  const scrapsArea = calculateScrapsArea();
-  const consumedArea = calculateConsumedArea();
-  const availableArea = totalArea - consumedArea;
-
   return (
     <Card className="shadow-md border border-muted">
       <CardHeader className="p-4 md:p-6">
-        <CardTitle className="text-lg md:text-xl">Retalhos Associados</CardTitle>
-        <div className="text-sm text-muted-foreground mt-2 space-y-1">
-          <p>Área Total do Item: {totalArea.toFixed(2)}m²</p>
-          <p>Área Consumida: {consumedArea.toFixed(2)}m²</p>
-          <p>Área Disponível: {availableArea.toFixed(2)}m²</p>
-          <p className="text-muted-foreground italic">
-            Área em Retalhos: {scrapsArea.toFixed(2)}m² (apenas referência)
-          </p>
+        <div className="flex items-center gap-2">
+          <Scissors className="w-5 h-5 text-primary" />
+          <CardTitle className="text-lg md:text-xl">Retalhos Associados</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0">

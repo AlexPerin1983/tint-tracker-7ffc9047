@@ -6,6 +6,7 @@ import { useItems } from "@/hooks/use-items";
 import { AddScrapDialog } from "@/components/inventory/AddScrapDialog";
 import { BasicInfoCard } from "@/components/inventory/details/BasicInfoCard";
 import { StockInfoCard } from "@/components/inventory/details/StockInfoCard";
+import { AreaSummaryCard } from "@/components/inventory/details/AreaSummaryCard";
 import { ScrapsTable } from "@/components/inventory/details/ScrapsTable";
 import { TransactionsTable } from "@/components/inventory/details/TransactionsTable";
 import { ActionButtons } from "@/components/inventory/details/ActionButtons";
@@ -41,9 +42,12 @@ const ItemDetails = () => {
         <StockInfoCard item={item} />
       </div>
 
-      <ScrapsTable scraps={scraps} parentItem={item} />
+      <AreaSummaryCard item={item} scraps={scraps} />
       
-      <TransactionsTable transactions={itemTransactions} />
+      <div className="space-y-6">
+        <TransactionsTable transactions={itemTransactions} />
+        <ScrapsTable scraps={scraps} parentItem={item} />
+      </div>
 
       <ActionButtons
         item={item}
@@ -57,6 +61,6 @@ const ItemDetails = () => {
       />
     </div>
   );
-}
+};
 
 export default ItemDetails;
