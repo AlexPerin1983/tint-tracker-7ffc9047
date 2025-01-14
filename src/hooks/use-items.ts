@@ -102,21 +102,34 @@ export function useItems() {
       if (!item) throw new Error('Item não encontrado');
 
       const consumedArea = data.width * data.length;
+      const existingScraps = items.filter(i => i.originId === id);
+      const scrapsArea = existingScraps.reduce((acc, scrap) => 
+        acc + (scrap.width * scrap.length * scrap.quantity), 0
+      );
       
       // Validar se há área suficiente disponível
-      if (consumedArea > item.remainingArea) {
-        throw new Error('Área consumida maior que a área disponível');
+      if (consumedArea > item.remainingArea - scrapsArea) {
+        throw new Error('A área consumida excede a área disponível');
+      }
+
+      // Validar dimensões
+      if (data.width > item.remainingWidth) {
+        throw new Error('A largura consumida excede a largura disponível');
+      }
+
+      if (data.length > item.remainingLength) {
+        throw new Error('O comprimento consumido excede o comprimento disponível');
       }
 
       // Calcular nova área disponível
       const newRemainingArea = item.remainingArea - consumedArea;
-      const newConsumedArea = item.consumedArea + consumedArea;
 
       // Atualizar o item com o novo consumo
       await itemsDB.update(id, {
         ...item,
         remainingArea: newRemainingArea,
-        consumedArea: newConsumedArea,
+        remainingWidth: item.remainingWidth,
+        remainingLength: item.remainingLength - data.length,
         isAvailable: newRemainingArea > 0,
       });
 
@@ -133,9 +146,8 @@ export function useItems() {
       if (data.createScrap && data.scrapWidth && data.scrapLength) {
         const scrapArea = data.scrapWidth * data.scrapLength;
         
-        // Validar se a sobra não excede a área consumida
         if (scrapArea > consumedArea) {
-          throw new Error('Área da sobra maior que a área consumida');
+          throw new Error('A área da sobra não pode ser maior que a área consumida');
         }
 
         await addScrapMutation.mutateAsync({
@@ -150,6 +162,7 @@ export function useItems() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
 

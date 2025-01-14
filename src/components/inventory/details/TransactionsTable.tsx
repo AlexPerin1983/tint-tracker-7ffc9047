@@ -9,7 +9,9 @@ interface TransactionsTableProps {
 
 export function TransactionsTable({ transactions }: TransactionsTableProps) {
   const isMobile = useIsMobile();
-  const consumptionTransactions = transactions.filter(t => t.type === 'corte');
+  const consumptionTransactions = transactions
+    .filter(t => t.type === 'corte')
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   if (consumptionTransactions.length === 0) {
     return (
