@@ -6,15 +6,17 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
       <div className="container mx-auto px-4">
-        <div className="h-16 flex items-center justify-between">
-          <SidebarTrigger>
-            <Button variant="ghost" size="icon" className="-ml-3">
-              <span className="sr-only">Abrir menu</span>
-            </Button>
-          </SidebarTrigger>
-          <div className="flex items-center gap-2">
-            <QrCode className="w-8 h-8 text-primary" />
-            <h1 className="text-xl font-semibold">Tint Tracker System</h1>
+        <div className="h-16 flex items-center">
+          <div className="flex items-center gap-4">
+            <SidebarTrigger>
+              <Button variant="ghost" size="icon" className="-ml-3">
+                <span className="sr-only">Abrir menu</span>
+              </Button>
+            </SidebarTrigger>
+            <div className="flex items-center gap-2">
+              <QrCode className="w-8 h-8 text-primary" />
+              <h1 className="text-xl font-semibold">Tint Tracker System</h1>
+            </div>
           </div>
         </div>
       </div>
