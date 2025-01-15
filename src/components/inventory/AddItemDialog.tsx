@@ -18,7 +18,8 @@ import { useItems } from "@/hooks/use-items";
 import { useEffect, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -91,6 +92,11 @@ export function AddItemDialog({
     form.reset();
   }, [mode, itemToEdit, updateItem, addItem, onOpenChange, form]);
 
+  const handleCancel = () => {
+    form.reset();
+    onOpenChange(false);
+  };
+
   const DialogComponent = isMobile ? Sheet : Dialog;
   const DialogContentComponent = isMobile ? SheetContent : DialogContent;
   const DialogHeaderComponent = isMobile ? SheetHeader : DialogHeader;
@@ -99,7 +105,7 @@ export function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] pt-16 pb-24 w-full bg-[#1E293B] border-none p-0"
+        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0"
       }
     : {
         className: "sm:max-w-[600px] bg-[#1E293B] border-none"
@@ -116,13 +122,34 @@ export function AddItemDialog({
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
-        <div className="px-6 py-8">
+
+        <div className="px-6 py-8 space-y-8 h-[calc(100vh-180px)] overflow-y-auto">
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
             onOpenChange={onOpenChange}
             mode={mode}
           />
+        </div>
+
+        <div className="border-t border-slate-700 p-6 bg-[#1E293B] sticky bottom-0">
+          <div className="flex gap-3 justify-between">
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              className="flex-1 bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+            <Button
+              onClick={form.handleSubmit(onSubmit)}
+              className="flex-1 bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {mode === "edit" ? "Salvar" : "Adicionar"}
+            </Button>
+          </div>
         </div>
       </DialogContentComponent>
     </DialogComponent>
