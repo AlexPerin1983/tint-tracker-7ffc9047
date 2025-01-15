@@ -97,6 +97,9 @@ export function AddItemDialog({
     onOpenChange(false);
   };
 
+  const isFormValid = !Object.keys(form.formState.errors).length && 
+                     form.formState.isDirty;
+
   const DialogComponent = isMobile ? Sheet : Dialog;
   const DialogContentComponent = isMobile ? SheetContent : DialogContent;
   const DialogHeaderComponent = isMobile ? SheetHeader : DialogHeader;
@@ -144,7 +147,14 @@ export function AddItemDialog({
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              disabled={!isFormValid}
+              className={cn(
+                "text-white",
+                isFormValid 
+                  ? "bg-blue-500 hover:bg-blue-600" 
+                  : "bg-slate-600 cursor-not-allowed"
+              )}
+              title={!isFormValid ? "Preencha todos os campos obrigatórios antes de continuar" : ""}
             >
               <Plus className="w-4 h-4 mr-2" />
               {mode === "edit" ? "Salvar" : "Adicionar"}
