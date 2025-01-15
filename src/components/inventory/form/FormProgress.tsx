@@ -26,9 +26,10 @@ export function FormProgress({ sections, activeTab, onTabChange }: FormProgressP
               "text-left"
             )}
           >
-            <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full border",
+            <span className={cn(
+              "flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full border",
               section.isValid ? "border-green-500" : "border-yellow-500"
-            >
+            )}>
               {section.isValid ? (
                 <Check className="w-4 h-4 text-green-500" />
               ) : (
