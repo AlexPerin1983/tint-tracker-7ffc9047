@@ -6,7 +6,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetFooter,
 } from "@/components/ui/sheet";
 import {
   Dialog,
@@ -35,7 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Category, Item, ItemFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
-import { useEffect } from "react";
+import { useEffect, useCallback, memo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 
@@ -56,6 +55,202 @@ interface AddItemDialogProps {
   mode?: "add" | "edit";
   itemToEdit?: Item;
 }
+
+// Memoize form fields to prevent unnecessary re-renders
+const FormFields = memo(({ form }: { form: any }) => (
+  <Tabs defaultValue="basic" className="w-full">
+    <TabsList className="grid w-full grid-cols-3 mb-8">
+      <TabsTrigger value="basic" className="flex items-center gap-2">
+        <Package2 className="w-4 h-4" />
+        <span className="hidden sm:inline">Básico</span>
+      </TabsTrigger>
+      <TabsTrigger value="dimensions" className="flex items-center gap-2">
+        <Ruler className="w-4 h-4" />
+        <span className="hidden sm:inline">Dimensões</span>
+      </TabsTrigger>
+      <TabsTrigger value="price" className="flex items-center gap-2">
+        <DollarSign className="w-4 h-4" />
+        <span className="hidden sm:inline">Preço</span>
+      </TabsTrigger>
+    </TabsList>
+
+    <TabsContent value="basic" className="space-y-4 mt-4">
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Nome do Material</FormLabel>
+            <FormControl>
+              <Input placeholder="Ex: Window Film Classic" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="category"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Categoria</FormLabel>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            >
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a categoria" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="Window Tinting">Window Tinting</SelectItem>
+                <SelectItem value="PPF">PPF</SelectItem>
+                <SelectItem value="Wrap">Wrap</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </TabsContent>
+
+    <TabsContent value="dimensions" className="space-y-4 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="width"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Largura (metros)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="Ex: 1.52"
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="length"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Comprimento (metros)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="Ex: 30"
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quantidade</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Ex: 1"
+                  {...field}
+                  onChange={(e) => field.onChange(parseInt(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="minQuantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quantidade Mínima</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Ex: 2"
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    </TabsContent>
+
+    <TabsContent value="price" className="space-y-4 mt-4">
+      <FormField
+        control={form.control}
+        name="price"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Preço por m² (USD)</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                step="0.01"
+                placeholder="Ex: 10.50"
+                {...field}
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="observation"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Observação</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Informações adicionais sobre o item"
+                className="min-h-[100px]"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </TabsContent>
+  </Tabs>
+));
+
+FormFields.displayName = 'FormFields';
 
 export function AddItemDialog({ 
   open, 
@@ -100,7 +295,7 @@ export function AddItemDialog({
     }
   }, [mode, itemToEdit, form]);
 
-  const onSubmit = async (data: ItemFormData) => {
+  const onSubmit = useCallback(async (data: ItemFormData) => {
     if (mode === "edit" && itemToEdit) {
       updateItem({ id: itemToEdit.id, data });
     } else {
@@ -108,202 +303,12 @@ export function AddItemDialog({
     }
     onOpenChange(false);
     form.reset();
-  };
+  }, [mode, itemToEdit, updateItem, addItem, onOpenChange, form]);
 
-  const Content = () => (
+  const Content = memo(() => (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
-              <Package2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Básico</span>
-            </TabsTrigger>
-            <TabsTrigger value="dimensions" className="flex items-center gap-2">
-              <Ruler className="w-4 h-4" />
-              <span className="hidden sm:inline">Dimensões</span>
-            </TabsTrigger>
-            <TabsTrigger value="price" className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
-              <span className="hidden sm:inline">Preço</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="basic" className="space-y-4 mt-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome do Material</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Window Film Classic" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Categoria</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a categoria" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Window Tinting">Window Tinting</SelectItem>
-                      <SelectItem value="PPF">PPF</SelectItem>
-                      <SelectItem value="Wrap">Wrap</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </TabsContent>
-
-          <TabsContent value="dimensions" className="space-y-4 mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="width"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Largura (metros)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Ex: 1.52"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="length"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Comprimento (metros)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Ex: 30"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Quantidade</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Ex: 1"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="minQuantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Quantidade Mínima</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Ex: 2"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? parseInt(e.target.value) : undefined
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="price" className="space-y-4 mt-4">
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Preço por m² (USD)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="Ex: 10.50"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseFloat(e.target.value) : undefined
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="observation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Observação</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Informações adicionais sobre o item"
-                      className="min-h-[100px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </TabsContent>
-        </Tabs>
-
+        <FormFields form={form} />
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
           <div className="flex justify-end gap-4 max-w-[600px] mx-auto">
             <Button
@@ -320,7 +325,9 @@ export function AddItemDialog({
         </div>
       </form>
     </Form>
-  );
+  ));
+
+  Content.displayName = 'Content';
 
   if (isMobile) {
     return (
