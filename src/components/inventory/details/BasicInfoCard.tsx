@@ -40,6 +40,12 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
             {(item.width * item.length).toFixed(2)}m²
           </p>
         </div>
+        {item.observation && (
+          <div>
+            <label className="text-sm text-muted-foreground font-medium">Localização</label>
+            <p className="text-sm md:text-base font-semibold">{item.observation}</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
