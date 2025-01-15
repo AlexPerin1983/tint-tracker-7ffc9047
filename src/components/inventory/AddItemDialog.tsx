@@ -6,7 +6,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetFooter,
 } from "@/components/ui/sheet";
 import {
   Dialog,
@@ -33,9 +32,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Category, Item, ItemFormData } from "@/types/inventory";
+import { Item, ItemFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 
@@ -65,6 +64,7 @@ export function AddItemDialog({
 }: AddItemDialogProps) {
   const { addItem, updateItem } = useItems();
   const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState("basic");
   
   const form = useForm<ItemFormData>({
     resolver: zodResolver(formSchema),
@@ -113,7 +113,7 @@ export function AddItemDialog({
   const Content = () => (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Tabs defaultValue="basic" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="basic" className="flex items-center gap-2">
               <Package2 className="w-4 h-4" />
@@ -302,6 +302,7 @@ export function AddItemDialog({
               )}
             />
           </TabsContent>
+
         </Tabs>
 
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
@@ -325,7 +326,7 @@ export function AddItemDialog({
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[100dvh] pt-16 pb-24">
+        <SheetContent side="bottom" className="pt-16 pb-24 overflow-y-auto">
           <SheetHeader>
             <SheetTitle>
               {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
