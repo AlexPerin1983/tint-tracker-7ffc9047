@@ -56,7 +56,6 @@ interface AddItemDialogProps {
   itemToEdit?: Item;
 }
 
-// Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(({ form, activeTab }: { form: any; activeTab: string }) => (
   <>
     <TabsContent value="basic" className="space-y-4 mt-4" hidden={activeTab !== "basic"}>
@@ -346,12 +345,18 @@ export function AddItemDialog({
   const DialogHeaderComponent = isMobile ? SheetHeader : DialogHeader;
   const DialogTitleComponent = isMobile ? SheetTitle : DialogTitle;
 
+  const contentProps = isMobile 
+    ? { 
+        side: "bottom" as const,
+        className: "h-[100dvh] pt-16 pb-24"
+      }
+    : {
+        className: "sm:max-w-[600px]"
+      };
+
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
-      <DialogContentComponent 
-        side={isMobile ? "bottom" : undefined}
-        className={isMobile ? "h-[100dvh] pt-16 pb-24" : "sm:max-w-[600px]"}
-      >
+      <DialogContentComponent {...contentProps}>
         <DialogHeaderComponent>
           <DialogTitleComponent>
             {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
