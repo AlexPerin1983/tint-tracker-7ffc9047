@@ -11,8 +11,9 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
-  // Gera a URL completa para o item
-  const itemUrl = `https://tint-warehouse.lovable.app/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+  // Gera a URL completa para o item usando window.location.origin
+  const baseUrl = window.location.origin;
+  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
   const qrCodeData = {
     id: item.id,
