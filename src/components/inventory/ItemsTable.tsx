@@ -19,6 +19,7 @@ import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
+import ReactDOMServer from "react-dom/server";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -91,10 +92,9 @@ export function ItemsTable() {
 
   const generateQRCodeDataURL = (item: Item): Promise<string> => {
     return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
       const qrCodeValue = `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
       
-      const qrCode = (
+      const qrCodeElement = ReactDOMServer.renderToStaticMarkup(
         <QRCodeCanvas
           value={qrCodeValue}
           size={100}
@@ -102,12 +102,20 @@ export function ItemsTable() {
         />
       );
       
-      // Renderiza o QR Code no canvas
-      const container = document.createElement('div');
-      container.appendChild(canvas);
-      qrCode.toCanvas(canvas).then(() => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = 100;
+        canvas.height = 100;
+        ctx?.drawImage(img, 0, 0);
         resolve(canvas.toDataURL('image/png'));
-      });
+      };
+      
+      const svg = new Blob([qrCodeElement], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(svg);
+      img.src = url;
     });
   };
 
