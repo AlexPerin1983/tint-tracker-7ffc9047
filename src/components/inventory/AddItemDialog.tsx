@@ -107,8 +107,8 @@ export function AddItemDialog({
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent>
-          <DialogTitleComponent>
+        <DialogHeaderComponent className="text-left">
+          <DialogTitleComponent className="text-left">
             {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
           </DialogTitleComponent>
         </DialogHeaderComponent>
