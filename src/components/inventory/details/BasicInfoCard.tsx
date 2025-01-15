@@ -10,7 +10,7 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
   return (
     <Card className="shadow-md border border-muted hover:border-muted/80 transition-colors">
       <CardHeader className="p-4 md:p-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           <Info className="w-5 h-5 text-primary" />
           <CardTitle className="text-lg md:text-xl">Informações Básicas</CardTitle>
         </div>
