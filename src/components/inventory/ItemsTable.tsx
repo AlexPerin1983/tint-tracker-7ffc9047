@@ -1,13 +1,16 @@
-import { Download } from "lucide-react";
+import { Eye, Edit, Trash2, QrCode, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
+import { Link } from "react-router-dom";
 import { FilterBar } from "./FilterBar";
 import { useState } from "react";
 import { Item, Filters } from "@/types/inventory";
@@ -15,9 +18,8 @@ import { AddItemDialog } from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
-import { generateQRCodeDataURL } from "./qrcode/QRCodeGenerator";
-import { TableActions } from "./TableActions";
-import { InventoryTableHeader } from "./TableHeader";
+import { QRCodeCanvas } from "qrcode.react";
+import ReactDOMServer from "react-dom/server";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -88,6 +90,35 @@ export function ItemsTable() {
     });
   };
 
+  const generateQRCodeDataURL = (item: Item): Promise<string> => {
+    return new Promise((resolve) => {
+      const qrCodeValue = `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+      
+      const qrCodeElement = ReactDOMServer.renderToStaticMarkup(
+        <QRCodeCanvas
+          value={qrCodeValue}
+          size={100}
+          level="H"
+        />
+      );
+      
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = 100;
+        canvas.height = 100;
+        ctx?.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      
+      const svg = new Blob([qrCodeElement], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(svg);
+      img.src = url;
+    });
+  };
+
   const handleDownloadPDF = async () => {
     if (selectedItems.length === 0) {
       toast({
@@ -152,11 +183,23 @@ export function ItemsTable() {
 
       <div className="rounded-md border border-muted">
         <Table>
-          <InventoryTableHeader 
-            onSelectAll={handleSelectAll}
-            allSelected={selectedItems.length === filteredItems.length}
-            hasItems={filteredItems.length > 0}
-          />
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={selectedItems.length === filteredItems.length && filteredItems.length > 0}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Selecionar todos"
+                />
+              </TableHead>
+              <TableHead>Código</TableHead>
+              <TableHead className="hidden md:table-cell">Nome</TableHead>
+              <TableHead className="hidden md:table-cell">Categoria</TableHead>
+              <TableHead className="hidden md:table-cell">Dimensões</TableHead>
+              <TableHead className="hidden md:table-cell">Quantidade</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
@@ -174,13 +217,37 @@ export function ItemsTable() {
                   {formatDimensions(item.width, item.length)}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
-                <TableCell className="text-right">
-                  <TableActions
-                    item={item}
-                    onEdit={handleEditClick}
-                    onDelete={deleteItem}
-                    onQRCode={handleQRCodeClick}
-                  />
+                <TableCell className="text-right space-x-2">
+                  <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`}>
+                    <Button variant="ghost" size="icon" title="Ver Detalhes">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="Editar"
+                    onClick={() => handleEditClick(item)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-destructive" 
+                    title="Excluir"
+                    onClick={() => deleteItem(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="QR Code"
+                    onClick={() => handleQRCodeClick(item)}
+                  >
+                    <QrCode className="h-4 w-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
