@@ -175,7 +175,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
             <FormLabel>Observação</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Nome do item esta na prateleira..."
+                placeholder="Item esta localizado na prateleira..."
                 className="min-h-[100px]"
                 {...field}
               />
