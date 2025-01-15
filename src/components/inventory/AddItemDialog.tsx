@@ -20,6 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
