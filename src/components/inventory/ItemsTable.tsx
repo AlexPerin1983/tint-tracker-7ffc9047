@@ -92,13 +92,20 @@ export function ItemsTable() {
   const generateQRCodeDataURL = (item: Item): Promise<string> => {
     return new Promise((resolve) => {
       const canvas = document.createElement('canvas');
-      const qr = new QRCodeCanvas({
-        value: `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`,
-        size: 100,
-        level: "H",
-        renderAs: "canvas",
-      });
-      qr.toCanvas(canvas).then(() => {
+      const qrCodeValue = `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+      
+      const qrCode = (
+        <QRCodeCanvas
+          value={qrCodeValue}
+          size={100}
+          level="H"
+        />
+      );
+      
+      // Renderiza o QR Code no canvas
+      const container = document.createElement('div');
+      container.appendChild(canvas);
+      qrCode.toCanvas(canvas).then(() => {
         resolve(canvas.toDataURL('image/png'));
       });
     });
