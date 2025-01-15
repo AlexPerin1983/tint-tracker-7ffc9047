@@ -1,5 +1,4 @@
 import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 import FormFields from "./FormFields";
@@ -12,7 +11,7 @@ interface ItemFormProps {
   mode: "add" | "edit";
 }
 
-const ItemForm = memo(({ form, onSubmit, onOpenChange, mode }: ItemFormProps) => {
+const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
   const [activeTab, setActiveTab] = useState("basic");
 
   return (
@@ -36,21 +35,6 @@ const ItemForm = memo(({ form, onSubmit, onOpenChange, mode }: ItemFormProps) =>
 
           <FormFields form={form} activeTab={activeTab} />
         </Tabs>
-
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-          <div className="flex justify-end gap-4 max-w-[600px] mx-auto">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" className="min-w-[100px]">
-              {mode === "edit" ? "Salvar Alterações" : "Salvar"}
-            </Button>
-          </div>
-        </div>
       </form>
     </Form>
   );

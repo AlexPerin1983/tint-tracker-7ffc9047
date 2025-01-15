@@ -20,6 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -108,7 +109,7 @@ export function AddItemDialog({
         className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0"
       }
     : {
-        className: "sm:max-w-[600px] bg-[#1E293B] border-none"
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0"
       };
 
   return (
@@ -123,7 +124,11 @@ export function AddItemDialog({
           </div>
         </DialogHeaderComponent>
 
-        <div className="px-6 py-8 space-y-8 h-[calc(100vh-180px)] overflow-y-auto">
+        <div className={cn(
+          "px-6 py-8 space-y-8",
+          isMobile ? "h-[calc(100vh-180px)]" : "h-[calc(100vh-300px)]",
+          "overflow-y-auto"
+        )}>
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
@@ -133,18 +138,18 @@ export function AddItemDialog({
         </div>
 
         <div className="border-t border-slate-700 p-6 bg-[#1E293B] sticky bottom-0">
-          <div className="flex gap-3 justify-between">
+          <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
               onClick={handleCancel}
-              className="flex-1 bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+              className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               <X className="w-4 h-4 mr-2" />
               Cancelar
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="flex-1 bg-blue-500 text-white hover:bg-blue-600"
+              className="bg-blue-500 text-white hover:bg-blue-600"
             >
               <Plus className="w-4 h-4 mr-2" />
               {mode === "edit" ? "Salvar" : "Adicionar"}
