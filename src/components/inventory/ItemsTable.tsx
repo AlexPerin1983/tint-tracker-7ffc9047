@@ -1,5 +1,6 @@
-import { Eye, Edit, Trash2, QrCode } from "lucide-react";
+import { Eye, Edit, Trash2, QrCode, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -15,9 +16,13 @@ import { useState } from "react";
 import { Item, Filters } from "@/types/inventory";
 import { AddItemDialog } from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
+import { useToast } from "@/hooks/use-toast";
+import jsPDF from "jspdf";
+import { QRCodeCanvas } from "qrcode.react";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
+  const { toast } = useToast();
   const [filters, setFilters] = useState<Filters>({
     category: "all",
     name: "",
@@ -27,6 +32,7 @@ export function ItemsTable() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const formatDimensions = (width: number, length: number) => 
     `${width.toFixed(2)}m x ${length.toFixed(2)}m`;
@@ -66,6 +72,82 @@ export function ItemsTable() {
     setQrCodeDialogOpen(true);
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedItems(filteredItems.map(item => item.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const toggleSelectItem = (itemId: string) => {
+    setSelectedItems(prev => {
+      if (prev.includes(itemId)) {
+        return prev.filter(id => id !== itemId);
+      }
+      return [...prev, itemId];
+    });
+  };
+
+  const generateQRCodeDataURL = (item: Item): Promise<string> => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const qr = new QRCodeCanvas({
+        value: `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`,
+        size: 100,
+        level: "H",
+      });
+      qr.toCanvas(canvas).then(() => {
+        resolve(canvas.toDataURL('image/png'));
+      });
+    });
+  };
+
+  const handleDownloadPDF = async () => {
+    if (selectedItems.length === 0) {
+      toast({
+        title: "Nenhum item selecionado",
+        description: "Selecione pelo menos um item para gerar o PDF.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const pdf = new jsPDF();
+    const selectedItemsData = filteredItems.filter(item => selectedItems.includes(item.id));
+    const margin = 20;
+    const qrSize = 50;
+    const itemsPerPage = 6;
+    let currentY = margin;
+
+    for (let i = 0; i < selectedItemsData.length; i++) {
+      const item = selectedItemsData[i];
+      
+      if (i > 0 && i % itemsPerPage === 0) {
+        pdf.addPage();
+        currentY = margin;
+      }
+
+      const qrDataUrl = await generateQRCodeDataURL(item);
+      
+      pdf.addImage(qrDataUrl, 'PNG', margin, currentY, qrSize, qrSize);
+      pdf.setFontSize(12);
+      pdf.text(item.name, margin + qrSize + 10, currentY + 15);
+      pdf.setFontSize(10);
+      pdf.text(`Código: ${item.code}`, margin + qrSize + 10, currentY + 25);
+      pdf.text(formatDimensions(item.width, item.length), margin + qrSize + 10, currentY + 35);
+
+      currentY += qrSize + margin;
+    }
+
+    pdf.save('qrcodes.pdf');
+    
+    toast({
+      title: "PDF gerado com sucesso!",
+      description: `${selectedItems.length} QR Code${selectedItems.length > 1 ? 's' : ''} exportado${selectedItems.length > 1 ? 's' : ''}.`,
+    });
+  };
+
   return (
     <div className="space-y-4">
       <FilterBar 
@@ -74,10 +156,26 @@ export function ItemsTable() {
         onClearFilters={handleClearFilters}
       />
 
+      <div className="flex justify-end">
+        {selectedItems.length > 0 && (
+          <Button onClick={handleDownloadPDF} className="mb-4">
+            <Download className="w-4 h-4 mr-2" />
+            Baixar {selectedItems.length} QR Code{selectedItems.length > 1 ? 's' : ''}
+          </Button>
+        )}
+      </div>
+
       <div className="rounded-md border border-muted">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={selectedItems.length === filteredItems.length && filteredItems.length > 0}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Selecionar todos"
+                />
+              </TableHead>
               <TableHead>Código</TableHead>
               <TableHead className="hidden md:table-cell">Nome</TableHead>
               <TableHead className="hidden md:table-cell">Categoria</TableHead>
@@ -89,6 +187,13 @@ export function ItemsTable() {
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedItems.includes(item.id)}
+                    onCheckedChange={() => toggleSelectItem(item.id)}
+                    aria-label={`Selecionar ${item.name}`}
+                  />
+                </TableCell>
                 <TableCell className="font-medium">{item.code}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.name}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.category}</TableCell>
