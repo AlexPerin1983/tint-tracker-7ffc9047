@@ -120,7 +120,10 @@ export function AddItemDialog({
       <DialogContentComponent {...contentProps}>
         <DialogHeaderComponent className="p-6 border-b border-slate-700">
           <div className="flex items-center gap-2">
-            <Plus className="w-5 h-5 text-blue-500" />
+            <Plus className={cn(
+              "w-5 h-5",
+              mode === "edit" ? "text-yellow-500" : "text-blue-500"
+            )} />
             <DialogTitleComponent className="text-white text-xl font-semibold">
               {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
             </DialogTitleComponent>
@@ -150,15 +153,17 @@ export function AddItemDialog({
               onClick={form.handleSubmit(onSubmit)}
               disabled={!isFormValid}
               className={cn(
-                "text-white",
+                "text-white transition-all duration-200",
                 isFormValid 
-                  ? "bg-blue-500 hover:bg-blue-600" 
-                  : "bg-slate-600 cursor-not-allowed"
+                  ? mode === "edit"
+                    ? "bg-yellow-500 hover:bg-yellow-600"
+                    : "bg-blue-500 hover:bg-blue-600"
+                  : "bg-slate-600 cursor-not-allowed opacity-50"
               )}
               title={!isFormValid ? "Preencha todos os campos obrigatórios antes de continuar" : ""}
             >
               <Plus className="w-4 h-4 mr-2" />
-              {mode === "edit" ? "Salvar" : "Adicionar"}
+              {mode === "edit" ? "Salvar Alterações" : "Adicionar Item"}
             </Button>
           </div>
         </div>
