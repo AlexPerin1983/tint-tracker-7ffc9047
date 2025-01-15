@@ -92,7 +92,9 @@ export function ItemsTable() {
 
   const generateQRCodeDataURL = (item: Item): Promise<string> => {
     return new Promise((resolve) => {
+      console.log('Iniciando geração do QR Code para item:', item);
       const qrCodeValue = `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+      console.log('URL do QR Code:', qrCodeValue);
       
       const qrCodeElement = ReactDOMServer.renderToStaticMarkup(
         <QRCodeCanvas
@@ -102,15 +104,24 @@ export function ItemsTable() {
         />
       );
       
+      console.log('QR Code Element gerado:', qrCodeElement);
+      
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
       
       img.onload = () => {
+        console.log('Imagem carregada com sucesso');
         canvas.width = 100;
         canvas.height = 100;
         ctx?.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL('image/png'));
+        const dataUrl = canvas.toDataURL('image/png');
+        console.log('Data URL gerada com sucesso');
+        resolve(dataUrl);
+      };
+      
+      img.onerror = (error) => {
+        console.error('Erro ao carregar imagem:', error);
       };
       
       const svg = new Blob([qrCodeElement], { type: 'image/svg+xml' });
