@@ -96,6 +96,7 @@ export function ItemsTable() {
         value: `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`,
         size: 100,
         level: "H",
+        renderAs: "canvas",
       });
       qr.toCanvas(canvas).then(() => {
         resolve(canvas.toDataURL('image/png'));
