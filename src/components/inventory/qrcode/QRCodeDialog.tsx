@@ -1,7 +1,7 @@
 import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, Printer } from "lucide-react";
+import { Download, Printer, Share2 } from "lucide-react";
 import { Item } from "@/types/inventory";
 
 interface QRCodeDialogProps {
@@ -78,6 +78,18 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     }
   };
 
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: `QR Code - ${item.name}`,
+        url: itemUrl
+      });
+    } catch (error) {
+      // Fallback para copiar o link
+      navigator.clipboard.writeText(itemUrl);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -116,7 +128,9 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             </div>
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Link:</span>
-              <span className="text-primary">{itemUrl}</span>
+              <Button variant="ghost" size="icon" className="h-6 w-6 p-0" onClick={handleShare}>
+                <Share2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 
