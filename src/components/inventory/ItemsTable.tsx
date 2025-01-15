@@ -120,7 +120,11 @@ export function ItemsTable() {
   };
 
   const handleDownloadPDF = async () => {
+    console.log('Botão clicado - Items selecionados:', selectedItems);
+    console.log('Items filtrados:', filteredItems);
+    
     if (selectedItems.length === 0) {
+      console.log('Nenhum item selecionado');
       toast({
         title: "Nenhum item selecionado",
         description: "Selecione pelo menos um item para gerar o PDF.",
@@ -131,6 +135,8 @@ export function ItemsTable() {
 
     const pdf = new jsPDF();
     const selectedItemsData = filteredItems.filter(item => selectedItems.includes(item.id));
+    console.log('Items que serão incluídos no PDF:', selectedItemsData);
+    
     const margin = 20;
     const qrSize = 50;
     const itemsPerPage = 6;
@@ -138,24 +144,33 @@ export function ItemsTable() {
 
     for (let i = 0; i < selectedItemsData.length; i++) {
       const item = selectedItemsData[i];
+      console.log(`Processando item ${i + 1}/${selectedItemsData.length}:`, item);
       
       if (i > 0 && i % itemsPerPage === 0) {
+        console.log('Adicionando nova página ao PDF');
         pdf.addPage();
         currentY = margin;
       }
 
-      const qrDataUrl = await generateQRCodeDataURL(item);
-      
-      pdf.addImage(qrDataUrl, 'PNG', margin, currentY, qrSize, qrSize);
-      pdf.setFontSize(12);
-      pdf.text(item.name, margin + qrSize + 10, currentY + 15);
-      pdf.setFontSize(10);
-      pdf.text(`Código: ${item.code}`, margin + qrSize + 10, currentY + 25);
-      pdf.text(formatDimensions(item.width, item.length), margin + qrSize + 10, currentY + 35);
+      try {
+        console.log('Gerando QR Code para:', item.id);
+        const qrDataUrl = await generateQRCodeDataURL(item);
+        console.log('QR Code gerado com sucesso');
+        
+        pdf.addImage(qrDataUrl, 'PNG', margin, currentY, qrSize, qrSize);
+        pdf.setFontSize(12);
+        pdf.text(item.name, margin + qrSize + 10, currentY + 15);
+        pdf.setFontSize(10);
+        pdf.text(`Código: ${item.code}`, margin + qrSize + 10, currentY + 25);
+        pdf.text(formatDimensions(item.width, item.length), margin + qrSize + 10, currentY + 35);
 
-      currentY += qrSize + margin;
+        currentY += qrSize + margin;
+      } catch (error) {
+        console.error('Erro ao processar item:', error);
+      }
     }
 
+    console.log('Salvando PDF...');
     pdf.save('qrcodes.pdf');
     
     toast({
