@@ -14,6 +14,7 @@ import { FilterBar } from "./FilterBar";
 import { useState } from "react";
 import { Item, Filters } from "@/types/inventory";
 import { AddItemDialog } from "./AddItemDialog";
+import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -24,6 +25,7 @@ export function ItemsTable() {
     minLength: "",
   });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
   const formatDimensions = (width: number, length: number) => 
@@ -57,6 +59,11 @@ export function ItemsTable() {
   const handleEditClick = (item: Item) => {
     setSelectedItem(item);
     setEditDialogOpen(true);
+  };
+
+  const handleQRCodeClick = (item: Item) => {
+    setSelectedItem(item);
+    setQrCodeDialogOpen(true);
   };
 
   return (
@@ -112,7 +119,12 @@ export function ItemsTable() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" title="QR Code">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="QR Code"
+                    onClick={() => handleQRCodeClick(item)}
+                  >
                     <QrCode className="h-4 w-4" />
                   </Button>
                 </TableCell>
@@ -128,6 +140,14 @@ export function ItemsTable() {
         mode="edit"
         itemToEdit={selectedItem}
       />
+
+      {selectedItem && (
+        <QRCodeDialog
+          open={qrCodeDialogOpen}
+          onOpenChange={setQrCodeDialogOpen}
+          item={selectedItem}
+        />
+      )}
     </div>
   );
 }
