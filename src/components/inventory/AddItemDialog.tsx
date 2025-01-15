@@ -20,7 +20,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -98,9 +97,6 @@ export function AddItemDialog({
     onOpenChange(false);
   };
 
-  const isFormValid = !Object.keys(form.formState.errors).length && 
-                     form.formState.isDirty;
-
   const DialogComponent = isMobile ? Sheet : Dialog;
   const DialogContentComponent = isMobile ? SheetContent : DialogContent;
   const DialogHeaderComponent = isMobile ? SheetHeader : DialogHeader;
@@ -112,7 +108,7 @@ export function AddItemDialog({
         className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0"
       }
     : {
-        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0"
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none"
       };
 
   return (
@@ -120,10 +116,7 @@ export function AddItemDialog({
       <DialogContentComponent {...contentProps}>
         <DialogHeaderComponent className="p-6 border-b border-slate-700">
           <div className="flex items-center gap-2">
-            <Plus className={cn(
-              "w-5 h-5",
-              mode === "edit" ? "text-yellow-500" : "text-blue-500"
-            )} />
+            <Plus className="w-5 h-5 text-blue-500" />
             <DialogTitleComponent className="text-white text-xl font-semibold">
               {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
             </DialogTitleComponent>
@@ -140,30 +133,21 @@ export function AddItemDialog({
         </div>
 
         <div className="border-t border-slate-700 p-6 bg-[#1E293B] sticky bottom-0">
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-between">
             <Button
               variant="outline"
               onClick={handleCancel}
-              className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+              className="flex-1 bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               <X className="w-4 h-4 mr-2" />
               Cancelar
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              disabled={!isFormValid}
-              className={cn(
-                "text-white transition-all duration-200",
-                isFormValid 
-                  ? mode === "edit"
-                    ? "bg-yellow-500 hover:bg-yellow-600"
-                    : "bg-blue-500 hover:bg-blue-600"
-                  : "bg-slate-600 cursor-not-allowed opacity-50"
-              )}
-              title={!isFormValid ? "Preencha todos os campos obrigatórios antes de continuar" : ""}
+              className="flex-1 bg-blue-500 text-white hover:bg-blue-600"
             >
               <Plus className="w-4 h-4 mr-2" />
-              {mode === "edit" ? "Salvar Alterações" : "Adicionar Item"}
+              {mode === "edit" ? "Salvar" : "Adicionar"}
             </Button>
           </div>
         </div>

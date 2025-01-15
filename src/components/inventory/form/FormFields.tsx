@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
 import { memo } from "react";
-import { cn } from "@/lib/utils";
 
 interface FormFieldsProps {
   form: any;
@@ -19,18 +18,9 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="flex items-center gap-1">
-              Nome do Material
-              <span className="text-red-500">*</span>
-            </FormLabel>
+            <FormLabel>Nome do Material</FormLabel>
             <FormControl>
-              <Input 
-                placeholder="Ex: Window Film Classic" 
-                {...field}
-                className={cn(
-                  form.formState.errors.name && "border-red-500 focus-visible:ring-red-500"
-                )}
-              />
+              <Input placeholder="Ex: Window Film Classic" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -42,18 +32,13 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
         name="category"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="flex items-center gap-1">
-              Categoria
-              <span className="text-red-500">*</span>
-            </FormLabel>
+            <FormLabel>Categoria</FormLabel>
             <Select
               onValueChange={field.onChange}
               defaultValue={field.value}
             >
               <FormControl>
-                <SelectTrigger className={cn(
-                  form.formState.errors.category && "border-red-500 focus-visible:ring-red-500"
-                )}>
+                <SelectTrigger>
                   <SelectValue placeholder="Selecione a categoria" />
                 </SelectTrigger>
               </FormControl>
@@ -76,10 +61,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
           name="width"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1">
-                Largura (metros)
-                <span className="text-red-500">*</span>
-              </FormLabel>
+              <FormLabel>Largura (metros)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -87,9 +69,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
                   placeholder="Ex: 1.52"
                   {...field}
                   onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                  className={cn(
-                    form.formState.errors.width && "border-red-500 focus-visible:ring-red-500"
-                  )}
                 />
               </FormControl>
               <FormMessage />
@@ -102,10 +81,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
           name="length"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1">
-                Comprimento (metros)
-                <span className="text-red-500">*</span>
-              </FormLabel>
+              <FormLabel>Comprimento (metros)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -113,9 +89,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
                   placeholder="Ex: 30"
                   {...field}
                   onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                  className={cn(
-                    form.formState.errors.length && "border-red-500 focus-visible:ring-red-500"
-                  )}
                 />
               </FormControl>
               <FormMessage />
@@ -130,19 +103,13 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => (
           name="quantity"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1">
-                Quantidade
-                <span className="text-red-500">*</span>
-              </FormLabel>
+              <FormLabel>Quantidade</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   placeholder="Ex: 1"
                   {...field}
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
-                  className={cn(
-                    form.formState.errors.quantity && "border-red-500 focus-visible:ring-red-500"
-                  )}
                 />
               </FormControl>
               <FormMessage />
