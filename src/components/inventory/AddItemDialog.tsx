@@ -325,13 +325,15 @@ export function AddItemDialog({
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[100dvh] pt-16 pb-24">
+        <SheetContent side="bottom" className="overflow-y-auto max-h-[90vh]">
           <SheetHeader>
             <SheetTitle>
               {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
             </SheetTitle>
           </SheetHeader>
-          <Content />
+          <div className="pb-24">
+            <Content />
+          </div>
         </SheetContent>
       </Sheet>
     );
