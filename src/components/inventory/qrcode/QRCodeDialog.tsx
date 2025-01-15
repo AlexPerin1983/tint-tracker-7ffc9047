@@ -11,12 +11,16 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
+  // Gera a URL completa para o item
+  const itemUrl = `https://tint-warehouse.lovable.app/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+  
   const qrCodeData = {
     id: item.id,
     code: item.code,
     name: item.name,
     category: item.category,
-    dimensions: `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`
+    dimensions: `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`,
+    url: itemUrl
   };
 
   const handleDownload = () => {
@@ -82,11 +86,15 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         
         <div className="flex flex-col items-center space-y-6 py-4">
           <QRCodeCanvas
-            value={JSON.stringify(qrCodeData)}
+            value={itemUrl}
             size={256}
             level="H"
             includeMargin
           />
+
+          <p className="text-sm text-muted-foreground text-center">
+            Escaneie este QR Code para acessar diretamente a página de detalhes deste item no sistema.
+          </p>
 
           <div className="w-full space-y-2 text-sm">
             <div className="flex justify-between py-1 border-b">
@@ -104,6 +112,10 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Dimensões:</span>
               <span>{qrCodeData.dimensions}</span>
+            </div>
+            <div className="flex justify-between py-1 border-b">
+              <span className="font-medium">Link:</span>
+              <span className="text-primary">{itemUrl}</span>
             </div>
           </div>
 
