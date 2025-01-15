@@ -18,6 +18,7 @@ import { useItems } from "@/hooks/use-items";
 import { useEffect, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -98,26 +99,31 @@ export function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] pt-16 pb-24"
+        className: "h-[100dvh] pt-16 pb-24 w-full bg-[#1E293B] border-none p-0"
       }
     : {
-        className: "sm:max-w-[600px]"
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none"
       };
 
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent className="text-left pt-0">
-          <DialogTitleComponent className="text-left">
-            {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
-          </DialogTitleComponent>
+        <DialogHeaderComponent className="p-6 border-b border-slate-700">
+          <div className="flex items-center gap-2">
+            <Plus className="w-5 h-5 text-blue-500" />
+            <DialogTitleComponent className="text-white text-xl font-semibold">
+              {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
+            </DialogTitleComponent>
+          </div>
         </DialogHeaderComponent>
-        <ItemForm 
-          form={form} 
-          onSubmit={onSubmit} 
-          onOpenChange={onOpenChange}
-          mode={mode}
-        />
+        <div className="px-6 py-8">
+          <ItemForm 
+            form={form} 
+            onSubmit={onSubmit} 
+            onOpenChange={onOpenChange}
+            mode={mode}
+          />
+        </div>
       </DialogContentComponent>
     </DialogComponent>
   );
