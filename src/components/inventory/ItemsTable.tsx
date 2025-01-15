@@ -19,7 +19,6 @@ import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
 import { QRCodeCanvas } from "qrcode.react";
-import ReactDOMServer from "react-dom/server";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -92,50 +91,20 @@ export function ItemsTable() {
 
   const generateQRCodeDataURL = (item: Item): Promise<string> => {
     return new Promise((resolve) => {
-      console.log('Iniciando geração do QR Code para item:', item);
-      const qrCodeValue = `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
-      console.log('URL do QR Code:', qrCodeValue);
-      
-      const qrCodeElement = ReactDOMServer.renderToStaticMarkup(
-        <QRCodeCanvas
-          value={qrCodeValue}
-          size={100}
-          level="H"
-        />
-      );
-      
-      console.log('QR Code Element gerado:', qrCodeElement);
-      
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        console.log('Imagem carregada com sucesso');
-        canvas.width = 100;
-        canvas.height = 100;
-        ctx?.drawImage(img, 0, 0);
-        const dataUrl = canvas.toDataURL('image/png');
-        console.log('Data URL gerada com sucesso');
-        resolve(dataUrl);
-      };
-      
-      img.onerror = (error) => {
-        console.error('Erro ao carregar imagem:', error);
-      };
-      
-      const svg = new Blob([qrCodeElement], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(svg);
-      img.src = url;
+      const qr = new QRCodeCanvas({
+        value: `${window.location.origin}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`,
+        size: 100,
+        level: "H",
+      });
+      qr.toCanvas(canvas).then(() => {
+        resolve(canvas.toDataURL('image/png'));
+      });
     });
   };
 
   const handleDownloadPDF = async () => {
-    console.log('Botão clicado - Items selecionados:', selectedItems);
-    console.log('Items filtrados:', filteredItems);
-    
     if (selectedItems.length === 0) {
-      console.log('Nenhum item selecionado');
       toast({
         title: "Nenhum item selecionado",
         description: "Selecione pelo menos um item para gerar o PDF.",
@@ -146,8 +115,6 @@ export function ItemsTable() {
 
     const pdf = new jsPDF();
     const selectedItemsData = filteredItems.filter(item => selectedItems.includes(item.id));
-    console.log('Items que serão incluídos no PDF:', selectedItemsData);
-    
     const margin = 20;
     const qrSize = 50;
     const itemsPerPage = 6;
@@ -155,33 +122,24 @@ export function ItemsTable() {
 
     for (let i = 0; i < selectedItemsData.length; i++) {
       const item = selectedItemsData[i];
-      console.log(`Processando item ${i + 1}/${selectedItemsData.length}:`, item);
       
       if (i > 0 && i % itemsPerPage === 0) {
-        console.log('Adicionando nova página ao PDF');
         pdf.addPage();
         currentY = margin;
       }
 
-      try {
-        console.log('Gerando QR Code para:', item.id);
-        const qrDataUrl = await generateQRCodeDataURL(item);
-        console.log('QR Code gerado com sucesso');
-        
-        pdf.addImage(qrDataUrl, 'PNG', margin, currentY, qrSize, qrSize);
-        pdf.setFontSize(12);
-        pdf.text(item.name, margin + qrSize + 10, currentY + 15);
-        pdf.setFontSize(10);
-        pdf.text(`Código: ${item.code}`, margin + qrSize + 10, currentY + 25);
-        pdf.text(formatDimensions(item.width, item.length), margin + qrSize + 10, currentY + 35);
+      const qrDataUrl = await generateQRCodeDataURL(item);
+      
+      pdf.addImage(qrDataUrl, 'PNG', margin, currentY, qrSize, qrSize);
+      pdf.setFontSize(12);
+      pdf.text(item.name, margin + qrSize + 10, currentY + 15);
+      pdf.setFontSize(10);
+      pdf.text(`Código: ${item.code}`, margin + qrSize + 10, currentY + 25);
+      pdf.text(formatDimensions(item.width, item.length), margin + qrSize + 10, currentY + 35);
 
-        currentY += qrSize + margin;
-      } catch (error) {
-        console.error('Erro ao processar item:', error);
-      }
+      currentY += qrSize + margin;
     }
 
-    console.log('Salvando PDF...');
     pdf.save('qrcodes.pdf');
     
     toast({
