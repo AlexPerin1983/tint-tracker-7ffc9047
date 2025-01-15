@@ -2,23 +2,22 @@ import { Form } from "@/components/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 import FormFields from "./FormFields";
-import { memo, useState } from "react";
-import { cn } from "@/lib/utils";
+import { memo } from "react";
 
 interface ItemFormProps {
   form: any;
   onSubmit: (data: any) => void;
   onOpenChange: (open: boolean) => void;
   mode: "add" | "edit";
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
-  const [activeTab, setActiveTab] = useState("basic");
-
+const ItemForm = memo(({ form, onSubmit, activeTab, onTabChange }: ItemFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="basic" className="flex items-center gap-2">
               <Package2 className="w-4 h-4" />

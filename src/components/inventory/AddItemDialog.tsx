@@ -15,11 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import { Item, ItemFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
-import { Plus, X } from "lucide-react";
+import { Plus, X, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -39,6 +42,12 @@ interface AddItemDialogProps {
   itemToEdit?: Item;
 }
 
+interface TabStatus {
+  basic: boolean;
+  dimensions: boolean;
+  price: boolean;
+}
+
 export function AddItemDialog({ 
   open, 
   onOpenChange, 
@@ -47,6 +56,13 @@ export function AddItemDialog({
 }: AddItemDialogProps) {
   const { addItem, updateItem } = useItems();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("basic");
+  const [tabsStatus, setTabsStatus] = useState<TabStatus>({
+    basic: false,
+    dimensions: false,
+    price: false
+  });
   
   const form = useForm<ItemFormData>({
     resolver: zodResolver(formSchema),
@@ -57,7 +73,33 @@ export function AddItemDialog({
       length: 0,
       quantity: 1,
     },
+    mode: "onChange"
   });
+
+  const validateCurrentTab = (tab: string) => {
+    switch (tab) {
+      case "basic":
+        return !form.formState.errors.name && !form.formState.errors.category;
+      case "dimensions":
+        return !form.formState.errors.width && !form.formState.errors.length && !form.formState.errors.quantity;
+      case "price":
+        return true; // Campos opcionais
+      default:
+        return false;
+    }
+  };
+
+  const updateTabsStatus = useCallback(() => {
+    setTabsStatus({
+      basic: validateCurrentTab("basic"),
+      dimensions: validateCurrentTab("dimensions"),
+      price: validateCurrentTab("price")
+    });
+  }, [form.formState.errors]);
+
+  useEffect(() => {
+    updateTabsStatus();
+  }, [form.formState.errors, updateTabsStatus]);
 
   useEffect(() => {
     if (mode === "edit" && itemToEdit) {
@@ -82,7 +124,33 @@ export function AddItemDialog({
     }
   }, [mode, itemToEdit, form]);
 
+  const handleTabChange = (newTab: string) => {
+    const isCurrentTabValid = validateCurrentTab(activeTab);
+    
+    if (!isCurrentTabValid) {
+      toast({
+        title: "Campos Obrigatórios",
+        description: `Por favor, preencha todos os campos obrigatórios na aba atual antes de prosseguir.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setActiveTab(newTab);
+  };
+
   const onSubmit = useCallback(async (data: ItemFormData) => {
+    const allTabsValid = Object.values(tabsStatus).every(status => status);
+    
+    if (!allTabsValid) {
+      toast({
+        title: "Campos Obrigatórios",
+        description: "Por favor, preencha todos os campos obrigatórios antes de prosseguir.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (mode === "edit" && itemToEdit) {
       updateItem({ id: itemToEdit.id, data });
     } else {
@@ -90,7 +158,7 @@ export function AddItemDialog({
     }
     onOpenChange(false);
     form.reset();
-  }, [mode, itemToEdit, updateItem, addItem, onOpenChange, form]);
+  }, [mode, itemToEdit, updateItem, addItem, onOpenChange, form, tabsStatus, toast]);
 
   const handleCancel = () => {
     form.reset();
@@ -111,6 +179,8 @@ export function AddItemDialog({
         className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0"
       };
 
+  const isFormValid = Object.values(tabsStatus).every(status => status);
+
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
@@ -123,12 +193,47 @@ export function AddItemDialog({
           </div>
         </DialogHeaderComponent>
 
-        <div className="px-6 py-8 space-y-8 h-[calc(100vh-180px)] overflow-y-auto">
+        <div className="px-6 pt-4">
+          <div className="flex items-center gap-4 mb-6 text-sm">
+            {Object.entries(tabsStatus).map(([tab, status], index) => (
+              <div 
+                key={tab}
+                className={cn(
+                  "flex items-center gap-2 cursor-pointer",
+                  status ? "text-green-500" : "text-yellow-500"
+                )}
+                onClick={() => handleTabChange(tab)}
+              >
+                {status ? (
+                  <CheckCircle2 className="w-4 h-4" />
+                ) : (
+                  <AlertCircle className="w-4 h-4" />
+                )}
+                <span>
+                  {index + 1}. {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {!isFormValid && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Por favor, preencha todos os campos obrigatórios antes de prosseguir.
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+
+        <div className="px-6 py-4 space-y-8 h-[calc(100vh-280px)] overflow-y-auto">
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
             onOpenChange={onOpenChange}
             mode={mode}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
           />
         </div>
 
@@ -144,7 +249,13 @@ export function AddItemDialog({
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              className={cn(
+                "text-white",
+                isFormValid 
+                  ? "bg-blue-500 hover:bg-blue-600" 
+                  : "bg-slate-500 cursor-not-allowed"
+              )}
+              disabled={!isFormValid}
             >
               <Plus className="w-4 h-4 mr-2" />
               {mode === "edit" ? "Salvar" : "Adicionar"}
