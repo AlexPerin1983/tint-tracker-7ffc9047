@@ -45,3 +45,21 @@ export async function validateUser(email: string): Promise<{ isValid: boolean; u
     userData: user
   };
 }
+
+export async function logoutUser(email: string): Promise<void> {
+  try {
+    const users = await fetchAndParseCSV();
+    const user = users.find(u => u.Email.toLowerCase() === email.toLowerCase());
+    
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Por enquanto apenas validamos se o usuário existe
+    // Em uma implementação real, aqui faríamos a atualização do status na planilha
+    return;
+  } catch (error) {
+    console.error('Error logging out user:', error);
+    throw new Error('Não foi possível realizar o logout. Tente novamente mais tarde.');
+  }
+}
