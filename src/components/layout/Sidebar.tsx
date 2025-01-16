@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const navigationItems = [
   { title: "Dashboard", icon: Home, url: "/" },
@@ -28,10 +30,20 @@ const externalLinks = [
 ];
 
 export const AppSidebar = () => {
-  const userEmail = "usuario@email.com";
+  const navigate = useNavigate();
+  // Recupera o email do localStorage
+  const userEmail = localStorage.getItem('userEmail') || 'Usuário';
 
   const handleLogout = () => {
-    console.log("Logout clicked");
+    // Limpa o localStorage
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('isAuthenticated');
+    
+    // Mostra mensagem de sucesso
+    toast.success('Logout realizado com sucesso');
+    
+    // Redireciona para a página inicial
+    navigate('/');
   };
 
   return (
