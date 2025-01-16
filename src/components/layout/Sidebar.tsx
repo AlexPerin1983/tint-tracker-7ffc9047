@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const navigationItems = [
   { title: "Dashboard", icon: Home, url: "/" },
@@ -28,10 +30,24 @@ const externalLinks = [
 ];
 
 export const AppSidebar = () => {
-  const userEmail = "usuario@email.com";
+  const userEmail = localStorage.getItem('userEmail') || 'Usuário';
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleLogout = () => {
-    console.log("Logout clicked");
+    // Limpa os dados do usuário
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userStatus');
+    
+    // Mostra mensagem de sucesso
+    toast({
+      title: "Logout realizado",
+      description: "Você foi desconectado com sucesso",
+    });
+
+    // Redireciona para a página inicial
+    navigate('/');
   };
 
   return (
@@ -112,24 +128,24 @@ export const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Seção 4: Logout */}
-      <SidebarFooter className="border-t border-slate-700/50 p-4">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={handleLogout}
-              className={cn(
-                "flex items-center gap-3 w-full rounded-lg px-3 py-2.5",
-                "hover:bg-slate-700/50 active:bg-slate-600/50",
-                "transition-colors duration-200"
-              )}
-            >
-              <LogOut className="h-5 w-5 text-slate-400" />
-              <span className="text-slate-200">Logout</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+  {/* Seção 4: Logout */}
+  <SidebarFooter className="border-t border-slate-700/50 p-4">
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton 
+          onClick={handleLogout}
+          className={cn(
+            "flex items-center gap-3 w-full rounded-lg px-3 py-2.5",
+            "hover:bg-slate-700/50 active:bg-slate-600/50",
+            "transition-colors duration-200"
+          )}
+        >
+          <LogOut className="h-5 w-5 text-slate-400" />
+          <span className="text-slate-200">Logout</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarFooter>
+</Sidebar>
   );
 };
