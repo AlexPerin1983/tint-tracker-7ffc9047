@@ -106,16 +106,16 @@ export function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0"
+        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col"
       }
     : {
-        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0"
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh]"
       };
 
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent className="p-6 border-b border-slate-700">
+        <DialogHeaderComponent className="p-6 border-b border-slate-700 shrink-0">
           <div className="flex items-center gap-2">
             <Plus className="w-5 h-5 text-blue-500" />
             <DialogTitleComponent className="text-white text-xl font-semibold">
@@ -124,11 +124,7 @@ export function AddItemDialog({
           </div>
         </DialogHeaderComponent>
 
-        <div className={cn(
-          "px-6 py-8 space-y-8",
-          isMobile ? "h-[calc(100vh-180px)]" : "h-[calc(100vh-300px)]",
-          "overflow-y-auto"
-        )}>
+        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8">
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
@@ -137,7 +133,7 @@ export function AddItemDialog({
           />
         </div>
 
-        <div className="border-t border-slate-700 p-6 bg-[#1E293B] sticky bottom-0">
+        <div className="border-t border-slate-700 p-6 bg-[#1E293B] mt-auto shrink-0">
           <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
