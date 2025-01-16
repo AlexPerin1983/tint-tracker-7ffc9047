@@ -14,18 +14,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
 
-  const handleScan = (result: any, error: any) => {
-    if (error) {
-      console.error(error);
-      setError('Erro ao acessar a câmera');
-      toast({
-        variant: "destructive",
-        title: "Erro ao acessar a câmera",
-        description: "Verifique se você permitiu o acesso à câmera.",
-      });
-      return;
-    }
-
+  const handleScan = (result: any) => {
     if (result) {
       try {
         const url = new URL(result?.text);
@@ -53,6 +42,16 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
     }
   };
 
+  const handleError = (err: any) => {
+    console.error(err);
+    setError('Erro ao acessar a câmera');
+    toast({
+      variant: "destructive",
+      title: "Erro ao acessar a câmera",
+      description: "Verifique se você permitiu o acesso à câmera.",
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -64,6 +63,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           <QrReader
             constraints={{ facingMode: "environment" }}
             onResult={handleScan}
+            onError={handleError}
             className="w-full"
             videoStyle={{ width: '100%' }}
           />
