@@ -11,6 +11,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 const navigationItems = [
   { title: "Dashboard", icon: Home, url: "/" },
@@ -27,41 +28,48 @@ const externalLinks = [
 ];
 
 export const AppSidebar = () => {
-  // Aqui você pode pegar os dados do usuário do seu contexto de autenticação
-  const userEmail = "usuario@email.com"; // Substitua pelo email real do usuário
+  const userEmail = "usuario@email.com";
 
   const handleLogout = () => {
-    // Implemente a lógica de logout aqui
     console.log("Logout clicked");
   };
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="bg-gradient-to-b from-slate-900 to-slate-800 md:bg-none">
         {/* Seção 1: Perfil do Usuário */}
         <SidebarGroup>
-          <div className="flex items-center gap-3 p-4">
+          <div className="flex items-center gap-3 p-6 border-b border-slate-700/50">
             <Avatar>
               <AvatarImage src="" alt={userEmail} />
-              <AvatarFallback>
+              <AvatarFallback className="bg-blue-600">
                 {userEmail.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium">{userEmail}</span>
+            <span className="text-sm font-medium text-slate-200">{userEmail}</span>
           </div>
         </SidebarGroup>
 
         {/* Seção 2: Navegação Principal */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Navegação</SidebarGroupLabel>
+        <SidebarGroup className="mt-4">
+          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+            Navegação
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="px-3">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center gap-2">
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "w-full rounded-lg px-3 py-2.5",
+                      "hover:bg-slate-700/50 active:bg-slate-600/50",
+                      "transition-colors duration-200"
+                    )}
+                  >
+                    <a href={item.url} className="flex items-center gap-3">
+                      <item.icon className="h-5 w-5 text-slate-400" />
+                      <span className="text-slate-200">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -71,21 +79,30 @@ export const AppSidebar = () => {
         </SidebarGroup>
 
         {/* Seção 3: Links Externos */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Links</SidebarGroupLabel>
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+            Links
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="px-3">
               {externalLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "w-full rounded-lg px-3 py-2.5",
+                      "hover:bg-slate-700/50 active:bg-slate-600/50",
+                      "transition-colors duration-200"
+                    )}
+                  >
                     <a 
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-3"
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
+                      <item.icon className="h-5 w-5 text-slate-400" />
+                      <span className="text-slate-200">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -96,15 +113,19 @@ export const AppSidebar = () => {
       </SidebarContent>
 
       {/* Seção 4: Logout */}
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-slate-700/50 p-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={handleLogout}
-              className="flex items-center gap-2 w-full"
+              className={cn(
+                "flex items-center gap-3 w-full rounded-lg px-3 py-2.5",
+                "hover:bg-slate-700/50 active:bg-slate-600/50",
+                "transition-colors duration-200"
+              )}
             >
-              <LogOut className="h-5 w-5" />
-              <span>Logout</span>
+              <LogOut className="h-5 w-5 text-slate-400" />
+              <span className="text-slate-200">Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
