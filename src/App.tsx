@@ -41,7 +41,7 @@ const App = () => {
                 <AppSidebar userEmail={userEmail} />
                 <div className="flex-1 flex flex-col">
                   <Header />
-                  <main className={`mt-16 ${isMobile ? 'mb-16' : 'mb-0'}`}>
+                  <main className={`flex-1 ${isMobile ? 'mt-16 mb-16' : 'mt-[4.5rem]'}`}>
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/item/:id" element={<ItemDetails />} />
