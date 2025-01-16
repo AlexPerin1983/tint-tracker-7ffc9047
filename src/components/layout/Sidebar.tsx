@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { logoutUser } from "@/services/sheets";
 
 const navigationItems = [
   { title: "Dashboard", icon: Home, url: "/" },
@@ -27,11 +30,30 @@ const externalLinks = [
   },
 ];
 
-export const AppSidebar = () => {
-  const userEmail = "usuario@email.com";
+interface AppSidebarProps {
+  userEmail?: string;
+}
 
-  const handleLogout = () => {
-    console.log("Logout clicked");
+export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser(userEmail);
+      localStorage.removeItem("userEmail");
+      window.location.reload();
+      toast({
+        title: "Logout realizado com sucesso",
+        description: "Você foi desconectado do sistema",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao realizar logout",
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

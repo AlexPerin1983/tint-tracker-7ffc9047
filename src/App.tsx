@@ -24,6 +24,7 @@ const App = () => {
   const handleLogin = (email: string) => {
     setIsLoggedIn(true);
     setUserEmail(email);
+    localStorage.setItem("userEmail", email);
   };
 
   return (
@@ -37,7 +38,7 @@ const App = () => {
           <BrowserRouter>
             <SidebarProvider>
               <div className="min-h-screen flex w-full">
-                <AppSidebar />
+                <AppSidebar userEmail={userEmail} />
                 <div className="flex-1 flex flex-col">
                   <Header />
                   <main className={`mt-16 ${isMobile ? 'mb-16' : 'mb-0'}`}>
