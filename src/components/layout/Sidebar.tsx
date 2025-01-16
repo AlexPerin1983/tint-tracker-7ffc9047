@@ -131,26 +131,26 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* Seção 4: Logout */}
-        <SidebarFooter className="border-t border-slate-700/50 p-4">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton 
-                onClick={handleLogout}
-                className={cn(
-                  "flex items-center gap-3 w-full rounded-lg px-3 py-2.5",
-                  "hover:bg-slate-700/50 active:bg-slate-600/50",
-                  "transition-colors duration-200"
-                )}
-              >
-                <LogOut className="h-5 w-5 text-slate-400" />
-                <span className="text-slate-200">Logout</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
       </SidebarContent>
+
+      {/* Seção 4: Logout */}
+      <SidebarFooter className="border-t border-slate-700/50 p-4">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={handleLogout}
+              className={cn(
+                "flex items-center gap-3 w-full rounded-lg px-3 py-2.5",
+                "hover:bg-slate-700/50 active:bg-slate-600/50",
+                "transition-colors duration-200"
+              )}
+            >
+              <LogOut className="h-5 w-5 text-slate-400" />
+              <span className="text-slate-200">Logout</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };
