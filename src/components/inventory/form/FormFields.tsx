@@ -49,46 +49,52 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
   return (
     <>
-      <TabsContent value="basic" className="space-y-6 mt-6" hidden={activeTab !== "basic"}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem className="space-y-4">
-              <FormLabel>Nome do Material</FormLabel>
-              <FormControl>
-                <Input placeholder="Ex: Window Film Classic" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem className="space-y-4">
-              <FormLabel>Categoria</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
+      <TabsContent value="basic" className="mt-8 px-4" hidden={activeTab !== "basic"}>
+        <div className="space-y-8">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="space-y-6">
+                <FormLabel className="text-lg">Nome do Material</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
-                  </SelectTrigger>
+                  <Input 
+                    placeholder="Ex: Window Film Classic" 
+                    {...field} 
+                    className="py-6 text-lg"
+                  />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="Window Tinting">Window Tinting</SelectItem>
-                  <SelectItem value="PPF">PPF</SelectItem>
-                  <SelectItem value="Wrap">Wrap</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem className="space-y-6">
+                <FormLabel className="text-lg">Categoria</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="py-6 text-lg">
+                      <SelectValue placeholder="Selecione a categoria" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Window Tinting">Window Tinting</SelectItem>
+                    <SelectItem value="PPF">PPF</SelectItem>
+                    <SelectItem value="Wrap">Wrap</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </TabsContent>
 
       <TabsContent value="dimensions" className="space-y-8 mt-4" hidden={activeTab !== "dimensions"}>
