@@ -66,7 +66,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             <div className="text-4xl font-bold text-white">{filters.minLength || "0,00"}</div>
             <Slider
               defaultValue={[Number(filters.minLength) || 0]}
-              max={2}
+              max={30}
               step={0.01}
               onValueChange={([value]) => handleInputChange("minLength", value.toString())}
               className="py-4"
@@ -78,19 +78,17 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             <div className="text-4xl font-bold text-white">{filters.minWidth || "0,00"}</div>
             <Slider
               defaultValue={[Number(filters.minWidth) || 0]}
-              max={2}
+              max={6}
               step={0.01}
               onValueChange={([value]) => handleInputChange("minWidth", value.toString())}
               className="py-4"
             />
           </div>
 
-          {itemCount !== undefined && (
-            <div className="pt-8">
-              <span className="text-yellow-400 text-3xl font-bold">{itemCount}</span>
-              <span className="text-slate-300 text-xl ml-2">encontrados</span>
-            </div>
-          )}
+          <div className="pt-4">
+            <span className="text-yellow-400 text-3xl font-bold">{itemCount || 0}</span>
+            <span className="text-slate-300 text-xl ml-2">encontrados</span>
+          </div>
         </div>
       )}
     </div>
