@@ -1,44 +1,66 @@
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { QuantityPicker } from "@/components/ui/quantity-picker";
-import { memo, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Filter } from "lucide-react";
+import { Filters } from "@/types/inventory";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useEffect, useState } from "react";
 
-interface FormFieldsProps {
-  form: any;
-  activeTab: string;
+interface FilterFieldsProps {
+  filters: Filters;
+  onFilterChange: (filters: Filters) => void;
+  variant?: "horizontal" | "vertical";
+  itemCount?: number;
 }
 
-const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
+export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
+  const [localName, setLocalName] = useState(filters.name);
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
-  const [sliderLength, setSliderLength] = useState([form.getValues("length") || 0]);
-  const [sliderWidth, setSliderWidth] = useState([form.getValues("width") || 0]);
+  const [sliderLength, setSliderLength] = useState([Number(filters.minLength) || 0]);
+  const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0]);
+  const debouncedName = useDebounce(localName, 300);
 
-  const handleInputClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  // Efeito para atualizar os estados locais quando os filtros são limpos
+  useEffect(() => {
+    setSliderLength([Number(filters.minLength) || 0]);
+    setSliderWidth([Number(filters.minWidth) || 0]);
+  }, [filters.minLength, filters.minWidth]);
+
+  useEffect(() => {
+    onFilterChange({ ...filters, name: debouncedName });
+  }, [debouncedName]);
+
+  const handleInputChange = (field: keyof Filters, value: string | number) => {
+    if (field === "name") {
+      setLocalName(value as string);
+    } else {
+      onFilterChange({ ...filters, [field]: value });
+    }
   };
 
-  const handleNumericInput = (field: "length" | "width", value: string) => {
+  const handleNumericInput = (field: "minLength" | "minWidth", value: string) => {
+    // Se o valor estiver vazio, permitimos isso temporariamente
     if (value === "") {
-      if (field === "length") {
+      handleInputChange(field, "0");
+      if (field === "minLength") {
         setSliderLength([0]);
       } else {
         setSliderWidth([0]);
       }
-      form.setValue(field, "");
       return;
     }
 
+    // Validamos se é um número válido
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      const maxValue = field === "length" ? 60 : 1.82;
-      if (numValue <= maxValue) {
-        form.setValue(field, numValue);
-        if (field === "length") {
+      if ((field === "minLength" && numValue <= 60) || 
+          (field === "minWidth" && numValue <= 1.82)) {
+        handleInputChange(field, numValue.toString());
+        // Atualiza o slider correspondente
+        if (field === "minLength") {
           setSliderLength([numValue]);
         } else {
           setSliderWidth([numValue]);
@@ -47,40 +69,56 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
     }
   };
 
+  const containerClass = variant === "vertical" 
+    ? "space-y-6" 
+    : "grid grid-cols-1 md:grid-cols-3 gap-4";
+
+  const handleInputClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <>
-      <TabsContent value="basic" className="mt-8 px-4" hidden={activeTab !== "basic"}>
-        <div className="space-y-8">
+      <TabsContent 
+        value="basic" 
+        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20" 
+        hidden={variant !== "horizontal"}
+      >
+        <div className="grid gap-8">
           <FormField
-            control={form.control}
+            control={undefined}
             name="name"
             render={({ field }) => (
-              <FormItem className="space-y-6">
-                <FormLabel className="text-lg">Nome do Material</FormLabel>
+              <FormItem className="bg-background/50 p-6 rounded-lg border border-muted/10">
+                <FormLabel className="text-lg font-medium mb-4 block">
+                  Nome do Material
+                </FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Ex: Window Film Classic" 
                     {...field} 
-                    className="py-6 text-lg"
+                    className="h-14 text-lg bg-background"
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="mt-3" />
               </FormItem>
             )}
           />
 
           <FormField
-            control={form.control}
+            control={undefined}
             name="category"
             render={({ field }) => (
-              <FormItem className="space-y-6">
-                <FormLabel className="text-lg">Categoria</FormLabel>
+              <FormItem className="bg-background/50 p-6 rounded-lg border border-muted/10">
+                <FormLabel className="text-lg font-medium mb-4 block">
+                  Categoria
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="py-6 text-lg">
+                    <SelectTrigger className="h-14 text-lg bg-background">
                       <SelectValue placeholder="Selecione a categoria" />
                     </SelectTrigger>
                   </FormControl>
@@ -90,118 +128,113 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                     <SelectItem value="Wrap">Wrap</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
+                <FormMessage className="mt-3" />
               </FormItem>
             )}
           />
         </div>
       </TabsContent>
 
-      <TabsContent value="dimensions" className="space-y-8 mt-4" hidden={activeTab !== "dimensions"}>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
-            <div className="flex items-center h-full relative">
-              <div className="absolute right-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
-                <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">em estoque</span>
+      <TabsContent 
+        value="dimensions" 
+        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20" 
+        hidden={variant !== "dimensions"}
+      >
+        <div className="grid gap-8">
+          {variant === "vertical" && (
+            <div className="space-y-8">
+              <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
+                  <span className="text-xs text-slate-400">Máx: 60m</span>
+                </div>
+                <div 
+                  className="relative group cursor-pointer"
+                  onClick={() => setShowLengthInput(true)}
+                >
+                  {showLengthInput ? (
+                    <Input
+                      type="number"
+                      value={filters.minLength || ""}
+                      onChange={(e) => handleNumericInput("minLength", e.target.value)}
+                      onClick={handleInputClick}
+                      step="0.01"
+                      min="0"
+                      max="60"
+                      className="text-3xl font-bold bg-transparent border-blue-500 h-12"
+                      autoFocus
+                      onBlur={() => setShowLengthInput(false)}
+                    />
+                  ) : (
+                    <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                      {sliderLength[0].toFixed(2)}
+                      <span className="text-lg ml-1 text-slate-400">m</span>
+                    </div>
+                  )}
+                </div>
+                <Slider
+                  value={sliderLength}
+                  max={60}
+                  step={0.01}
+                  onValueChange={(value) => {
+                    setSliderLength(value);
+                    handleInputChange("minLength", value[0].toString());
+                  }}
+                  className="py-4"
+                />
               </div>
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
-                    <FormControl>
-                      <QuantityPicker
-                        value={field.value || 1}
-                        onChange={field.onChange}
-                        min={1}
-                        max={100}
-                        step={1}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
 
-          <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
-            <div className="flex items-center h-full relative">
-              <div className="absolute right-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
-                <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">alerta estoque</span>
+              <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
+                  <span className="text-xs text-slate-400">Máx: 1.82m</span>
+                </div>
+                <div 
+                  className="relative group cursor-pointer"
+                  onClick={() => setShowWidthInput(true)}
+                >
+                  {showWidthInput ? (
+                    <Input
+                      type="number"
+                      value={filters.minWidth || ""}
+                      onChange={(e) => handleNumericInput("minWidth", e.target.value)}
+                      onClick={handleInputClick}
+                      step="0.01"
+                      min="0"
+                      max="1.82"
+                      className="text-3xl font-bold bg-transparent border-blue-500 h-12"
+                      autoFocus
+                      onBlur={() => setShowWidthInput(false)}
+                    />
+                  ) : (
+                    <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                      {sliderWidth[0].toFixed(2)}
+                      <span className="text-lg ml-1 text-slate-400">m</span>
+                    </div>
+                  )}
+                </div>
+                <Slider
+                  value={sliderWidth}
+                  max={1.82}
+                  step={0.01}
+                  onValueChange={(value) => {
+                    setSliderWidth(value);
+                    handleInputChange("minWidth", value[0].toString());
+                  }}
+                  className="py-4"
+                />
               </div>
-              <FormField
-                control={form.control}
-                name="minQuantity"
-                render={({ field }) => (
-                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
-                    <FormControl>
-                      <QuantityPicker
-                        value={field.value || 1}
-                        onChange={(value) => field.onChange(value)}
-                        min={0}
-                        max={100}
-                        step={1}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700">
+                <div className="flex items-center gap-3">
+                  <span className="text-blue-500 text-3xl font-bold">{itemCount || 0}</span>
+                  <span className="text-slate-400 text-sm uppercase tracking-wider">itens encontrados</span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      </TabsContent>
-
-      <TabsContent value="price" className="space-y-4 mt-4" hidden={activeTab !== "price"}>
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Preço por m² (USD)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="Ex: 10.50"
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value ? parseFloat(e.target.value) : undefined
-                    )
-                  }
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="observation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Observação</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Item esta localizado na prateleira..."
-                  className="min-h-[100px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </TabsContent>
     </>
   );
-});
-
-FormFields.displayName = 'FormFields';
-
-export default FormFields;
+}
