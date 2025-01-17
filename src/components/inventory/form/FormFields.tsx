@@ -12,7 +12,7 @@ interface FormFieldsProps {
   activeTab: string;
 }
 
-const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
+const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
   const [sliderLength, setSliderLength] = useState([form.getValues("length") || 0]);
@@ -49,7 +49,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
   return (
     <>
-      <TabsContent value="basic" className="space-y-4 mt-4" hidden={activeTab !== "basic"}>
+      <TabsContent value="basic" className="space-y-4 mt-4">
         <FormField
           control={form.control}
           name="name"
@@ -91,7 +91,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         />
       </TabsContent>
 
-      <TabsContent value="dimensions" className="space-y-8 mt-4" hidden={activeTab !== "dimensions"}>
+      <TabsContent value="dimensions" className="space-y-8 mt-4">
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
@@ -231,7 +231,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         </div>
       </TabsContent>
 
-      <TabsContent value="price" className="space-y-4 mt-4" hidden={activeTab !== "price"}>
+      <TabsContent value="price" className="space-y-4 mt-4">
         <FormField
           control={form.control}
           name="price"
@@ -276,8 +276,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
       </TabsContent>
     </>
   );
-});
-
-FormFields.displayName = 'FormFields';
+};
 
 export default FormFields;
