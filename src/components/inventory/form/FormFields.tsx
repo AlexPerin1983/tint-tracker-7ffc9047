@@ -177,7 +177,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         <div className="grid grid-cols-2 gap-6">
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center h-full relative">
-              <div className="absolute left-0 flex items-center gap-1 bg-[#242936] px-3 py-2 rounded-lg">
+              <div className="absolute left-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
                 <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">em estoque</span>
               </div>
@@ -204,7 +204,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center h-full relative">
-              <div className="absolute left-0 flex items-center gap-1 bg-[#242936] px-3 py-2 rounded-lg">
+              <div className="absolute left-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
                 <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">alerta estoque</span>
               </div>
