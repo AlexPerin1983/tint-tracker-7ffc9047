@@ -175,19 +175,21 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd.</span>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd.</span>
+            </div>
             <FormField
               control={form.control}
               name="quantity"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-0">
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="Ex: 1"
-                      className="text-2xl font-bold bg-transparent border-none h-12 p-0 focus-visible:ring-0"
+                      className="text-2xl font-bold bg-transparent border-none h-10 p-0 focus-visible:ring-0"
                       {...field}
                       onChange={(e) => field.onChange(parseInt(e.target.value))}
                     />
@@ -198,18 +200,20 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
             />
           </div>
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd. Mín.</span>
+          <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd. Mín.</span>
+            </div>
             <FormField
               control={form.control}
               name="minQuantity"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-0">
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="Ex: 2"
-                      className="text-2xl font-bold bg-transparent border-none h-12 p-0 focus-visible:ring-0"
+                      className="text-2xl font-bold bg-transparent border-none h-10 p-0 focus-visible:ring-0"
                       {...field}
                       onChange={(e) =>
                         field.onChange(
