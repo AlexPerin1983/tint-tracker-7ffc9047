@@ -1,21 +1,30 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TabsContent } from "@/components/ui/tabs";
-import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
 import { Filter } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
+import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { TabsContent } from "@/components/ui/tabs";
 
-interface FilterFieldsProps {
-  filters: Filters;
-  onFilterChange: (filters: Filters) => void;
+interface FormFieldsProps {
+  form?: any;
+  activeTab?: string;
+  filters?: Filters;
+  onFilterChange?: (filters: Filters) => void;
   variant?: "horizontal" | "vertical";
   itemCount?: number;
 }
 
-export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
+const FormFields = ({ 
+  form, 
+  activeTab,
+  filters = {} as Filters, 
+  onFilterChange = () => {}, 
+  variant = "horizontal", 
+  itemCount 
+}: FormFieldsProps) => {
   const [localName, setLocalName] = useState(filters.name);
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
@@ -23,7 +32,6 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0]);
   const debouncedName = useDebounce(localName, 300);
 
-  // Efeito para atualizar os estados locais quando os filtros são limpos
   useEffect(() => {
     setSliderLength([Number(filters.minLength) || 0]);
     setSliderWidth([Number(filters.minWidth) || 0]);
@@ -42,7 +50,6 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   };
 
   const handleNumericInput = (field: "minLength" | "minWidth", value: string) => {
-    // Se o valor estiver vazio, permitimos isso temporariamente
     if (value === "") {
       handleInputChange(field, "0");
       if (field === "minLength") {
@@ -53,13 +60,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
       return;
     }
 
-    // Validamos se é um número válido
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       if ((field === "minLength" && numValue <= 60) || 
           (field === "minWidth" && numValue <= 1.82)) {
         handleInputChange(field, numValue.toString());
-        // Atualiza o slider correspondente
         if (field === "minLength") {
           setSliderLength([numValue]);
         } else {
@@ -77,16 +82,17 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     e.stopPropagation();
   };
 
+  // ... keep existing code (render methods and JSX)
+
   return (
     <>
       <TabsContent 
         value="basic" 
-        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20" 
-        hidden={variant !== "horizontal"}
+        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20"
       >
         <div className="grid gap-8">
           <FormField
-            control={undefined}
+            control={form?.control}
             name="name"
             render={({ field }) => (
               <FormItem className="bg-background/50 p-6 rounded-lg border border-muted/10">
@@ -106,7 +112,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           />
 
           <FormField
-            control={undefined}
+            control={form?.control}
             name="category"
             render={({ field }) => (
               <FormItem className="bg-background/50 p-6 rounded-lg border border-muted/10">
@@ -137,8 +143,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
       <TabsContent 
         value="dimensions" 
-        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20" 
-        hidden={variant !== "dimensions"}
+        className="p-8 bg-card rounded-lg shadow-lg border border-muted/20"
       >
         <div className="grid gap-8">
           {variant === "vertical" && (
@@ -237,4 +242,6 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
       </TabsContent>
     </>
   );
-}
+};
+
+export default FormFields;
