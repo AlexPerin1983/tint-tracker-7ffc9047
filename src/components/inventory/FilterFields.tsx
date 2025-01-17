@@ -4,6 +4,7 @@ import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 
 interface FilterFieldsProps {
   filters: Filters;
@@ -14,6 +15,8 @@ interface FilterFieldsProps {
 
 export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
   const [localName, setLocalName] = useState(filters.name);
+  const [showLengthInput, setShowLengthInput] = useState(false);
+  const [showWidthInput, setShowWidthInput] = useState(false);
   const debouncedName = useDebounce(localName, 300);
 
   useEffect(() => {
@@ -25,6 +28,16 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
       setLocalName(value as string);
     } else {
       onFilterChange({ ...filters, [field]: value });
+    }
+  };
+
+  const handleNumericInput = (field: "minLength" | "minWidth", value: string) => {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      if ((field === "minLength" && numValue <= 30) || 
+          (field === "minWidth" && numValue <= 6)) {
+        handleInputChange(field, numValue.toString());
+      }
     }
   };
 
@@ -63,7 +76,26 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         <div className="space-y-8 pt-4">
           <div className="space-y-4">
             <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
-            <div className="text-4xl font-bold text-white">{filters.minLength || "0,00"}</div>
+            <div 
+              className="text-4xl font-bold text-white cursor-pointer"
+              onClick={() => setShowLengthInput(!showLengthInput)}
+            >
+              {showLengthInput ? (
+                <Input
+                  type="number"
+                  value={filters.minLength || ""}
+                  onChange={(e) => handleNumericInput("minLength", e.target.value)}
+                  step="0.01"
+                  min="0"
+                  max="30"
+                  className="text-4xl font-bold bg-transparent border-yellow-400"
+                  autoFocus
+                  onBlur={() => setShowLengthInput(false)}
+                />
+              ) : (
+                filters.minLength || "0,00"
+              )}
+            </div>
             <Slider
               defaultValue={[Number(filters.minLength) || 0]}
               max={30}
@@ -75,7 +107,26 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
           <div className="space-y-4">
             <span className="text-yellow-400 text-lg font-medium">Largura</span>
-            <div className="text-4xl font-bold text-white">{filters.minWidth || "0,00"}</div>
+            <div 
+              className="text-4xl font-bold text-white cursor-pointer"
+              onClick={() => setShowWidthInput(!showWidthInput)}
+            >
+              {showWidthInput ? (
+                <Input
+                  type="number"
+                  value={filters.minWidth || ""}
+                  onChange={(e) => handleNumericInput("minWidth", e.target.value)}
+                  step="0.01"
+                  min="0"
+                  max="6"
+                  className="text-4xl font-bold bg-transparent border-yellow-400"
+                  autoFocus
+                  onBlur={() => setShowWidthInput(false)}
+                />
+              ) : (
+                filters.minWidth || "0,00"
+              )}
+            </div>
             <Slider
               defaultValue={[Number(filters.minWidth) || 0]}
               max={6}
