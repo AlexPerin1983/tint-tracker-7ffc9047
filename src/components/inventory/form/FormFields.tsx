@@ -21,6 +21,33 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
     e.stopPropagation();
   };
 
+  const handleNumericInput = (field: "length" | "width", value: string) => {
+    // Se o valor estiver vazio, permitimos isso temporariamente
+    if (value === "") {
+      if (field === "length") {
+        setSliderLength([0]);
+      } else {
+        setSliderWidth([0]);
+      }
+      form.setValue(field, "");
+      return;
+    }
+
+    // Validamos se é um número válido
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      const maxValue = field === "length" ? 60 : 1.82;
+      if (numValue <= maxValue) {
+        form.setValue(field, numValue);
+        if (field === "length") {
+          setSliderLength([numValue]);
+        } else {
+          setSliderWidth([numValue]);
+        }
+      }
+    }
+  };
+
   return (
     <>
       <TabsContent value="basic" className="space-y-4 mt-4" hidden={activeTab !== "basic"}>
@@ -79,13 +106,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               <Input
                 type="number"
                 value={form.getValues("length") || ""}
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value) && value <= 60) {
-                    form.setValue("length", value);
-                    setSliderLength([value]);
-                  }
-                }}
+                onChange={(e) => handleNumericInput("length", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
@@ -96,7 +117,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {sliderLength[0].toFixed(2)}
+                {(form.getValues("length") || 0).toFixed(2)}
                 <span className="text-lg ml-1 text-slate-400">m</span>
               </div>
             )}
@@ -126,13 +147,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               <Input
                 type="number"
                 value={form.getValues("width") || ""}
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  if (!isNaN(value) && value <= 1.82) {
-                    form.setValue("width", value);
-                    setSliderWidth([value]);
-                  }
-                }}
+                onChange={(e) => handleNumericInput("width", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
@@ -143,7 +158,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {sliderWidth[0].toFixed(2)}
+                {(form.getValues("width") || 0).toFixed(2)}
                 <span className="text-lg ml-1 text-slate-400">m</span>
               </div>
             )}
