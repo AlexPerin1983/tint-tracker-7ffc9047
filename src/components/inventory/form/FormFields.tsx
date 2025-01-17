@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { memo, useState } from "react";
+import { QuantityPicker } from "@/components/ui/quantity-picker";
 
 interface FormFieldsProps {
   form: any;
@@ -187,12 +188,12 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Ex: 1"
-                      className="text-2xl font-bold bg-transparent border-none h-10 p-0 focus-visible:ring-0"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    <QuantityPicker
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      min={0}
+                      max={100}
+                      step={1}
                     />
                   </FormControl>
                   <FormMessage />
@@ -212,16 +213,12 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
               render={({ field }) => (
                 <FormItem className="space-y-0">
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Ex: 2"
-                      className="text-2xl font-bold bg-transparent border-none h-10 p-0 focus-visible:ring-0"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseInt(e.target.value) : undefined
-                        )
-                      }
+                    <QuantityPicker
+                      value={field.value || 0}
+                      onChange={(value) => field.onChange(value)}
+                      min={0}
+                      max={100}
+                      step={1}
                     />
                   </FormControl>
                   <FormMessage />
