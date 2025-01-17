@@ -176,16 +176,16 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
-            <div className="flex flex-col h-full">
-              <div className="flex flex-col items-center mb-2">
-                <span className="text-[#D3E4FD] text-sm font-medium uppercase">QTD</span>
-                <span className="text-[#D3E4FD] text-xs">em estoque</span>
+            <div className="flex items-center justify-between h-full">
+              <div className="flex flex-col justify-between h-full py-2">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">em estoque</span>
               </div>
               <FormField
                 control={form.control}
                 name="quantity"
                 render={({ field }) => (
-                  <FormItem className="flex-1 flex items-center justify-center">
+                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
                     <FormControl>
                       <QuantityPicker
                         value={field.value || 1}
@@ -203,16 +203,16 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
           </div>
 
           <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
-            <div className="flex flex-col h-full">
-              <div className="flex flex-col items-center mb-2">
-                <span className="text-[#D3E4FD] text-sm font-medium uppercase">QTD</span>
-                <span className="text-[#D3E4FD] text-xs">alerta estoque</span>
+            <div className="flex items-center justify-between h-full">
+              <div className="flex flex-col justify-between h-full py-2">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">alerta estoque</span>
               </div>
               <FormField
                 control={form.control}
                 name="minQuantity"
                 render={({ field }) => (
-                  <FormItem className="flex-1 flex items-center justify-center">
+                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
                     <FormControl>
                       <QuantityPicker
                         value={field.value || 1}
