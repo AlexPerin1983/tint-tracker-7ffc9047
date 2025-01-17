@@ -17,6 +17,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   const [localName, setLocalName] = useState(filters.name);
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
+  const [sliderLength, setSliderLength] = useState([Number(filters.minLength) || 0]);
+  const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0]);
   const debouncedName = useDebounce(localName, 300);
 
   useEffect(() => {
@@ -35,6 +37,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     // Se o valor estiver vazio, permitimos isso temporariamente
     if (value === "") {
       handleInputChange(field, "0");
+      if (field === "minLength") {
+        setSliderLength([0]);
+      } else {
+        setSliderWidth([0]);
+      }
       return;
     }
 
@@ -44,6 +51,12 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
       if ((field === "minLength" && numValue <= 30) || 
           (field === "minWidth" && numValue <= 6)) {
         handleInputChange(field, numValue.toString());
+        // Atualiza o slider correspondente
+        if (field === "minLength") {
+          setSliderLength([numValue]);
+        } else {
+          setSliderWidth([numValue]);
+        }
       }
     }
   };
@@ -109,16 +122,19 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                 />
               ) : (
                 <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                  {filters.minLength || "0,00"}
+                  {sliderLength[0].toFixed(2)}
                   <span className="text-lg ml-1 text-slate-400">m</span>
                 </div>
               )}
             </div>
             <Slider
-              defaultValue={[Number(filters.minLength) || 0]}
+              value={sliderLength}
               max={30}
               step={0.01}
-              onValueChange={([value]) => handleInputChange("minLength", value.toString())}
+              onValueChange={(value) => {
+                setSliderLength(value);
+                handleInputChange("minLength", value[0].toString());
+              }}
               className="py-4"
             />
           </div>
@@ -147,16 +163,19 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                 />
               ) : (
                 <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                  {filters.minWidth || "0,00"}
+                  {sliderWidth[0].toFixed(2)}
                   <span className="text-lg ml-1 text-slate-400">m</span>
                 </div>
               )}
             </div>
             <Slider
-              defaultValue={[Number(filters.minWidth) || 0]}
+              value={sliderWidth}
               max={6}
               step={0.01}
-              onValueChange={([value]) => handleInputChange("minWidth", value.toString())}
+              onValueChange={(value) => {
+                setSliderWidth(value);
+                handleInputChange("minWidth", value[0].toString());
+              }}
               className="py-4"
             />
           </div>
