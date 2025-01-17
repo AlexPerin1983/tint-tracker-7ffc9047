@@ -45,6 +45,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     ? "space-y-6" 
     : "grid grid-cols-1 md:grid-cols-3 gap-4";
 
+  const handleInputClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className={containerClass}>
       <Select
@@ -81,13 +85,14 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             </div>
             <div 
               className="relative group cursor-pointer"
-              onClick={() => setShowLengthInput(!showLengthInput)}
+              onClick={() => setShowLengthInput(true)}
             >
               {showLengthInput ? (
                 <Input
                   type="number"
                   value={filters.minLength || ""}
                   onChange={(e) => handleNumericInput("minLength", e.target.value)}
+                  onClick={handleInputClick}
                   step="0.01"
                   min="0"
                   max="30"
@@ -118,13 +123,14 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             </div>
             <div 
               className="relative group cursor-pointer"
-              onClick={() => setShowWidthInput(!showWidthInput)}
+              onClick={() => setShowWidthInput(true)}
             >
               {showWidthInput ? (
                 <Input
                   type="number"
                   value={filters.minWidth || ""}
                   onChange={(e) => handleNumericInput("minWidth", e.target.value)}
+                  onClick={handleInputClick}
                   step="0.01"
                   min="0"
                   max="6"
