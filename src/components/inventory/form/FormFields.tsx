@@ -179,6 +179,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
           <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between mb-2">
               <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd.</span>
+              <span className="text-slate-400 text-[10px] leading-tight">em estoque</span>
             </div>
             <FormField
               control={form.control}
