@@ -4,7 +4,6 @@ import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
 
 interface FilterFieldsProps {
   filters: Filters;
@@ -60,28 +59,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         </SelectContent>
       </Select>
 
-      {variant === "horizontal" ? (
-        <>
-          <Input
-            type="number"
-            placeholder="Largura mínima (m)"
-            value={filters.minWidth}
-            onChange={(e) => handleInputChange("minWidth", e.target.value)}
-            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
-            min="0"
-            step="0.01"
-          />
-          <Input
-            type="number"
-            placeholder="Comprimento mínimo (m)"
-            value={filters.minLength}
-            onChange={(e) => handleInputChange("minLength", e.target.value)}
-            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
-            min="0"
-            step="0.01"
-          />
-        </>
-      ) : (
+      {variant === "vertical" && (
         <div className="space-y-8 pt-4">
           <div className="space-y-4">
             <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
