@@ -11,7 +11,6 @@ interface FilterSheetProps {
   onFilterChange: (filters: Filters) => void;
   onClearFilters: () => void;
   onApplyFilters: () => void;
-  itemCount?: number;
 }
 
 export function FilterSheet({
@@ -21,7 +20,6 @@ export function FilterSheet({
   onFilterChange,
   onClearFilters,
   onApplyFilters,
-  itemCount,
 }: FilterSheetProps) {
   const handleApplyFilters = () => {
     onApplyFilters();
@@ -30,7 +28,7 @@ export function FilterSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md bg-[#1A1F2C] border-none p-0">
+      <SheetContent className="w-full sm:max-w-md bg-[#1E293B] border-none p-0">
         <SheetHeader className="p-6 border-b border-slate-700">
           <div className="flex items-center gap-2">
             <Filter className="w-5 h-5 text-blue-500" />
@@ -43,11 +41,10 @@ export function FilterSheet({
             filters={filters}
             onFilterChange={onFilterChange}
             variant="vertical"
-            itemCount={itemCount}
           />
         </div>
 
-        <div className="border-t border-slate-700 p-6 bg-[#1A1F2C] sticky bottom-0">
+        <div className="border-t border-slate-700 p-6 bg-[#1E293B] sticky bottom-0">
           <div className="flex gap-3 justify-between">
             <Button
               variant="outline"
