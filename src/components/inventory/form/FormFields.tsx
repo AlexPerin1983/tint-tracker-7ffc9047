@@ -23,7 +23,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
   };
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    // Se o valor estiver vazio, permitimos isso temporariamente
     if (value === "") {
       if (field === "length") {
         setSliderLength([0]);
@@ -34,7 +33,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
       return;
     }
 
-    // Validamos se é um número válido
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       const maxValue = field === "length" ? 60 : 1.82;
@@ -189,9 +187,9 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                 <FormItem className="space-y-0">
                   <FormControl>
                     <QuantityPicker
-                      value={field.value || 0}
+                      value={field.value || 1}
                       onChange={field.onChange}
-                      min={0}
+                      min={1}
                       max={100}
                       step={1}
                     />
@@ -214,7 +212,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                 <FormItem className="space-y-0">
                   <FormControl>
                     <QuantityPicker
-                      value={field.value || 0}
+                      value={field.value || 1}
                       onChange={(value) => field.onChange(value)}
                       min={0}
                       max={100}
