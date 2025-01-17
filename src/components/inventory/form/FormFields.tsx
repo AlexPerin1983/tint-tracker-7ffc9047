@@ -177,9 +177,9 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd.</span>
-                <span className="block text-slate-400 text-xs">em estoque</span>
+              <div className="flex flex-col items-center">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] mt-2">em estoque</span>
               </div>
               <FormField
                 control={form.control}
@@ -204,9 +204,9 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
           <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Qtd. Mín.</span>
-                <span className="block text-slate-400 text-xs">alerta em estoque</span>
+              <div className="flex flex-col items-center">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] mt-2">alerta estoque</span>
               </div>
               <FormField
                 control={form.control}
