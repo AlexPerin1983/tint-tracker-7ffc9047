@@ -90,7 +90,7 @@ export const QuantityPicker = ({
     );
   };
 
-  const adjacentNumbers = [-2, -1, 0, 1, 2].map((offset) => {
+  const adjacentNumbers = [-1, 0, 1].map((offset) => {
     const num = currentValue + offset;
     if (num < min || num > max) return null;
     return (
@@ -109,7 +109,7 @@ export const QuantityPicker = ({
   return (
     <div
       ref={containerRef}
-      className="relative h-40 overflow-hidden cursor-pointer touch-none select-none"
+      className="relative h-28 overflow-hidden cursor-pointer touch-none select-none"
       onMouseDown={handleMouseDown}
       onMouseMove={isDragging ? handleMouseMove : undefined}
       onTouchStart={handleTouchStart}
@@ -118,7 +118,7 @@ export const QuantityPicker = ({
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="h-10 w-full bg-gradient-to-b from-transparent via-blue-500/10 to-transparent" />
       </div>
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
         {adjacentNumbers}
       </div>
     </div>
