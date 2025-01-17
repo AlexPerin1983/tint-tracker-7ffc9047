@@ -4,14 +4,16 @@ import { Filter } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
+import { Slider } from "@/components/ui/slider";
 
 interface FilterFieldsProps {
   filters: Filters;
   onFilterChange: (filters: Filters) => void;
   variant?: "horizontal" | "vertical";
+  itemCount?: number;
 }
 
-export function FilterFields({ filters, onFilterChange, variant = "horizontal" }: FilterFieldsProps) {
+export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
   const [localName, setLocalName] = useState(filters.name);
   const debouncedName = useDebounce(localName, 300);
 
@@ -19,21 +21,16 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal" }
     onFilterChange({ ...filters, name: debouncedName });
   }, [debouncedName]);
 
-  const handleInputChange = (field: keyof Filters, value: string) => {
+  const handleInputChange = (field: keyof Filters, value: string | number) => {
     if (field === "name") {
-      setLocalName(value);
+      setLocalName(value as string);
     } else {
       onFilterChange({ ...filters, [field]: value });
     }
   };
 
-  const validateDimension = (value: string) => {
-    const num = parseFloat(value);
-    return value === "" || (!isNaN(num) && num > 0);
-  };
-
   const containerClass = variant === "vertical" 
-    ? "space-y-4" 
+    ? "space-y-6" 
     : "grid grid-cols-1 md:grid-cols-4 gap-4";
 
   return (
@@ -42,10 +39,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal" }
         value={filters.category}
         onValueChange={(value) => handleInputChange("category", value)}
       >
-        <SelectTrigger>
+        <SelectTrigger className="bg-[#1A1F2C] border-slate-700">
           <SelectValue placeholder="Categoria">
             <div className="flex items-center gap-2">
-              {filters.category === "all" && <Filter className="w-4 h-4" />}
+              <Filter className="w-4 h-4" />
               {filters.category === "all" ? "Todas" : filters.category}
             </div>
           </SelectValue>
@@ -63,40 +60,76 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal" }
         </SelectContent>
       </Select>
 
-      <Input
-        placeholder="Buscar por nome..."
-        value={localName}
-        onChange={(e) => handleInputChange("name", e.target.value)}
-        className="bg-[#273347] text-white placeholder:text-[#94A3B8]"
-      />
+      {variant === "horizontal" ? (
+        <>
+          <Input
+            placeholder="Buscar por nome..."
+            value={localName}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
+          />
+          <Input
+            type="number"
+            placeholder="Largura mínima (m)"
+            value={filters.minWidth}
+            onChange={(e) => handleInputChange("minWidth", e.target.value)}
+            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
+            min="0"
+            step="0.01"
+          />
+          <Input
+            type="number"
+            placeholder="Comprimento mínimo (m)"
+            value={filters.minLength}
+            onChange={(e) => handleInputChange("minLength", e.target.value)}
+            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
+            min="0"
+            step="0.01"
+          />
+        </>
+      ) : (
+        <>
+          <Input
+            placeholder="Buscar por nome..."
+            value={localName}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
+          />
+          
+          <div className="space-y-8 pt-4">
+            <div className="space-y-4">
+              <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
+              <div className="text-4xl font-bold text-white">{filters.minLength || "0,00"}</div>
+              <Slider
+                defaultValue={[Number(filters.minLength) || 0]}
+                max={2}
+                step={0.01}
+                onValueChange={([value]) => handleInputChange("minLength", value.toString())}
+                className="py-4"
+              />
+            </div>
 
-      <Input
-        type="number"
-        placeholder="Largura mínima (m)"
-        value={filters.minWidth}
-        onChange={(e) => {
-          if (validateDimension(e.target.value)) {
-            handleInputChange("minWidth", e.target.value);
-          }
-        }}
-        className="bg-[#273347] text-white placeholder:text-[#94A3B8]"
-        min="0"
-        step="0.01"
-      />
+            <div className="space-y-4">
+              <span className="text-yellow-400 text-lg font-medium">Largura</span>
+              <div className="text-4xl font-bold text-white">{filters.minWidth || "0,00"}</div>
+              <Slider
+                defaultValue={[Number(filters.minWidth) || 0]}
+                max={2}
+                step={0.01}
+                onValueChange={([value]) => handleInputChange("minWidth", value.toString())}
+                className="py-4"
+              />
+            </div>
 
-      <Input
-        type="number"
-        placeholder="Comprimento mínimo (m)"
-        value={filters.minLength}
-        onChange={(e) => {
-          if (validateDimension(e.target.value)) {
-            handleInputChange("minLength", e.target.value);
-          }
-        }}
-        className="bg-[#273347] text-white placeholder:text-[#94A3B8]"
-        min="0"
-        step="0.01"
-      />
+            {itemCount !== undefined && (
+              <div className="pt-4">
+                <span className="text-yellow-400 text-2xl font-bold">{itemCount}</span>
+                <span className="text-slate-300 text-lg ml-2">encontrados</span>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
