@@ -177,10 +177,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between h-full">
-              <div className="flex flex-col justify-between h-full py-2">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">em estoque</span>
-              </div>
               <FormField
                 control={form.control}
                 name="quantity"
@@ -199,15 +195,15 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                   </FormItem>
                 )}
               />
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">em estoque</span>
+              </div>
             </div>
           </div>
 
           <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between h-full">
-              <div className="flex flex-col justify-between h-full py-2">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">alerta estoque</span>
-              </div>
               <FormField
                 control={form.control}
                 name="minQuantity"
@@ -226,6 +222,10 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                   </FormItem>
                 )}
               />
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">alerta estoque</span>
+              </div>
             </div>
           </div>
         </div>
