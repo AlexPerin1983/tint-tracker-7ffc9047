@@ -195,7 +195,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col items-start gap-1">
+              <div className="flex items-center gap-2">
                 <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">em estoque</span>
               </div>
@@ -222,7 +222,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col items-start gap-1">
+              <div className="flex items-center gap-2">
                 <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">alerta estoque</span>
               </div>
