@@ -4,8 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { memo, useState } from "react";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
+import { memo, useState } from "react";
 
 interface FormFieldsProps {
   form: any;
@@ -49,12 +49,12 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
   return (
     <>
-      <TabsContent value="basic" className="space-y-4 mt-4" hidden={activeTab !== "basic"}>
+      <TabsContent value="basic" className="space-y-6 mt-6" hidden={activeTab !== "basic"}>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-4">
               <FormLabel>Nome do Material</FormLabel>
               <FormControl>
                 <Input placeholder="Ex: Window Film Classic" {...field} />
@@ -68,7 +68,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
           control={form.control}
           name="category"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-4">
               <FormLabel>Categoria</FormLabel>
               <Select
                 onValueChange={field.onChange}
