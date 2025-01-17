@@ -21,6 +21,12 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0]);
   const debouncedName = useDebounce(localName, 300);
 
+  // Efeito para atualizar os estados locais quando os filtros são limpos
+  useEffect(() => {
+    setSliderLength([Number(filters.minLength) || 0]);
+    setSliderWidth([Number(filters.minWidth) || 0]);
+  }, [filters.minLength, filters.minWidth]);
+
   useEffect(() => {
     onFilterChange({ ...filters, name: debouncedName });
   }, [debouncedName]);
