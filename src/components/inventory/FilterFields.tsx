@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
 import { Filters } from "@/types/inventory";
@@ -31,7 +30,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
   const containerClass = variant === "vertical" 
     ? "space-y-6" 
-    : "grid grid-cols-1 md:grid-cols-4 gap-4";
+    : "grid grid-cols-1 md:grid-cols-3 gap-4";
 
   return (
     <div className={containerClass}>
@@ -63,12 +62,6 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
       {variant === "horizontal" ? (
         <>
           <Input
-            placeholder="Buscar por nome..."
-            value={localName}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
-          />
-          <Input
             type="number"
             placeholder="Largura mínima (m)"
             value={filters.minWidth}
@@ -88,47 +81,38 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           />
         </>
       ) : (
-        <>
-          <Input
-            placeholder="Buscar por nome..."
-            value={localName}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            className="bg-[#1A1F2C] border-slate-700 text-white placeholder:text-slate-400"
-          />
-          
-          <div className="space-y-8 pt-4">
-            <div className="space-y-4">
-              <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
-              <div className="text-4xl font-bold text-white">{filters.minLength || "0,00"}</div>
-              <Slider
-                defaultValue={[Number(filters.minLength) || 0]}
-                max={2}
-                step={0.01}
-                onValueChange={([value]) => handleInputChange("minLength", value.toString())}
-                className="py-4"
-              />
-            </div>
-
-            <div className="space-y-4">
-              <span className="text-yellow-400 text-lg font-medium">Largura</span>
-              <div className="text-4xl font-bold text-white">{filters.minWidth || "0,00"}</div>
-              <Slider
-                defaultValue={[Number(filters.minWidth) || 0]}
-                max={2}
-                step={0.01}
-                onValueChange={([value]) => handleInputChange("minWidth", value.toString())}
-                className="py-4"
-              />
-            </div>
-
-            {itemCount !== undefined && (
-              <div className="pt-4">
-                <span className="text-yellow-400 text-2xl font-bold">{itemCount}</span>
-                <span className="text-slate-300 text-lg ml-2">encontrados</span>
-              </div>
-            )}
+        <div className="space-y-8 pt-4">
+          <div className="space-y-4">
+            <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
+            <div className="text-4xl font-bold text-white">{filters.minLength || "0,00"}</div>
+            <Slider
+              defaultValue={[Number(filters.minLength) || 0]}
+              max={2}
+              step={0.01}
+              onValueChange={([value]) => handleInputChange("minLength", value.toString())}
+              className="py-4"
+            />
           </div>
-        </>
+
+          <div className="space-y-4">
+            <span className="text-yellow-400 text-lg font-medium">Largura</span>
+            <div className="text-4xl font-bold text-white">{filters.minWidth || "0,00"}</div>
+            <Slider
+              defaultValue={[Number(filters.minWidth) || 0]}
+              max={2}
+              step={0.01}
+              onValueChange={([value]) => handleInputChange("minWidth", value.toString())}
+              className="py-4"
+            />
+          </div>
+
+          {itemCount !== undefined && (
+            <div className="pt-4">
+              <span className="text-yellow-400 text-2xl font-bold">{itemCount}</span>
+              <span className="text-slate-300 text-lg ml-2">encontrados</span>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
