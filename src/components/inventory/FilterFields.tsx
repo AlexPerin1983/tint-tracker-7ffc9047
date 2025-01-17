@@ -54,8 +54,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     // Validamos se é um número válido
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      if ((field === "minLength" && numValue <= 30) || 
-          (field === "minWidth" && numValue <= 6)) {
+      if ((field === "minLength" && numValue <= 60) || 
+          (field === "minWidth" && numValue <= 1.82)) {
         handleInputChange(field, numValue.toString());
         // Atualiza o slider correspondente
         if (field === "minLength") {
@@ -107,7 +107,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
               <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
-              <span className="text-xs text-slate-400">Máx: 30m</span>
+              <span className="text-xs text-slate-400">Máx: 60m</span>
             </div>
             <div 
               className="relative group cursor-pointer"
@@ -121,7 +121,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                   onClick={handleInputClick}
                   step="0.01"
                   min="0"
-                  max="30"
+                  max="60"
                   className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                   autoFocus
                   onBlur={() => setShowLengthInput(false)}
@@ -135,7 +135,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             </div>
             <Slider
               value={sliderLength}
-              max={30}
+              max={60}
               step={0.01}
               onValueChange={(value) => {
                 setSliderLength(value);
@@ -148,7 +148,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
               <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
-              <span className="text-xs text-slate-400">Máx: 6m</span>
+              <span className="text-xs text-slate-400">Máx: 1.82m</span>
             </div>
             <div 
               className="relative group cursor-pointer"
@@ -162,7 +162,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                   onClick={handleInputClick}
                   step="0.01"
                   min="0"
-                  max="6"
+                  max="1.82"
                   className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                   autoFocus
                   onBlur={() => setShowWidthInput(false)}
@@ -176,7 +176,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             </div>
             <Slider
               value={sliderWidth}
-              max={6}
+              max={1.82}
               step={0.01}
               onValueChange={(value) => {
                 setSliderWidth(value);
