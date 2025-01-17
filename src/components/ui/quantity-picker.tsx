@@ -19,7 +19,10 @@ export const QuantityPicker = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentValue, setCurrentValue] = useState(value);
+  const [dragSensitivity, setDragSensitivity] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastMoveTime = useRef<number>(Date.now());
+  const accumulatedDelta = useRef<number>(0);
 
   useEffect(() => {
     setCurrentValue(value);
@@ -28,26 +31,43 @@ export const QuantityPicker = ({
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true);
     setStartY(e.touches[0].clientY);
+    lastMoveTime.current = Date.now();
+    accumulatedDelta.current = 0;
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartY(e.clientY);
+    lastMoveTime.current = Date.now();
+    accumulatedDelta.current = 0;
   };
 
   const handleMove = (clientY: number) => {
     if (!isDragging) return;
 
+    const currentTime = Date.now();
+    const timeDelta = currentTime - lastMoveTime.current;
+    lastMoveTime.current = currentTime;
+
     const delta = startY - clientY;
-    const sensitivity = 10; // Pixels por incremento
-    const valueChange = Math.floor(delta / sensitivity) * step;
-    
-    let newValue = value + valueChange;
-    newValue = Math.max(min, Math.min(max, newValue));
-    
-    if (newValue !== value) {
-      onChange(newValue);
-      setStartY(clientY);
+    accumulatedDelta.current += delta;
+
+    // Ajusta a sensibilidade com base na velocidade do movimento
+    const speed = Math.abs(delta / timeDelta);
+    const newSensitivity = Math.max(0.2, Math.min(1, 1 - speed * 0.1));
+    setDragSensitivity(newSensitivity);
+
+    // Requer mais movimento acumulado para mudar o valor
+    const threshold = 20; // pixels
+    if (Math.abs(accumulatedDelta.current) >= threshold) {
+      const direction = accumulatedDelta.current > 0 ? 1 : -1;
+      const newValue = Math.max(min, Math.min(max, value + direction * step));
+      
+      if (newValue !== value) {
+        onChange(newValue);
+        accumulatedDelta.current = 0;
+        setStartY(clientY);
+      }
     }
   };
 
@@ -62,6 +82,8 @@ export const QuantityPicker = ({
 
   const handleEnd = () => {
     setIsDragging(false);
+    setDragSensitivity(1);
+    accumulatedDelta.current = 0;
   };
 
   useEffect(() => {
@@ -84,6 +106,11 @@ export const QuantityPicker = ({
             ? "text-3xl font-bold text-white scale-100"
             : "text-lg text-slate-500 scale-75 opacity-50"
         )}
+        style={{
+          transform: `scale(${isCenter ? 1 : 0.75}) translateY(${
+            isDragging ? accumulatedDelta.current * dragSensitivity * 0.1 : 0
+          }px)`,
+        }}
       >
         {num}
       </div>
