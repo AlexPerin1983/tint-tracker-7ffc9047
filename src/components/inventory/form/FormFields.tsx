@@ -92,92 +92,10 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
       </TabsContent>
 
       <TabsContent value="dimensions" className="space-y-8 mt-4" hidden={activeTab !== "dimensions"}>
-        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
-            <span className="text-xs text-slate-400">Máx: 60m</span>
-          </div>
-          <div 
-            className="relative group cursor-pointer"
-            onClick={() => setShowLengthInput(true)}
-          >
-            {showLengthInput ? (
-              <Input
-                type="number"
-                value={form.getValues("length") || ""}
-                onChange={(e) => handleNumericInput("length", e.target.value)}
-                onClick={handleInputClick}
-                step="0.01"
-                min="0"
-                max="60"
-                className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-                autoFocus
-                onBlur={() => setShowLengthInput(false)}
-              />
-            ) : (
-              <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("length") || 0).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">m</span>
-              </div>
-            )}
-          </div>
-          <Slider
-            value={sliderLength}
-            max={60}
-            step={0.01}
-            onValueChange={(value) => {
-              setSliderLength(value);
-              form.setValue("length", value[0]);
-            }}
-            className="py-4"
-          />
-        </div>
-
-        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
-            <span className="text-xs text-slate-400">Máx: 1.82m</span>
-          </div>
-          <div 
-            className="relative group cursor-pointer"
-            onClick={() => setShowWidthInput(true)}
-          >
-            {showWidthInput ? (
-              <Input
-                type="number"
-                value={form.getValues("width") || ""}
-                onChange={(e) => handleNumericInput("width", e.target.value)}
-                onClick={handleInputClick}
-                step="0.01"
-                min="0"
-                max="1.82"
-                className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-                autoFocus
-                onBlur={() => setShowWidthInput(false)}
-              />
-            ) : (
-              <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("width") || 0).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">m</span>
-              </div>
-            )}
-          </div>
-          <Slider
-            value={sliderWidth}
-            max={1.82}
-            step={0.01}
-            onValueChange={(value) => {
-              setSliderWidth(value);
-              form.setValue("width", value[0]);
-            }}
-            className="py-4"
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-6">
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center h-full relative">
-              <div className="absolute left-0 flex items-center gap-2 bg-[#242936] px-3 py-2 rounded-lg">
+              <div className="absolute right-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
                 <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">em estoque</span>
               </div>
@@ -204,7 +122,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
 
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center h-full relative">
-              <div className="absolute left-0 flex items-center gap-2 bg-[#242936] px-3 py-2 rounded-lg">
+              <div className="absolute right-0 flex items-center gap-0.5 bg-[#242936] px-2 py-1.5 rounded-lg">
                 <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">alerta estoque</span>
               </div>
