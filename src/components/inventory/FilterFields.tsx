@@ -4,6 +4,7 @@ import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 
 interface FilterFieldsProps {
   filters: Filters;
@@ -107,9 +108,9 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           </div>
 
           {itemCount !== undefined && (
-            <div className="pt-4">
-              <span className="text-yellow-400 text-2xl font-bold">{itemCount}</span>
-              <span className="text-slate-300 text-lg ml-2">encontrados</span>
+            <div className="pt-8">
+              <span className="text-yellow-400 text-3xl font-bold">{itemCount}</span>
+              <span className="text-slate-300 text-xl ml-2">encontrados</span>
             </div>
           )}
         </div>
