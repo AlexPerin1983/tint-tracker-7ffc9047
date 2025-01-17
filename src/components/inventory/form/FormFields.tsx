@@ -177,7 +177,7 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
         <div className="grid grid-cols-2 gap-6">
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center justify-between h-full relative">
-              <div className="flex items-center gap-1 mr-6 bg-[#242936] px-3 py-2 rounded-lg">
+              <div className="absolute left-0 flex items-center gap-1 bg-[#242936] px-3 py-2 rounded-lg">
                 <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
                 <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">em estoque</span>
               </div>
@@ -203,7 +203,11 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
           </div>
 
           <div className="bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] aspect-square p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 shadow-lg hover:shadow-blue-500/10">
-            <div className="flex items-center justify-between h-full">
+            <div className="flex items-center justify-between h-full relative">
+              <div className="absolute left-0 flex items-center gap-1 bg-[#242936] px-3 py-2 rounded-lg">
+                <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">alerta estoque</span>
+              </div>
               <FormField
                 control={form.control}
                 name="minQuantity"
@@ -222,10 +226,6 @@ const FormFields = memo(({ form, activeTab }: FormFieldsProps) => {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center gap-1 ml-6 bg-[#242936] px-3 py-2 rounded-lg">
-                <span className="text-blue-400 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr] drop-shadow-sm">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr] opacity-75">alerta estoque</span>
-              </div>
             </div>
           </div>
         </div>
