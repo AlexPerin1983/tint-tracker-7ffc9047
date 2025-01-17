@@ -11,9 +11,10 @@ interface FilterBarProps {
   filters: Filters;
   onFilterChange: (filters: Filters) => void;
   onClearFilters: () => void;
+  itemCount?: number;
 }
 
-export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBarProps) {
+export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }: FilterBarProps) {
   const [showFilterSheet, setShowFilterSheet] = useState(false);
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -54,6 +55,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onApplyFilters={handleApplyFilters}
+          itemCount={itemCount}
         />
       </div>
     );
@@ -66,6 +68,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters }: FilterBar
           <FilterFields
             filters={filters}
             onFilterChange={handleFilterChange}
+            itemCount={itemCount}
           />
         </div>
         <Button

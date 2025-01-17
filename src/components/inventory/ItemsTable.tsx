@@ -72,6 +72,7 @@ export function ItemsTable() {
         filters={filters}
         onFilterChange={setFilters}
         onClearFilters={handleClearFilters}
+        itemCount={filteredItems.length}
       />
 
       <div className="rounded-md border border-muted">
