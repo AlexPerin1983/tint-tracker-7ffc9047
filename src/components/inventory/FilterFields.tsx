@@ -32,6 +32,13 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   };
 
   const handleNumericInput = (field: "minLength" | "minWidth", value: string) => {
+    // Se o valor estiver vazio, permitimos isso temporariamente
+    if (value === "") {
+      handleInputChange(field, "0");
+      return;
+    }
+
+    // Validamos se é um número válido
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       if ((field === "minLength" && numValue <= 30) || 
