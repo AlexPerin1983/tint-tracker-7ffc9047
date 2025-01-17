@@ -51,10 +51,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         value={filters.category}
         onValueChange={(value) => handleInputChange("category", value)}
       >
-        <SelectTrigger className="bg-[#1A1F2C] border-slate-700">
+        <SelectTrigger className="bg-[#1A1F2C] border-slate-700 hover:border-blue-500 transition-colors">
           <SelectValue placeholder="Categoria">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4" />
+              <Filter className="w-4 h-4 text-blue-500" />
               {filters.category === "all" ? "Todas" : filters.category}
             </div>
           </SelectValue>
@@ -74,10 +74,13 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
       {variant === "vertical" && (
         <div className="space-y-8 pt-4">
-          <div className="space-y-4">
-            <span className="text-yellow-400 text-lg font-medium">Comprimento</span>
+          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
+              <span className="text-xs text-slate-400">Máx: 30m</span>
+            </div>
             <div 
-              className="text-4xl font-bold text-white cursor-pointer"
+              className="relative group cursor-pointer"
               onClick={() => setShowLengthInput(!showLengthInput)}
             >
               {showLengthInput ? (
@@ -88,12 +91,15 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                   step="0.01"
                   min="0"
                   max="30"
-                  className="text-4xl font-bold bg-transparent border-yellow-400"
+                  className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                   autoFocus
                   onBlur={() => setShowLengthInput(false)}
                 />
               ) : (
-                filters.minLength || "0,00"
+                <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                  {filters.minLength || "0,00"}
+                  <span className="text-lg ml-1 text-slate-400">m</span>
+                </div>
               )}
             </div>
             <Slider
@@ -105,10 +111,13 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             />
           </div>
 
-          <div className="space-y-4">
-            <span className="text-yellow-400 text-lg font-medium">Largura</span>
+          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
+              <span className="text-xs text-slate-400">Máx: 6m</span>
+            </div>
             <div 
-              className="text-4xl font-bold text-white cursor-pointer"
+              className="relative group cursor-pointer"
               onClick={() => setShowWidthInput(!showWidthInput)}
             >
               {showWidthInput ? (
@@ -119,12 +128,15 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
                   step="0.01"
                   min="0"
                   max="6"
-                  className="text-4xl font-bold bg-transparent border-yellow-400"
+                  className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                   autoFocus
                   onBlur={() => setShowWidthInput(false)}
                 />
               ) : (
-                filters.minWidth || "0,00"
+                <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                  {filters.minWidth || "0,00"}
+                  <span className="text-lg ml-1 text-slate-400">m</span>
+                </div>
               )}
             </div>
             <Slider
@@ -136,9 +148,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             />
           </div>
 
-          <div className="pt-4">
-            <span className="text-yellow-400 text-3xl font-bold">{itemCount || 0}</span>
-            <span className="text-slate-300 text-xl ml-2">encontrados</span>
+          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700">
+            <div className="flex items-center gap-3">
+              <span className="text-blue-500 text-3xl font-bold">{itemCount || 0}</span>
+              <span className="text-slate-400 text-sm uppercase tracking-wider">itens encontrados</span>
+            </div>
           </div>
         </div>
       )}
