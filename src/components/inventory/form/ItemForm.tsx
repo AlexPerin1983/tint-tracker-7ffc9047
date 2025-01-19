@@ -3,6 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 import FormFields from "./FormFields";
 import { memo, useState } from "react";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 interface ItemFormProps {
   form: any;
@@ -12,7 +13,7 @@ interface ItemFormProps {
 }
 
 const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
-  const [activeTab, setActiveTab] = useState("basic");
+  const [activeTab, setActiveTab] = useLocalStorage("inventory-form-tab", "basic");
 
   return (
     <Form {...form}>
@@ -21,15 +22,15 @@ const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="basic" className="flex items-center gap-2">
               <Package2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Básico</span>
+              <span className="hidden sm:inline">Basic</span>
             </TabsTrigger>
             <TabsTrigger value="dimensions" className="flex items-center gap-2">
               <Ruler className="w-4 h-4" />
-              <span className="hidden sm:inline">Dimensões</span>
+              <span className="hidden sm:inline">Dimensions</span>
             </TabsTrigger>
             <TabsTrigger value="price" className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
-              <span className="hidden sm:inline">Preço</span>
+              <span className="hidden sm:inline">Price</span>
             </TabsTrigger>
           </TabsList>
 
