@@ -62,7 +62,6 @@ const App = () => {
     initializeAuth();
   }, []);
 
-  // Verifica a autorização a cada 5 minutos
   useEffect(() => {
     if (!userEmail) return;
 
@@ -101,9 +100,9 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/landing" element={<Landing />} />
+            <Route path="/" element={<Landing />} />
             <Route
-              path="*"
+              path="/app/*"
               element={
                 !isLoggedIn ? (
                   <LoginDialog onLogin={handleLogin} />
