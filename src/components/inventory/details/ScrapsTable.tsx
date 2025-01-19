@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Item } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
@@ -5,8 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrapCard } from "./ScrapCard";
 import { ScrapTable } from "./ScrapTable";
-import { Scissors, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Scissors, Plus, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ScrapsTableProps {
   scraps: Item[];
@@ -58,13 +59,47 @@ export function ScrapsTable({ scraps, parentItem, onAddScrap }: ScrapsTableProps
       <CardContent className="p-4 md:p-6 pt-0">
         {scraps.length > 0 ? (
           isMobile ? (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
               {scraps.map((scrap) => (
-                <ScrapCard
+                <div 
                   key={scrap.id}
-                  scrap={scrap}
-                  onDelete={handleDelete}
-                />
+                  className="bg-muted/20 p-4 rounded-lg space-y-3"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-primary">
+                        Code: {scrap.code}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Dimensions: {scrap.width.toFixed(2)}m x {scrap.length.toFixed(2)}m
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Area: {(scrap.width * scrap.length).toFixed(2)}m²
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Quantity: {scrap.quantity}
+                      </p>
+                      {scrap.observation && (
+                        <p className="text-sm text-muted-foreground">
+                          Observation: {scrap.observation}
+                        </p>
+                      )}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(scrap.id)}
+                      className="text-destructive hover:text-destructive/90"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Link to={`/scrap/${scrap.id}`}>
+                    <Button variant="secondary" size="sm" className="w-full">
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
               ))}
             </div>
           ) : (
