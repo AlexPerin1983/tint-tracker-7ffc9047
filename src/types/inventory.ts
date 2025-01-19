@@ -43,11 +43,12 @@ export interface ItemFormData {
 }
 
 export interface ScrapFormData {
-  originId: string;
   width: number;
   length: number;
   quantity: number;
   observation?: string;
+  id?: string; // Adicionando o campo id como opcional
+  originId?: string; // Adicionando o campo originId como opcional
 }
 
 export interface ConsumptionFormData {
