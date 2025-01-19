@@ -9,13 +9,14 @@ import { StockInfoCard } from "@/components/inventory/details/StockInfoCard";
 import { AreaSummaryCard } from "@/components/inventory/details/AreaSummaryCard";
 import { ScrapsTable } from "@/components/inventory/details/ScrapsTable";
 import { TransactionsTable } from "@/components/inventory/details/TransactionsTable";
-import { ActionButtons } from "@/components/inventory/details/ActionButtons";
+import { ConsumptionDialog } from "@/components/inventory/consumption/ConsumptionDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const ItemDetails = () => {
   const { id } = useParams();
   const { items, transactions } = useItems();
   const [showAddScrap, setShowAddScrap] = useState(false);
+  const [showConsumption, setShowConsumption] = useState(false);
   const isMobile = useIsMobile();
 
   const item = items.find((item) => item.id === id);
@@ -45,13 +46,17 @@ const ItemDetails = () => {
       <AreaSummaryCard item={item} scraps={scraps} />
       
       <div className="space-y-6">
-        <TransactionsTable transactions={itemTransactions} />
+        <TransactionsTable 
+          transactions={itemTransactions} 
+          onRecordUsage={() => setShowConsumption(true)} 
+        />
         <ScrapsTable scraps={scraps} parentItem={item} />
       </div>
 
-      <ActionButtons
+      <ConsumptionDialog 
+        open={showConsumption} 
+        onOpenChange={setShowConsumption} 
         item={item}
-        onAddScrap={() => setShowAddScrap(true)}
       />
 
       <AddScrapDialog 

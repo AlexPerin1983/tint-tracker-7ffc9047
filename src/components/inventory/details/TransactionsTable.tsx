@@ -2,13 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/types/inventory";
 import { formatDate } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { History } from "lucide-react";
+import { History, Scissors } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
+  onRecordUsage: () => void;
 }
 
-export function TransactionsTable({ transactions }: TransactionsTableProps) {
+export function TransactionsTable({ transactions, onRecordUsage }: TransactionsTableProps) {
   const isMobile = useIsMobile();
   const consumptionTransactions = transactions
     .filter(t => t.type === 'corte')
@@ -18,9 +20,19 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
     return (
       <Card className="shadow-md border border-muted hover:border-muted/80 transition-colors">
         <CardHeader className="p-4 md:p-6">
-          <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-primary" />
-            <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <History className="w-5 h-5 text-primary" />
+              <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+            </div>
+            <Button 
+              variant="default"
+              onClick={onRecordUsage}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+              Record Usage
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="p-4 md:p-6 pt-0">
@@ -35,9 +47,19 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
   return (
     <Card className="shadow-md border border-muted hover:border-muted/80 transition-colors">
       <CardHeader className="p-4 md:p-6">
-        <div className="flex items-center gap-2">
-          <History className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <History className="w-5 h-5 text-primary" />
+            <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+          </div>
+          <Button 
+            variant="default"
+            onClick={onRecordUsage}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+            Record Usage
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0">
