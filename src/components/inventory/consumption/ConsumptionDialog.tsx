@@ -15,18 +15,26 @@ import { useToast } from "@/hooks/use-toast";
 import { ConsumptionForm } from "./ConsumptionForm";
 
 const formSchema = z.object({
-  width: z.number().min(0.01, "Largura deve ser maior que 0"),
-  length: z.number().min(0.01, "Comprimento deve ser maior que 0"),
+  width: z.number()
+    .min(0.01, "Width must be greater than 0")
+    .max(1.82, "Maximum width is 1.82m"),
+  length: z.number()
+    .min(0.01, "Length must be greater than 0"),
   createScrap: z.boolean(),
-  scrapWidth: z.number().min(0.01, "Largura deve ser maior que 0").optional(),
-  scrapLength: z.number().min(0.01, "Comprimento deve ser maior que 0").optional(),
+  scrapWidth: z.number()
+    .min(0.01, "Width must be greater than 0")
+    .max(1.82, "Maximum width is 1.82m")
+    .optional(),
+  scrapLength: z.number()
+    .min(0.01, "Length must be greater than 0")
+    .optional(),
 }).refine((data) => {
   if (data.createScrap) {
     return data.scrapWidth !== undefined && data.scrapLength !== undefined;
   }
   return true;
 }, {
-  message: "Dimensões da sobra são obrigatórias quando criar sobra está marcado",
+  message: "Scrap dimensions are required when creating scrap",
   path: ["scrapWidth"],
 });
 
@@ -97,9 +105,9 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Registrar Consumo</DialogTitle>
+          <DialogTitle>Register Consumption</DialogTitle>
           <DialogDescription>
-            Registre o consumo de material e, opcionalmente, crie uma sobra.
+            Register material consumption and optionally create scrap.
           </DialogDescription>
         </DialogHeader>
 
