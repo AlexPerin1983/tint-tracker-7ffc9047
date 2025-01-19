@@ -45,7 +45,7 @@ export function AddScrapDialog({
   parentItemId,
   editingScrap 
 }: AddScrapDialogProps) {
-  const { addScrap, items } = useItems();
+  const { addScrap, items, refetchItems } = useItems();
   const { toast } = useToast();
   
   const parentItem = items.find(item => item.id === parentItemId);
@@ -116,8 +116,11 @@ export function AddScrapDialog({
       await addScrap({
         ...data,
         originId: parentItemId,
-        id: editingScrap?.id, // Pass the ID if editing
+        id: editingScrap?.id,
       });
+      
+      // Força a atualização dos dados após a edição
+      await refetchItems();
       
       toast({
         title: "Success",
