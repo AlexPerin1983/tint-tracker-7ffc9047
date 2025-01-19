@@ -69,9 +69,12 @@ export function AddScrapDialog({
   const onSubmit = async (data: ScrapFormData) => {
     if (mode === "edit" && itemToEdit) {
       try {
-        await updateScrap(itemToEdit.id, {
-          ...data,
-          originId: parentItemId,
+        await updateScrap({
+          id: itemToEdit.id,
+          data: {
+            ...data,
+            originId: parentItemId,
+          }
         });
         
         toast({
