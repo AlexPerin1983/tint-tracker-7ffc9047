@@ -12,14 +12,12 @@ function App() {
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = urlParams.get('session_id');
       
-      // Se tiver um session_id, verifica o status do pagamento
       if (sessionId) {
         try {
           const response = await fetch(`/api/verify-payment?session_id=${sessionId}`);
           const data = await response.json();
           
           if (data.success) {
-            // Salva no localStorage que o usuário tem acesso
             localStorage.setItem('has_access', 'true');
             return true;
           }
@@ -28,7 +26,6 @@ function App() {
         }
       }
       
-      // Verifica se já tem acesso salvo
       return localStorage.getItem('has_access') === 'true';
     }
   });
@@ -42,10 +39,13 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Rota principal - Página de vendas */}
         <Route 
           path="/" 
-          element={hasAccess ? <Navigate to="/app" /> : <Landing />} 
+          element={<Landing />} 
         />
+        
+        {/* Rotas protegidas - Só acessíveis após pagamento */}
         <Route 
           path="/app" 
           element={hasAccess ? <Index /> : <Navigate to="/" />} 
@@ -58,6 +58,9 @@ function App() {
           path="/scraps/:id" 
           element={hasAccess ? <ScrapDetails /> : <Navigate to="/" />} 
         />
+
+        {/* Redireciona qualquer outra rota para a landing */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
