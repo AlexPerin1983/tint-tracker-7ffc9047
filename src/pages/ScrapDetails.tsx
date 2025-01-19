@@ -23,6 +23,15 @@ const ScrapDetails = () => {
   const formattedArea = `${totalArea.toFixed(2)}m²`;
   const formattedDimensions = `${scrap.width.toFixed(2)}m x ${scrap.length.toFixed(2)}m`;
 
+  // Prepare scrap data for editing
+  const editingScrapData = {
+    id: scrap.id,
+    width: scrap.width,
+    length: scrap.length,
+    quantity: scrap.quantity,
+    observation: scrap.observation,
+  };
+
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -130,11 +139,12 @@ const ScrapDetails = () => {
         )}
       </div>
 
-      {scrap.originId && (
+      {parentItem && (
         <AddScrapDialog
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
-          parentItemId={scrap.originId}
+          parentItemId={parentItem.id}
+          editingScrap={editingScrapData}
         />
       )}
     </div>

@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,15 +24,28 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   parentItemId: string;
+  editingScrap?: {
+    id: string;
+    width: number;
+    length: number;
+    quantity: number;
+    observation?: string;
+  };
 }
 
-export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDialogProps) {
-  const { addScrap, items } = useItems();
+export function AddScrapDialog({ 
+  open, 
+  onOpenChange, 
+  parentItemId,
+  editingScrap 
+}: AddScrapDialogProps) {
+  const { addScrap, items, refetchItems } = useItems();
   const { toast } = useToast();
   
   const parentItem = items.find(item => item.id === parentItemId);
@@ -51,11 +65,24 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      width: 0,
-      length: 0,
-      quantity: 1,
+      width: editingScrap?.width || 0,
+      length: editingScrap?.length || 0,
+      quantity: editingScrap?.quantity || 1,
+      observation: editingScrap?.observation || "",
     },
   });
+
+  // Reset form when editing scrap changes
+  useEffect(() => {
+    if (editingScrap) {
+      form.reset({
+        width: editingScrap.width,
+        length: editingScrap.length,
+        quantity: editingScrap.quantity,
+        observation: editingScrap.observation,
+      });
+    }
+  }, [editingScrap, form]);
 
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
@@ -67,10 +94,12 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
       return;
     }
 
-    const totalScrapArea = existingScraps.reduce(
-      (acc, scrap) => acc + scrap.width * scrap.length * scrap.quantity,
-      0
-    );
+    const totalScrapArea = existingScraps
+      .filter(scrap => scrap.id !== editingScrap?.id) // Exclude current scrap when editing
+      .reduce(
+        (acc, scrap) => acc + scrap.width * scrap.length * scrap.quantity,
+        0
+      );
     const newScrapArea = data.width * data.length * data.quantity;
     const parentArea = parentItem.width * parentItem.length;
 
@@ -87,11 +116,17 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
       await addScrap({
         ...data,
         originId: parentItemId,
+        id: editingScrap?.id,
       });
+      
+      // Força a atualização dos dados após a edição
+      await refetchItems();
       
       toast({
         title: "Success",
-        description: "Scrap added successfully!",
+        description: editingScrap 
+          ? "Scrap updated successfully!"
+          : "Scrap added successfully!",
       });
       
       onOpenChange(false);
@@ -113,7 +148,14 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add New Scrap</DialogTitle>
+          <DialogTitle>
+            {editingScrap ? "Edit Scrap" : "Add New Scrap"}
+          </DialogTitle>
+          <DialogDescription>
+            {editingScrap 
+              ? "Update the scrap's dimensions and details"
+              : "Add a new scrap with its dimensions and details"}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
