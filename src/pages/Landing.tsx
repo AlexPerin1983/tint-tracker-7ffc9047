@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2, Shield, Timer, Zap } from "lucide-react";
 const Landing = () => {
   const handleStartNow = () => {
     // URLs de redirecionamento após o pagamento
-    const successUrl = `${window.location.origin}/app?customer_email={CUSTOMER_EMAIL}`;
+    const successUrl = `${window.location.origin}/login`;
     const cancelUrl = `${window.location.origin}`;
     
     window.location.href = `https://buy.stripe.com/28oaGF8YAebQg4UaEG?success_url=${encodeURIComponent(successUrl)}&cancel_url=${encodeURIComponent(cancelUrl)}`;
