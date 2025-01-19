@@ -45,10 +45,21 @@ export function AddScrapDialog({
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
   
+  // Se não encontrar o parentItem, mostra um erro e fecha o dialog
+  if (!parentItem) {
+    toast({
+      title: "Error",
+      description: "Parent item not found",
+      variant: "destructive",
+    });
+    onOpenChange(false);
+    return null;
+  }
+
   const formSchema = z.object({
     width: z.number()
       .min(0.01, "Width must be greater than 0")
-      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
+      .max(parentItem.width, `Maximum width is ${parentItem.width}m`),
     length: z.number()
       .min(0.01, "Length must be greater than 0"),
     quantity: z.number()
@@ -91,15 +102,6 @@ export function AddScrapDialog({
           variant: "destructive",
         });
       }
-      return;
-    }
-
-    if (!parentItem) {
-      toast({
-        title: "Error",
-        description: "Parent item not found",
-        variant: "destructive",
-      });
       return;
     }
 
