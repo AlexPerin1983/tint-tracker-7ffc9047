@@ -42,8 +42,28 @@ export function useScraps() {
     },
   });
 
+  const updateScrapMutation = useMutation({
+    mutationFn: async (params: { id: string, data: ScrapFormData }) => {
+      const updatedScrap = await itemsDB.update(params.id, {
+        width: params.data.width,
+        length: params.data.length,
+        quantity: params.data.quantity,
+        observation: params.data.observation,
+        remainingWidth: params.data.width,
+        remainingLength: params.data.length,
+        remainingArea: params.data.width * params.data.length,
+      });
+
+      return updatedScrap;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] });
+    },
+  });
+
   return {
     addScrap: addScrapMutation.mutate,
+    updateScrap: updateScrapMutation.mutate,
   };
 }
 
