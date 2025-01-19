@@ -24,17 +24,6 @@ import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 
-const formSchema = z.object({
-  width: z.number()
-    .min(0.01, "Width must be greater than 0")
-    .max(1.82, "Maximum width is 1.82m"),
-  length: z.number()
-    .min(0.01, "Length must be greater than 0"),
-  quantity: z.number()
-    .min(1, "Quantity must be greater than 0"),
-  observation: z.string().optional(),
-});
-
 interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -48,6 +37,17 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
   
+  const formSchema = z.object({
+    width: z.number()
+      .min(0.01, "Width must be greater than 0")
+      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
+    length: z.number()
+      .min(0.01, "Length must be greater than 0"),
+    quantity: z.number()
+      .min(1, "Quantity must be greater than 0"),
+    observation: z.string().optional(),
+  });
+
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,8 +60,8 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
       toast({
-        title: "Erro",
-        description: "Item pai não encontrado",
+        title: "Error",
+        description: "Parent item not found",
         variant: "destructive",
       });
       return;
@@ -76,8 +76,8 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
 
     if (totalScrapArea + newScrapArea > parentArea) {
       toast({
-        title: "Erro",
-        description: "A área total dos retalhos excede a área disponível do item pai",
+        title: "Error",
+        description: "Total scrap area exceeds available parent item area",
         variant: "destructive",
       });
       return;
@@ -90,20 +90,24 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
       });
       
       toast({
-        title: "Sucesso",
-        description: "Retalho adicionado com sucesso!",
+        title: "Success",
+        description: "Scrap added successfully!",
       });
       
       onOpenChange(false);
       form.reset();
     } catch (error) {
       toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao adicionar retalho",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error adding scrap",
         variant: "destructive",
       });
     }
   };
+
+  if (!parentItem) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -124,7 +128,7 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                     <div className="space-y-2">
                       <Slider
                         min={0}
-                        max={1.82}
+                        max={parentItem.width}
                         step={0.01}
                         value={[field.value]}
                         onValueChange={(value) => field.onChange(value[0])}
@@ -140,14 +144,14 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                             {...field}
                             onChange={(e) => {
                               const value = parseFloat(e.target.value);
-                              if (!isNaN(value) && value <= 1.82) {
+                              if (!isNaN(value) && value <= parentItem.width) {
                                 field.onChange(value);
                               }
                             }}
                             className="w-24 text-right"
                           />
                         </FormControl>
-                        <span className="text-sm text-muted-foreground">1.82m</span>
+                        <span className="text-sm text-muted-foreground">{parentItem.width}m</span>
                       </div>
                     </div>
                     <FormMessage />
@@ -233,24 +237,24 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                   </FormItem>
                 )}
               />
-            </div>
 
-            <FormField
-              control={form.control}
-              name="observation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Observation</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Additional information about the scrap"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="observation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Observation</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Additional information about the scrap"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <DialogFooter>
               <Button
