@@ -3,6 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, CheckCircle2, Shield, Timer, Zap } from "lucide-react";
 
 const Landing = () => {
+  const handleStartNow = () => {
+    window.location.href = "https://buy.stripe.com/28oaGF8YAebQg4UaEG";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-card">
       {/* Hero Section */}
@@ -13,13 +17,12 @@ const Landing = () => {
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
           Stop wasting materials. Start maximizing profits with the smartest inventory system for Window Film, PPF, and Wrap installers.
         </p>
-        <Button size="lg" className="text-lg px-8">
-          Start Now - Only $40
+        <Button size="lg" className="text-lg px-8" onClick={handleStartNow}>
+          Start Now - Only $49
           <ArrowRight className="ml-2" />
         </Button>
       </section>
 
-      {/* Features Section */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Why Top Installers Choose Our System
@@ -72,7 +75,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Demo Video Section */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
@@ -90,7 +92,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           What Installers Are Saying
@@ -136,8 +137,8 @@ const Landing = () => {
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join successful installers who are saving time and money with our inventory system.
             </p>
-            <Button size="lg" className="text-lg px-8">
-              Get Started Now - Only $40
+            <Button size="lg" className="text-lg px-8" onClick={handleStartNow}>
+              Get Started Now - Only $49
               <ArrowRight className="ml-2" />
             </Button>
             <p className="mt-4 text-sm text-muted-foreground">
@@ -173,7 +174,7 @@ const Landing = () => {
             <CardContent className="pt-6">
               <h3 className="text-xl font-semibold mb-2">Is there a monthly fee?</h3>
               <p className="text-muted-foreground">
-                No monthly fees! Pay once and use forever. Only $40 for lifetime access.
+                No monthly fees! Pay once and use forever. Only $49 for lifetime access.
               </p>
             </CardContent>
           </Card>
