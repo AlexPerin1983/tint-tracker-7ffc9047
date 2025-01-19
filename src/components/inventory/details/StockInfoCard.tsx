@@ -13,36 +13,36 @@ export function StockInfoCard({ item }: StockInfoCardProps) {
       <CardHeader className="p-4 md:p-6">
         <div className="flex items-center gap-2">
           <Database className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Informações de Estoque</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Stock Information</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0 space-y-4">
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Quantidade Disponível</label>
+          <label className="text-sm text-muted-foreground font-medium">Available Quantity</label>
           <p className="text-sm md:text-base font-semibold">{item.quantity}</p>
         </div>
         {item.minQuantity && (
           <div>
-            <label className="text-sm text-muted-foreground font-medium">Quantidade Mínima</label>
+            <label className="text-sm text-muted-foreground font-medium">Minimum Quantity</label>
             <p className="text-sm md:text-base font-semibold">{item.minQuantity}</p>
           </div>
         )}
         {item.price && (
           <div>
-            <label className="text-sm text-muted-foreground font-medium">Preço por m²</label>
+            <label className="text-sm text-muted-foreground font-medium">Price per m²</label>
             <p className="text-sm md:text-base font-semibold">
               USD {item.price.toFixed(2)}
             </p>
           </div>
         )}
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Data de Cadastro</label>
+          <label className="text-sm text-muted-foreground font-medium">Creation Date</label>
           <p className="text-sm md:text-base font-semibold">
             {formatDate(item.createdAt)}
           </p>
         </div>
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Última Atualização</label>
+          <label className="text-sm text-muted-foreground font-medium">Last Update</label>
           <p className="text-sm md:text-base font-semibold">
             {formatDate(item.updatedAt)}
           </p>

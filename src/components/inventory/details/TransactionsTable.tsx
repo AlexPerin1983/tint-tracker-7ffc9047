@@ -20,12 +20,12 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
         <CardHeader className="p-4 md:p-6">
           <div className="flex items-center gap-2">
             <History className="w-5 h-5 text-primary" />
-            <CardTitle className="text-lg md:text-xl">Histórico de Consumo</CardTitle>
+            <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-4 md:p-6 pt-0">
           <p className="text-sm text-muted-foreground">
-            Nenhum consumo registrado.
+            No usage recorded.
           </p>
         </CardContent>
       </Card>
@@ -37,7 +37,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
       <CardHeader className="p-4 md:p-6">
         <div className="flex items-center gap-2">
           <History className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Histórico de Consumo</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0">
@@ -55,13 +55,13 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Dimensões:</p>
+                    <p className="text-muted-foreground">Dimensions:</p>
                     <p className="font-medium">
                       {transaction.width.toFixed(2)}m x {transaction.length.toFixed(2)}m
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Área:</p>
+                    <p className="text-muted-foreground">Area:</p>
                     <p className="font-medium">{transaction.area.toFixed(2)}m²</p>
                   </div>
                 </div>
@@ -73,10 +73,10 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
             <table className="w-full text-sm">
               <thead className="text-xs uppercase bg-muted/50">
                 <tr>
-                  <th scope="col" className="px-4 py-3 text-left">Data</th>
-                  <th scope="col" className="px-4 py-3 text-right">Largura (m)</th>
-                  <th scope="col" className="px-4 py-3 text-right">Compr. (m)</th>
-                  <th scope="col" className="px-4 py-3 text-right">Área (m²)</th>
+                  <th scope="col" className="px-4 py-3 text-left">Date</th>
+                  <th scope="col" className="px-4 py-3 text-right">Width (m)</th>
+                  <th scope="col" className="px-4 py-3 text-right">Length (m)</th>
+                  <th scope="col" className="px-4 py-3 text-right">Area (m²)</th>
                 </tr>
               </thead>
               <tbody>

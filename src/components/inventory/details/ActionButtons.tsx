@@ -23,7 +23,7 @@ export function ActionButtons({ item, onAddScrap }: ActionButtonsProps) {
           className="hover:bg-muted/50"
         >
           <Edit className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Editar
+          Edit
         </Button>
         <Button 
           variant="default"
@@ -31,7 +31,7 @@ export function ActionButtons({ item, onAddScrap }: ActionButtonsProps) {
           className="bg-primary hover:bg-primary/90"
         >
           <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Registrar Consumo
+          Record Usage
         </Button>
         <Button 
           variant="outline"
@@ -39,7 +39,7 @@ export function ActionButtons({ item, onAddScrap }: ActionButtonsProps) {
           className="hover:bg-muted/50"
         >
           <Plus className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Adicionar Retalho
+          Add Scrap
         </Button>
       </div>
 

@@ -21,13 +21,13 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
     try {
       await deleteItem(scrapId);
       toast({
-        title: "Sucesso",
-        description: "Retalho excluído com sucesso!",
+        title: "Success",
+        description: "Scrap deleted successfully!",
       });
     } catch (error) {
       toast({
-        title: "Erro",
-        description: "Erro ao excluir retalho",
+        title: "Error",
+        description: "Error deleting scrap",
         variant: "destructive",
       });
     }
@@ -38,7 +38,7 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
       <CardHeader className="p-4 md:p-6">
         <div className="flex items-center gap-2">
           <Scissors className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Retalhos Associados</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Associated Scraps</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0">
@@ -58,7 +58,7 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
           )
         ) : (
           <p className="text-sm md:text-base text-muted-foreground">
-            Nenhum retalho associado.
+            No associated scraps.
           </p>
         )}
       </CardContent>
