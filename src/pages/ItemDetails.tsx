@@ -50,7 +50,11 @@ const ItemDetails = () => {
           transactions={itemTransactions} 
           onRecordUsage={() => setShowConsumption(true)} 
         />
-        <ScrapsTable scraps={scraps} parentItem={item} />
+        <ScrapsTable 
+          scraps={scraps} 
+          parentItem={item} 
+          onAddScrap={() => setShowAddScrap(true)}
+        />
       </div>
 
       <ConsumptionDialog 

@@ -5,14 +5,16 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrapCard } from "./ScrapCard";
 import { ScrapTable } from "./ScrapTable";
-import { Scissors } from "lucide-react";
+import { Scissors, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ScrapsTableProps {
   scraps: Item[];
   parentItem: Item;
+  onAddScrap?: () => void;
 }
 
-export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
+export function ScrapsTable({ scraps, parentItem, onAddScrap }: ScrapsTableProps) {
   const { deleteItem } = useItems();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -36,9 +38,21 @@ export function ScrapsTable({ scraps, parentItem }: ScrapsTableProps) {
   return (
     <Card className="shadow-md border border-muted">
       <CardHeader className="p-4 md:p-6">
-        <div className="flex items-center gap-2">
-          <Scissors className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Associated Scraps</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Scissors className="w-5 h-5 text-primary" />
+            <CardTitle className="text-lg md:text-xl">Associated Scraps</CardTitle>
+          </div>
+          {onAddScrap && (
+            <Button 
+              variant="default"
+              onClick={onAddScrap}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Plus className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+              Add Scrap
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0">
