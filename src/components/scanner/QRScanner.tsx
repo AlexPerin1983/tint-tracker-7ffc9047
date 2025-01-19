@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { QrCode } from "lucide-react";
 
 interface QRScannerProps {
   open: boolean;
@@ -45,20 +46,38 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-center gap-2 text-xl">
+            <QrCode className="h-6 w-6 text-primary" />
+            Leitor de QR Code
+          </DialogTitle>
+        </DialogHeader>
+        
         <div className="w-full space-y-4">
           {error ? (
-            <div className="text-center text-destructive">{error}</div>
+            <div className="text-center p-2 bg-destructive/10 text-destructive rounded-md">
+              {error}
+            </div>
           ) : null}
           
-          <QrReader
-            constraints={{ facingMode: "environment" }}
-            onResult={handleScan}
-            className="w-full"
-            videoStyle={{ width: '100%' }}
-          />
+          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg border-2 border-primary/20">
+            <QrReader
+              constraints={{ facingMode: "environment" }}
+              onResult={handleScan}
+              className="w-full h-full"
+              videoStyle={{ 
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+            <div className="absolute inset-0 border-[3rem] sm:border-[4rem] border-black/50">
+              <div className="absolute inset-0 border-2 border-white/50"></div>
+            </div>
+          </div>
           
-          <p className="text-sm text-muted-foreground text-center">
-            Posicione o QR Code no centro da tela para escaneá-lo
+          <p className="text-sm text-muted-foreground text-center px-6">
+            Posicione o QR Code dentro da área demarcada para escaneá-lo automaticamente
           </p>
         </div>
       </DialogContent>
