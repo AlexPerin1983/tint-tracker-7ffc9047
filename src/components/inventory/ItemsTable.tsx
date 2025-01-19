@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Item, Filters } from "@/types/inventory";
 import { AddItemDialog } from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
+import { AddScrapDialog } from "./AddScrapDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
@@ -25,6 +26,7 @@ export function ItemsTable() {
     minLength: "",
   });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
@@ -58,7 +60,11 @@ export function ItemsTable() {
 
   const handleEditClick = (item: Item) => {
     setSelectedItem(item);
-    setEditDialogOpen(true);
+    if (item.type === 'retalho') {
+      setEditScrapDialogOpen(true);
+    } else {
+      setEditDialogOpen(true);
+    }
   };
 
   const handleQRCodeClick = (item: Item) => {
@@ -141,6 +147,14 @@ export function ItemsTable() {
         mode="edit"
         itemToEdit={selectedItem}
       />
+
+      {selectedItem?.originId && (
+        <AddScrapDialog
+          open={editScrapDialogOpen}
+          onOpenChange={setEditScrapDialogOpen}
+          parentItemId={selectedItem.originId}
+        />
+      )}
 
       {selectedItem && (
         <QRCodeDialog
