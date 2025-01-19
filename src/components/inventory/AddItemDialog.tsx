@@ -2,6 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -92,62 +98,61 @@ export function AddItemDialog({
     onOpenChange(false);
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(
-        "p-0 gap-0 bg-[#1E293B] border-none overflow-hidden",
-        isMobile ? "w-full h-[100dvh] rounded-none" : "sm:max-w-[600px] rounded-lg"
-      )}>
-        <DialogHeader className="p-6 border-b border-slate-700/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/20">
-                <Plus className="w-5 h-5 text-blue-500" />
-              </div>
-              <DialogTitle className="text-xl font-semibold text-white">
-                {mode === "edit" ? "Edit Item" : "Add New Item"}
-              </DialogTitle>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-slate-700/50"
-              onClick={handleCancel}
-            >
-              <X className="w-4 h-4 text-slate-400" />
-            </Button>
-          </div>
-        </DialogHeader>
+  const DialogComponent = isMobile ? Sheet : Dialog;
+  const DialogContentComponent = isMobile ? SheetContent : DialogContent;
+  const DialogHeaderComponent = isMobile ? SheetHeader : DialogHeader;
+  const DialogTitleComponent = isMobile ? SheetTitle : DialogTitle;
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-6">
-            <ItemForm 
-              form={form} 
-              onSubmit={onSubmit} 
-              onOpenChange={onOpenChange}
-              mode={mode}
-            />
+  const contentProps = isMobile 
+    ? { 
+        side: "bottom" as const,
+        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col"
+      }
+    : {
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh]"
+      };
+
+  return (
+    <DialogComponent open={open} onOpenChange={onOpenChange}>
+      <DialogContentComponent {...contentProps}>
+        <DialogHeaderComponent className="p-6 border-b border-slate-700 shrink-0">
+          <div className="flex items-center gap-2">
+            <Plus className="w-5 h-5 text-blue-500" />
+            <DialogTitleComponent className="text-white text-xl font-semibold">
+              {mode === "edit" ? "Edit Item" : "Add New Item"}
+            </DialogTitleComponent>
           </div>
+        </DialogHeaderComponent>
+
+        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8">
+          <ItemForm 
+            form={form} 
+            onSubmit={onSubmit} 
+            onOpenChange={onOpenChange}
+            mode={mode}
+          />
         </div>
 
-        <div className="p-6 border-t border-slate-700/50 bg-slate-800/50">
+        <div className="border-t border-slate-700 p-6 bg-[#1E293B] mt-auto shrink-0">
           <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
               onClick={handleCancel}
               className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
+              <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
               className="bg-blue-500 text-white hover:bg-blue-600"
             >
-              {mode === "edit" ? "Save Changes" : "Add Item"}
+              <Plus className="w-4 h-4 mr-2" />
+              {mode === "edit" ? "Save" : "Add"}
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DialogContentComponent>
+    </DialogComponent>
   );
 }
