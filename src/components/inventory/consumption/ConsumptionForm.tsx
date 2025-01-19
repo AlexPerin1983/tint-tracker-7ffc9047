@@ -9,19 +9,23 @@ interface ConsumptionFormProps {
   form: UseFormReturn<ConsumptionFormData>;
   onSubmit: (data: ConsumptionFormData) => void;
   onCancel: () => void;
+  maxWidth: number;
+  maxLength: number;
 }
 
-export function ConsumptionForm({ form, onSubmit, onCancel }: ConsumptionFormProps) {
+export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength }: ConsumptionFormProps) {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <DimensionsFields
         form={form}
-        label="Consumida"
+        label="Consumed"
         widthName="width"
         lengthName="length"
+        maxWidth={maxWidth}
+        maxLength={maxLength}
       />
 
-      <ScrapFields form={form} />
+      <ScrapFields form={form} maxWidth={maxWidth} maxLength={maxLength} />
 
       <DialogFooter>
         <Button
@@ -29,9 +33,9 @@ export function ConsumptionForm({ form, onSubmit, onCancel }: ConsumptionFormPro
           variant="outline"
           onClick={onCancel}
         >
-          Cancelar
+          Cancel
         </Button>
-        <Button type="submit">Registrar Consumo</Button>
+        <Button type="submit">Register Consumption</Button>
       </DialogFooter>
     </form>
   );

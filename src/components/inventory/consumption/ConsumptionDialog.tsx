@@ -14,30 +14,6 @@ import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 import { ConsumptionForm } from "./ConsumptionForm";
 
-const formSchema = z.object({
-  width: z.number()
-    .min(0.01, "Width must be greater than 0")
-    .max(1.82, "Maximum width is 1.82m"),
-  length: z.number()
-    .min(0.01, "Length must be greater than 0"),
-  createScrap: z.boolean(),
-  scrapWidth: z.number()
-    .min(0.01, "Width must be greater than 0")
-    .max(1.82, "Maximum width is 1.82m")
-    .optional(),
-  scrapLength: z.number()
-    .min(0.01, "Length must be greater than 0")
-    .optional(),
-}).refine((data) => {
-  if (data.createScrap) {
-    return data.scrapWidth !== undefined && data.scrapLength !== undefined;
-  }
-  return true;
-}, {
-  message: "Scrap dimensions are required when creating scrap",
-  path: ["scrapWidth"],
-});
-
 interface ConsumptionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -47,6 +23,32 @@ interface ConsumptionDialogProps {
 export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialogProps) {
   const { registerConsumption } = useItems();
   const { toast } = useToast();
+
+  const formSchema = z.object({
+    width: z.number()
+      .min(0.01, "Width must be greater than 0")
+      .max(item.remainingWidth, `Maximum width is ${item.remainingWidth}m`),
+    length: z.number()
+      .min(0.01, "Length must be greater than 0")
+      .max(item.remainingLength, `Maximum length is ${item.remainingLength}m`),
+    createScrap: z.boolean(),
+    scrapWidth: z.number()
+      .min(0.01, "Width must be greater than 0")
+      .max(item.remainingWidth, `Maximum width is ${item.remainingWidth}m`)
+      .optional(),
+    scrapLength: z.number()
+      .min(0.01, "Length must be greater than 0")
+      .max(item.remainingLength, `Maximum length is ${item.remainingLength}m`)
+      .optional(),
+  }).refine((data) => {
+    if (data.createScrap) {
+      return data.scrapWidth !== undefined && data.scrapLength !== undefined;
+    }
+    return true;
+  }, {
+    message: "Scrap dimensions are required when creating scrap",
+    path: ["scrapWidth"],
+  });
 
   const form = useForm<ConsumptionFormData>({
     resolver: zodResolver(formSchema),
@@ -63,8 +65,8 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
     if (consumedArea > remainingArea) {
       toast({
-        title: "Erro",
-        description: "A área consumida não pode ser maior que a área disponível",
+        title: "Error",
+        description: "The consumed area cannot be greater than the available area",
         variant: "destructive",
       });
       return;
@@ -74,8 +76,8 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
       const scrapArea = (data.scrapWidth || 0) * (data.scrapLength || 0);
       if (scrapArea + consumedArea > remainingArea) {
         toast({
-          title: "Erro",
-          description: "A soma da área consumida e da sobra não pode ser maior que a área disponível",
+          title: "Error",
+          description: "The sum of consumed area and scrap cannot be greater than the available area",
           variant: "destructive",
         });
         return;
@@ -85,17 +87,17 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     try {
       await registerConsumption({ id: item.id, data });
       toast({
-        title: "Sucesso",
+        title: "Success",
         description: data.createScrap 
-          ? "Consumo registrado e sobra criada com sucesso!"
-          : "Consumo registrado com sucesso!",
+          ? "Consumption registered and scrap created successfully!"
+          : "Consumption registered successfully!",
       });
       onOpenChange(false);
       form.reset();
     } catch (error) {
       toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao registrar consumo",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error registering consumption",
         variant: "destructive",
       });
     }
@@ -116,6 +118,8 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
             form={form}
             onSubmit={onSubmit}
             onCancel={() => onOpenChange(false)}
+            maxWidth={item.remainingWidth}
+            maxLength={item.remainingLength}
           />
         </Form>
       </DialogContent>

@@ -3,19 +3,24 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { UseFormReturn } from "react-hook-form";
 import { ConsumptionFormData } from "@/types/inventory";
-import { useState } from "react";
 
 interface DimensionsFieldsProps {
   form: UseFormReturn<ConsumptionFormData>;
   label: string;
   widthName: "width" | "scrapWidth";
   lengthName: "length" | "scrapLength";
+  maxWidth: number;
+  maxLength: number;
 }
 
-export function DimensionsFields({ form, label, widthName, lengthName }: DimensionsFieldsProps) {
-  const [showWidthInput, setShowWidthInput] = useState(false);
-  const [showLengthInput, setShowLengthInput] = useState(false);
-
+export function DimensionsFields({ 
+  form, 
+  label, 
+  widthName, 
+  lengthName,
+  maxWidth,
+  maxLength 
+}: DimensionsFieldsProps) {
   return (
     <div className="grid grid-cols-1 gap-4">
       <FormField
@@ -23,11 +28,11 @@ export function DimensionsFields({ form, label, widthName, lengthName }: Dimensi
         name={widthName}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Width {label} (meters)</FormLabel>
+            <FormLabel>{label} Width (meters)</FormLabel>
             <div className="space-y-2">
               <Slider
                 min={0}
-                max={1.82}
+                max={maxWidth}
                 step={0.01}
                 value={[field.value]}
                 onValueChange={(value) => field.onChange(value[0])}
@@ -43,14 +48,14 @@ export function DimensionsFields({ form, label, widthName, lengthName }: Dimensi
                     {...field}
                     onChange={(e) => {
                       const value = parseFloat(e.target.value);
-                      if (!isNaN(value) && value <= 1.82) {
+                      if (!isNaN(value) && value <= maxWidth) {
                         field.onChange(value);
                       }
                     }}
                     className="w-24 text-right"
                   />
                 </FormControl>
-                <span className="text-sm text-muted-foreground">1.82m</span>
+                <span className="text-sm text-muted-foreground">{maxWidth}m</span>
               </div>
             </div>
             <FormMessage />
@@ -63,11 +68,11 @@ export function DimensionsFields({ form, label, widthName, lengthName }: Dimensi
         name={lengthName}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Length {label} (meters)</FormLabel>
+            <FormLabel>{label} Length (meters)</FormLabel>
             <div className="space-y-2">
               <Slider
                 min={0}
-                max={60}
+                max={maxLength}
                 step={0.01}
                 value={[field.value]}
                 onValueChange={(value) => field.onChange(value[0])}
@@ -83,14 +88,14 @@ export function DimensionsFields({ form, label, widthName, lengthName }: Dimensi
                     {...field}
                     onChange={(e) => {
                       const value = parseFloat(e.target.value);
-                      if (!isNaN(value) && value <= 60) {
+                      if (!isNaN(value) && value <= maxLength) {
                         field.onChange(value);
                       }
                     }}
                     className="w-24 text-right"
                   />
                 </FormControl>
-                <span className="text-sm text-muted-foreground">60m</span>
+                <span className="text-sm text-muted-foreground">{maxLength}m</span>
               </div>
             </div>
             <FormMessage />

@@ -6,9 +6,11 @@ import { DimensionsFields } from "./DimensionsFields";
 
 interface ScrapFieldsProps {
   form: UseFormReturn<ConsumptionFormData>;
+  maxWidth: number;
+  maxLength: number;
 }
 
-export function ScrapFields({ form }: ScrapFieldsProps) {
+export function ScrapFields({ form, maxWidth, maxLength }: ScrapFieldsProps) {
   const createScrap = form.watch("createScrap");
 
   return (
@@ -25,7 +27,7 @@ export function ScrapFields({ form }: ScrapFieldsProps) {
               />
             </FormControl>
             <div className="space-y-1 leading-none">
-              <FormLabel>Criar Sobra</FormLabel>
+              <FormLabel>Create Scrap</FormLabel>
             </div>
           </FormItem>
         )}
@@ -34,9 +36,11 @@ export function ScrapFields({ form }: ScrapFieldsProps) {
       {createScrap && (
         <DimensionsFields
           form={form}
-          label="da Sobra"
+          label="Scrap"
           widthName="scrapWidth"
           lengthName="scrapLength"
+          maxWidth={maxWidth}
+          maxLength={maxLength}
         />
       )}
     </>
