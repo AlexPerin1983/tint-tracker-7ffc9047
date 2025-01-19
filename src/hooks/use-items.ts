@@ -5,14 +5,13 @@ import { useTransactions } from './use-transactions';
 
 export function useItems() {
   const baseItems = useBaseItems();
-  const { addScrap, updateScrap } = useScraps();
+  const { addScrap } = useScraps();
   const { registerConsumption } = useConsumption();
   const { transactions } = useTransactions();
 
   return {
     ...baseItems,
     addScrap,
-    updateScrap,
     registerConsumption,
     transactions,
   };

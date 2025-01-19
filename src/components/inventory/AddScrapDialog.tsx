@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -21,76 +20,42 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ScrapFormData, Item } from "@/types/inventory";
+import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 
 interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   parentItemId: string;
-  mode?: "add" | "edit";
-  itemToEdit?: Item;
 }
 
-export function AddScrapDialog({ 
-  open, 
-  onOpenChange, 
-  parentItemId,
-  mode = "add",
-  itemToEdit 
-}: AddScrapDialogProps) {
-  const { addScrap, updateScrap, items } = useItems();
+export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDialogProps) {
+  const { addScrap, items } = useItems();
   const { toast } = useToast();
   
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
-
+  
   const formSchema = z.object({
     width: z.number()
       .min(0.01, "Width must be greater than 0")
-      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width || 0}m`),
+      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
     length: z.number()
-      .min(0.01, "Length must be greater than 0")
-      .max(60, "Maximum length is 60m"),
+      .min(0.01, "Length must be greater than 0"),
     quantity: z.number()
-      .min(1, "Quantity must be greater than 0")
-      .max(100, "Maximum quantity is 100"),
+      .min(1, "Quantity must be greater than 0"),
     observation: z.string().optional(),
   });
 
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      width: mode === "edit" && itemToEdit ? itemToEdit.width : 0,
-      length: mode === "edit" && itemToEdit ? itemToEdit.length : 0,
-      quantity: mode === "edit" && itemToEdit ? itemToEdit.quantity : 1,
-      observation: mode === "edit" && itemToEdit ? itemToEdit.observation : "",
+      width: 0,
+      length: 0,
+      quantity: 1,
     },
   });
-
-  useEffect(() => {
-    if (open && !parentItem) {
-      toast({
-        title: "Error",
-        description: "Parent item not found",
-        variant: "destructive",
-      });
-      onOpenChange(false);
-    }
-  }, [open, parentItem, toast, onOpenChange]);
-
-  useEffect(() => {
-    if (open && mode === "edit" && itemToEdit) {
-      form.reset({
-        width: itemToEdit.width,
-        length: itemToEdit.length,
-        quantity: itemToEdit.quantity,
-        observation: itemToEdit.observation,
-      });
-    }
-  }, [open, mode, itemToEdit, form]);
 
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
@@ -99,33 +64,6 @@ export function AddScrapDialog({
         description: "Parent item not found",
         variant: "destructive",
       });
-      return;
-    }
-
-    if (mode === "edit" && itemToEdit) {
-      try {
-        await updateScrap({
-          id: itemToEdit.id,
-          data: {
-            ...data,
-            originId: parentItemId,
-          }
-        });
-        
-        toast({
-          title: "Success",
-          description: "Scrap updated successfully!",
-        });
-        
-        onOpenChange(false);
-        form.reset();
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: error instanceof Error ? error.message : "Error updating scrap",
-          variant: "destructive",
-        });
-      }
       return;
     }
 
@@ -167,7 +105,7 @@ export function AddScrapDialog({
     }
   };
 
-  if (!parentItem && open) {
+  if (!parentItem) {
     return null;
   }
 
@@ -175,12 +113,7 @@ export function AddScrapDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>{mode === "edit" ? "Edit Scrap" : "Add New Scrap"}</DialogTitle>
-          <DialogDescription>
-            {mode === "edit" 
-              ? "Update the scrap dimensions and details below." 
-              : "Add a new scrap with the dimensions and details below."}
-          </DialogDescription>
+          <DialogTitle>Add New Scrap</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -195,7 +128,7 @@ export function AddScrapDialog({
                     <div className="space-y-2">
                       <Slider
                         min={0}
-                        max={parentItem?.width || 0}
+                        max={parentItem.width}
                         step={0.01}
                         value={[field.value]}
                         onValueChange={(value) => field.onChange(value[0])}
@@ -211,14 +144,14 @@ export function AddScrapDialog({
                             {...field}
                             onChange={(e) => {
                               const value = parseFloat(e.target.value);
-                              if (!isNaN(value) && value <= (parentItem?.width || 0)) {
+                              if (!isNaN(value) && value <= parentItem.width) {
                                 field.onChange(value);
                               }
                             }}
                             className="w-24 text-right"
                           />
                         </FormControl>
-                        <span className="text-sm text-muted-foreground">{parentItem?.width || 0}m</span>
+                        <span className="text-sm text-muted-foreground">{parentItem.width}m</span>
                       </div>
                     </div>
                     <FormMessage />
@@ -331,7 +264,7 @@ export function AddScrapDialog({
               >
                 Cancel
               </Button>
-              <Button type="submit">{mode === "edit" ? "Update" : "Save"}</Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </Form>
