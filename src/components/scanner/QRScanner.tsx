@@ -25,19 +25,19 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           onOpenChange(false);
           navigate(path);
         } else {
-          setError('QR Code inválido');
+          setError('Invalid QR Code');
           toast({
             variant: "destructive",
-            title: "Erro ao ler QR Code",
-            description: "Este QR Code não corresponde a nenhum item do sistema.",
+            title: "QR Code Error",
+            description: "This QR code doesn't match any item in the system.",
           });
         }
       } catch (err) {
-        setError('QR Code inválido');
+        setError('Invalid QR Code');
         toast({
           variant: "destructive",
-          title: "Erro ao ler QR Code",
-          description: "Não foi possível ler o QR Code. Tente novamente.",
+          title: "QR Code Error",
+          description: "Unable to read QR code. Please try again.",
         });
       }
     }
@@ -49,7 +49,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2 text-xl">
             <QrCode className="h-6 w-6 text-primary" />
-            Leitor de QR Code
+            QR Code Scanner
           </DialogTitle>
         </DialogHeader>
         
@@ -77,7 +77,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           </div>
           
           <p className="text-sm text-muted-foreground text-center px-6">
-            Posicione o QR Code dentro da área demarcada para escaneá-lo automaticamente
+            Position the inventory QR code within the marked area for automatic scanning
           </p>
         </div>
       </DialogContent>
