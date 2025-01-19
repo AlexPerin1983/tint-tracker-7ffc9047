@@ -6,6 +6,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { memo, useState } from "react";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
+import { useToast } from "@/hooks/use-toast";
 
 interface FormFieldsProps {
   form: any;
@@ -17,6 +18,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   const [showWidthInput, setShowWidthInput] = useState(false);
   const [sliderLength, setSliderLength] = useState([form.getValues("length") || 0]);
   const [sliderWidth, setSliderWidth] = useState([form.getValues("width") || 0]);
+  const { toast } = useToast();
 
   const handleInputClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,6 +38,16 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       const maxValue = field === "length" ? 60 : 1.82;
+      
+      if (field === "width" && numValue > maxValue) {
+        toast({
+          title: "Invalid Width",
+          description: "Maximum roll width is 1.82m",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       if (numValue <= maxValue) {
         form.setValue(field, numValue);
         if (field === "length") {
@@ -278,4 +290,4 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   );
 };
 
-export default FormFields;
+export default memo(FormFields);
