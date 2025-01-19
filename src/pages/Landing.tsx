@@ -200,7 +200,7 @@ export default function Landing() {
         </div>
 
         {/* Guarantee Section */}
-        <div className="text-center mb-16 bg-white/5 rounded-lg p-8">
+        <div className="text-center mb-16 bg-white/5 rounded-lg p-4 md:p-8">
           <h2 className="text-2xl font-bold text-white mb-4">
             7-Day Money-Back Guarantee
           </h2>
@@ -209,10 +209,10 @@ export default function Landing() {
           </p>
           <Button 
             size="lg" 
-            className="bg-primary hover:bg-primary/90 text-xl px-8 py-6 h-auto"
+            className="bg-primary hover:bg-primary/90 text-base md:text-xl px-4 md:px-8 py-4 md:py-6 h-auto w-full md:w-auto mx-auto"
             onClick={handleBuyNow}
           >
-            <DollarSign className="w-6 h-6" />
+            <DollarSign className="w-5 h-5 md:w-6 md:h-6" />
             One-Time Payment - Only $49
           </Button>
         </div>
