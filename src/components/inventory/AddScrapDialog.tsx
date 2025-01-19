@@ -172,7 +172,7 @@ export function AddScrapDialog({
                     <div className="space-y-2">
                       <Slider
                         min={0}
-                        max={parentItem.width}
+                        max={parentItem?.width || 0}
                         step={0.01}
                         value={[field.value]}
                         onValueChange={(value) => field.onChange(value[0])}
@@ -188,14 +188,14 @@ export function AddScrapDialog({
                             {...field}
                             onChange={(e) => {
                               const value = parseFloat(e.target.value);
-                              if (!isNaN(value) && value <= parentItem.width) {
+                              if (!isNaN(value) && value <= (parentItem?.width || 0)) {
                                 field.onChange(value);
                               }
                             }}
                             className="w-24 text-right"
                           />
                         </FormControl>
-                        <span className="text-sm text-muted-foreground">{parentItem.width}m</span>
+                        <span className="text-sm text-muted-foreground">{parentItem?.width || 0}m</span>
                       </div>
                     </div>
                     <FormMessage />
