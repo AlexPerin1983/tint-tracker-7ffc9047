@@ -79,12 +79,12 @@ export function ItemsTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Código</TableHead>
-              <TableHead className="hidden md:table-cell">Nome</TableHead>
-              <TableHead className="hidden md:table-cell">Categoria</TableHead>
-              <TableHead className="hidden md:table-cell">Dimensões</TableHead>
-              <TableHead className="hidden md:table-cell">Quantidade</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead>Code</TableHead>
+              <TableHead className="hidden md:table-cell">Name</TableHead>
+              <TableHead className="hidden md:table-cell">Category</TableHead>
+              <TableHead className="hidden md:table-cell">Dimensions</TableHead>
+              <TableHead className="hidden md:table-cell">Quantity</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -99,14 +99,14 @@ export function ItemsTable() {
                 <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`}>
-                    <Button variant="ghost" size="icon" title="Ver Detalhes">
+                    <Button variant="ghost" size="icon" title="View Details">
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    title="Editar"
+                    title="Edit"
                     onClick={() => handleEditClick(item)}
                   >
                     <Edit className="h-4 w-4" />
@@ -115,7 +115,7 @@ export function ItemsTable() {
                     variant="ghost" 
                     size="icon" 
                     className="text-destructive" 
-                    title="Excluir"
+                    title="Delete"
                     onClick={() => deleteItem(item.id)}
                   >
                     <Trash2 className="h-4 w-4" />

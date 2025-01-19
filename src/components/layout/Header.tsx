@@ -10,12 +10,12 @@ export function Header() {
           <div className="flex items-center gap-4">
             <SidebarTrigger>
               <Button variant="ghost" size="icon" className="-ml-3">
-                <span className="sr-only">Abrir menu</span>
+                <span className="sr-only">Open menu</span>
               </Button>
             </SidebarTrigger>
             <div className="flex items-center gap-2">
               <QrCode className="w-8 h-8 text-primary" />
-              <h1 className="text-xl font-semibold">Tint Tracker System</h1>
+              <h1 className="text-xl font-semibold">QR Tracker System</h1>
             </div>
           </div>
         </div>

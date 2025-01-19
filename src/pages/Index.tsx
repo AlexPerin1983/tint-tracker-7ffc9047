@@ -10,10 +10,10 @@ const Index = () => {
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg md:text-2xl font-bold">Inventário</h1>
+        <h1 className="text-lg md:text-2xl font-bold">Inventory</h1>
         <Button onClick={() => setShowAddItem(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          Adicionar Item
+          Add Item
         </Button>
       </div>
 

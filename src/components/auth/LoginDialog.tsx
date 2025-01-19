@@ -20,8 +20,8 @@ export function LoginDialog({ onLogin }: LoginDialogProps) {
     
     if (!email || !email.includes("@")) {
       toast({
-        title: "Email inválido",
-        description: "Por favor, insira um email válido",
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
         variant: "destructive",
       });
       return;
@@ -34,8 +34,8 @@ export function LoginDialog({ onLogin }: LoginDialogProps) {
       
       if (!isValid) {
         toast({
-          title: "Acesso negado",
-          description: "Este email não está autorizado a acessar o sistema",
+          title: "Access Denied",
+          description: "This email is not authorized to access the system",
           variant: "destructive",
         });
         return;
@@ -43,13 +43,13 @@ export function LoginDialog({ onLogin }: LoginDialogProps) {
 
       onLogin(email);
       toast({
-        title: `Bem-vindo, ${userData?.Nome || ''}!`,
-        description: "Login realizado com sucesso",
+        title: `Welcome, ${userData?.Nome || ''}!`,
+        description: "Login successful",
       });
     } catch (error) {
       toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao validar usuário",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error validating user",
         variant: "destructive",
       });
     } finally {
@@ -63,14 +63,14 @@ export function LoginDialog({ onLogin }: LoginDialogProps) {
         <DialogHeader>
           <DialogTitle>Login</DialogTitle>
           <DialogDescription>
-            Digite seu email para acessar o sistema.
+            Enter your email to access the system.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Input
               type="email"
-              placeholder="Digite seu email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
@@ -81,10 +81,10 @@ export function LoginDialog({ onLogin }: LoginDialogProps) {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Verificando...
+                Verifying...
               </>
             ) : (
-              "Entrar"
+              "Enter"
             )}
           </Button>
         </form>

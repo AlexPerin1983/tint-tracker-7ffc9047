@@ -21,7 +21,7 @@ export const Footer = () => {
             className="flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors"
           >
             <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">Início</span>
+            <span className="text-xs mt-1">Home</span>
           </Link>
 
           <button 
@@ -37,7 +37,7 @@ export const Footer = () => {
             className="flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors"
           >
             <Package className="h-5 w-5" />
-            <span className="text-xs mt-1">Estoque</span>
+            <span className="text-xs mt-1">Inventory</span>
           </Link>
         </div>
       </nav>

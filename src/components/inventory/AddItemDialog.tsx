@@ -23,11 +23,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
+  name: z.string().min(1, "Name is required"),
   category: z.enum(["Window Tinting", "PPF", "Wrap"] as const),
-  width: z.number().min(0.01, "Largura deve ser maior que 0"),
-  length: z.number().min(0.01, "Comprimento deve ser maior que 0"),
-  quantity: z.number().min(1, "Quantidade deve ser maior que 0"),
+  width: z.number().min(0.01, "Width must be greater than 0"),
+  length: z.number().min(0.01, "Length must be greater than 0"),
+  quantity: z.number().min(1, "Quantity must be greater than 0"),
   minQuantity: z.number().optional(),
   price: z.number().optional(),
   observation: z.string().optional(),
@@ -119,7 +119,7 @@ export function AddItemDialog({
           <div className="flex items-center gap-2">
             <Plus className="w-5 h-5 text-blue-500" />
             <DialogTitleComponent className="text-white text-xl font-semibold">
-              {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
+              {mode === "edit" ? "Edit Item" : "Add New Item"}
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
@@ -141,14 +141,14 @@ export function AddItemDialog({
               className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               <X className="w-4 h-4 mr-2" />
-              Cancelar
+              Cancel
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
               className="bg-blue-500 text-white hover:bg-blue-600"
             >
               <Plus className="w-4 h-4 mr-2" />
-              {mode === "edit" ? "Salvar" : "Adicionar"}
+              {mode === "edit" ? "Save" : "Add"}
             </Button>
           </div>
         </div>

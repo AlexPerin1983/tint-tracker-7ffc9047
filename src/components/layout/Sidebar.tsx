@@ -18,8 +18,8 @@ import { logoutUser } from "@/services/sheets";
 
 const navigationItems = [
   { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Bobinas", icon: Box, url: "/rolls" },
-  { title: "Retalhos", icon: Scissors, url: "/scraps" },
+  { title: "Rolls", icon: Box, url: "/rolls" },
+  { title: "Scraps", icon: Scissors, url: "/scraps" },
 ];
 
 const externalLinks = [
@@ -44,13 +44,13 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
       localStorage.removeItem("userEmail");
       window.location.reload();
       toast({
-        title: "Logout realizado com sucesso",
-        description: "Você foi desconectado do sistema",
+        title: "Logout successful",
+        description: "You have been disconnected from the system",
       });
     } catch (error) {
       toast({
-        title: "Erro ao realizar logout",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
+        title: "Error during logout",
+        description: error instanceof Error ? error.message : "Unknown error",
         variant: "destructive",
       });
     }
@@ -59,7 +59,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
   return (
     <Sidebar>
       <SidebarContent className="bg-gradient-to-b from-slate-900 to-slate-800 md:bg-none pt-16 md:pt-16">
-        {/* Seção 1: Perfil do Usuário */}
+        {/* Section 1: User Profile */}
         <SidebarGroup>
           <div className="flex items-center gap-3 p-6 border-b border-slate-700/50">
             <Avatar>
@@ -74,7 +74,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
 
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
-            Navegação
+            Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="px-3">
@@ -99,7 +99,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Seção 3: Links Externos */}
+        {/* Section 3: External Links */}
         <SidebarGroup className="mt-6">
           <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
             Links
@@ -133,7 +133,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Seção 4: Logout */}
+      {/* Section 4: Logout */}
       <SidebarFooter className="border-t border-slate-700/50 p-4">
         <SidebarMenu>
           <SidebarMenuItem>

@@ -34,7 +34,7 @@ export function FilterSheet({
         <SheetHeader className="p-6 border-b border-slate-700">
           <div className="flex items-center gap-2">
             <Filter className="w-5 h-5 text-blue-500" />
-            <SheetTitle className="text-white text-xl font-semibold">Filtros</SheetTitle>
+            <SheetTitle className="text-white text-xl font-semibold">Filters</SheetTitle>
           </div>
         </SheetHeader>
 
@@ -55,14 +55,14 @@ export function FilterSheet({
               className="flex-1 bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               <X className="w-4 h-4 mr-2" />
-              Limpar
+              Clear
             </Button>
             <Button
               onClick={handleApplyFilters}
               className="flex-1 bg-blue-500 text-white hover:bg-blue-600"
             >
               <Filter className="w-4 h-4 mr-2" />
-              Aplicar
+              Apply
             </Button>
           </div>
         </div>
