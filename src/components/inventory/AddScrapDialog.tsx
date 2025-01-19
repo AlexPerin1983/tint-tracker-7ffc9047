@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -49,11 +50,13 @@ export function AddScrapDialog({
   const formSchema = z.object({
     width: z.number()
       .min(0.01, "Width must be greater than 0")
-      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
+      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width || 0}m`),
     length: z.number()
-      .min(0.01, "Length must be greater than 0"),
+      .min(0.01, "Length must be greater than 0")
+      .max(60, "Maximum length is 60m"),
     quantity: z.number()
-      .min(1, "Quantity must be greater than 0"),
+      .min(1, "Quantity must be greater than 0")
+      .max(100, "Maximum quantity is 100"),
     observation: z.string().optional(),
   });
 
@@ -77,6 +80,17 @@ export function AddScrapDialog({
       onOpenChange(false);
     }
   }, [open, parentItem, toast, onOpenChange]);
+
+  useEffect(() => {
+    if (open && mode === "edit" && itemToEdit) {
+      form.reset({
+        width: itemToEdit.width,
+        length: itemToEdit.length,
+        quantity: itemToEdit.quantity,
+        observation: itemToEdit.observation,
+      });
+    }
+  }, [open, mode, itemToEdit, form]);
 
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
@@ -153,11 +167,20 @@ export function AddScrapDialog({
     }
   };
 
+  if (!parentItem && open) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{mode === "edit" ? "Edit Scrap" : "Add New Scrap"}</DialogTitle>
+          <DialogDescription>
+            {mode === "edit" 
+              ? "Update the scrap dimensions and details below." 
+              : "Add a new scrap with the dimensions and details below."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
