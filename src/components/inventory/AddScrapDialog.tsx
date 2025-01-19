@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrapFormData } from "@/types/inventory";
@@ -24,9 +25,13 @@ import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  width: z.number().min(0.01, "Largura deve ser maior que 0"),
-  length: z.number().min(0.01, "Comprimento deve ser maior que 0"),
-  quantity: z.number().min(1, "Quantidade deve ser maior que 0"),
+  width: z.number()
+    .min(0.01, "Width must be greater than 0")
+    .max(1.82, "Maximum width is 1.82m"),
+  length: z.number()
+    .min(0.01, "Length must be greater than 0"),
+  quantity: z.number()
+    .min(1, "Quantity must be greater than 0"),
   observation: z.string().optional(),
 });
 
@@ -104,27 +109,47 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Adicionar Novo Retalho</DialogTitle>
+          <DialogTitle>Add New Scrap</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
                 name="width"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Largura (metros)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Ex: 0.5"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <FormLabel>Width (meters)</FormLabel>
+                    <div className="space-y-2">
+                      <Slider
+                        min={0}
+                        max={1.82}
+                        step={0.01}
+                        value={[field.value]}
+                        onValueChange={(value) => field.onChange(value[0])}
+                        className="w-full"
                       />
-                    </FormControl>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">0m</span>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="Ex: 0.5"
+                            {...field}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value);
+                              if (!isNaN(value) && value <= 1.82) {
+                                field.onChange(value);
+                              }
+                            }}
+                            className="w-24 text-right"
+                          />
+                        </FormControl>
+                        <span className="text-sm text-muted-foreground">1.82m</span>
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -135,16 +160,36 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                 name="length"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comprimento (metros)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Ex: 1.2"
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    <FormLabel>Length (meters)</FormLabel>
+                    <div className="space-y-2">
+                      <Slider
+                        min={0}
+                        max={60}
+                        step={0.01}
+                        value={[field.value]}
+                        onValueChange={(value) => field.onChange(value[0])}
+                        className="w-full"
                       />
-                    </FormControl>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">0m</span>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="Ex: 1.2"
+                            {...field}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value);
+                              if (!isNaN(value) && value <= 60) {
+                                field.onChange(value);
+                              }
+                            }}
+                            className="w-24 text-right"
+                          />
+                        </FormControl>
+                        <span className="text-sm text-muted-foreground">60m</span>
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -155,7 +200,7 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quantidade</FormLabel>
+                    <FormLabel>Quantity</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -175,10 +220,10 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
               name="observation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Observação</FormLabel>
+                  <FormLabel>Observation</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Informações adicionais sobre o retalho"
+                      placeholder="Additional information about the scrap"
                       {...field}
                     />
                   </FormControl>
@@ -193,9 +238,9 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancelar
+                Cancel
               </Button>
-              <Button type="submit">Salvar</Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </Form>
