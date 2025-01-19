@@ -5,11 +5,14 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useItems } from "@/hooks/use-items";
 import { formatDate } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AddScrapDialog } from "@/components/inventory/AddScrapDialog";
+import { useState } from "react";
 
 const ScrapDetails = () => {
   const { id } = useParams();
   const { items } = useItems();
   const isMobile = useIsMobile();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const scrap = items.find(item => item.id === id);
   const parentItem = scrap?.originId ? items.find(item => item.id === scrap.originId) : null;
@@ -31,7 +34,11 @@ const ScrapDetails = () => {
           </Link>
           <h1 className="text-lg md:text-2xl font-bold">Detalhes do Retalho</h1>
         </div>
-        <Button variant="outline" size={isMobile ? "sm" : "default"} onClick={() => {}}>
+        <Button 
+          variant="outline" 
+          size={isMobile ? "sm" : "default"} 
+          onClick={() => setEditDialogOpen(true)}
+        >
           <Edit className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Editar
         </Button>
       </div>
@@ -122,6 +129,14 @@ const ScrapDetails = () => {
           </Card>
         )}
       </div>
+
+      {scrap.originId && (
+        <AddScrapDialog
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          parentItemId={scrap.originId}
+        />
+      )}
     </div>
   );
 };
