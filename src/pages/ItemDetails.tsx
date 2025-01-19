@@ -22,7 +22,7 @@ const ItemDetails = () => {
   const scraps = items.filter((i) => i.originId === id);
   const itemTransactions = transactions?.filter((t) => t.itemId === id) ?? [];
 
-  if (!item) return <div>Item não encontrado</div>;
+  if (!item) return <div>Item not found</div>;
 
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
@@ -30,10 +30,10 @@ const ItemDetails = () => {
         <div className="flex items-center gap-2 md:gap-4">
           <Link to="/">
             <Button variant="ghost" size={isMobile ? "sm" : "default"}>
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Voltar
+              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Back
             </Button>
           </Link>
-          <h1 className="text-lg md:text-2xl font-bold">Detalhes do Item</h1>
+          <h1 className="text-lg md:text-2xl font-bold">Item Details</h1>
         </div>
       </div>
 
