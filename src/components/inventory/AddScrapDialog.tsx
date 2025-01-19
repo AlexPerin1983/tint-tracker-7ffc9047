@@ -80,13 +80,6 @@ export function AddScrapDialog({
         quantity: editingScrap.quantity,
         observation: editingScrap.observation,
       });
-    } else {
-      form.reset({
-        width: 0,
-        length: 0,
-        quantity: 1,
-        observation: "",
-      });
     }
   }, [editingScrap, form]);
 
