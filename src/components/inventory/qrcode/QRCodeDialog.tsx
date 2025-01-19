@@ -106,24 +106,24 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
           />
 
           <p className="text-sm text-muted-foreground text-center">
-            Escaneie este QR Code para acessar diretamente a página de detalhes deste item no sistema.
+            Scan this QR Code to directly access the item details page in the system.
           </p>
 
           <div className="w-full space-y-2 text-sm">
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Código:</span>
+              <span className="font-medium">Code:</span>
               <span>{item.code}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Nome:</span>
+              <span className="font-medium">Name:</span>
               <span>{item.name}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Categoria:</span>
+              <span className="font-medium">Category:</span>
               <span>{item.category}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Dimensões:</span>
+              <span className="font-medium">Dimensions:</span>
               <span>{qrCodeData.dimensions}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
@@ -137,11 +137,11 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
           <div className="flex gap-4">
             <Button onClick={handleDownload} variant="outline">
               <Download className="w-4 h-4 mr-2" />
-              Baixar
+              Download
             </Button>
             <Button onClick={handlePrint} variant="outline">
               <Printer className="w-4 h-4 mr-2" />
-              Imprimir
+              Print
             </Button>
           </div>
         </div>
