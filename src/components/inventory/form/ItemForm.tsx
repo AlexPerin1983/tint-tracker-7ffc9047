@@ -14,23 +14,39 @@ interface ItemFormProps {
 const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
   const [activeTab, setActiveTab] = useState("basic");
 
+  const tabs = [
+    {
+      title: "Basic",
+      value: "basic",
+      icon: <Package2 className="w-4 h-4" />,
+    },
+    {
+      title: "Dimensions",
+      value: "dimensions",
+      icon: <Ruler className="w-4 h-4" />,
+    },
+    {
+      title: "Price",
+      value: "price",
+      icon: <DollarSign className="w-4 h-4" />,
+    },
+  ];
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
-              <Package2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Básico</span>
-            </TabsTrigger>
-            <TabsTrigger value="dimensions" className="flex items-center gap-2">
-              <Ruler className="w-4 h-4" />
-              <span className="hidden sm:inline">Dimensões</span>
-            </TabsTrigger>
-            <TabsTrigger value="price" className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
-              <span className="hidden sm:inline">Preço</span>
-            </TabsTrigger>
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="flex items-center gap-2"
+              >
+                {tab.icon}
+                <span className="hidden sm:inline">{tab.title}</span>
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <FormFields form={form} activeTab={activeTab} />
