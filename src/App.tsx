@@ -4,25 +4,25 @@ import Index from "./pages/Index";
 import ItemDetails from "./pages/ItemDetails";
 import ScrapDetails from "./pages/ScrapDetails";
 import Landing from "./pages/Landing";
+import { validateUser } from "./services/sheets";
 
 function App() {
   const { data: paymentStatus, isLoading } = useQuery({
     queryKey: ['payment-status'],
     queryFn: async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const sessionId = urlParams.get('session_id');
+      const customerEmail = urlParams.get('customer_email');
       
-      if (sessionId) {
+      if (customerEmail) {
         try {
-          const response = await fetch(`/api/verify-payment?session_id=${sessionId}`);
-          const data = await response.json();
+          const { isValid } = await validateUser(customerEmail);
           
-          if (data.success) {
+          if (isValid) {
             localStorage.setItem('has_access', 'true');
             return true;
           }
         } catch (error) {
-          console.error('Erro ao verificar pagamento:', error);
+          console.error('Erro ao verificar acesso:', error);
         }
       }
       
