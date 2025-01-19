@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { CheckCircle, BarChart2, QrCode, Shield } from "lucide-react";
 
 export default function Landing() {
   const handleBuyNow = () => {
@@ -8,48 +9,45 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#1E293B] to-[#0F172A]">
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Stop Wasting Film! Smart Inventory Control with Tint QR Tracker
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            Stop Wasting Film!<br />Smart Inventory Control with Tint QR Tracker
           </h1>
-          <p className="text-xl text-gray-300 mb-8">
-            Organization, savings, and convenience in one powerful app
-          </p>
-          <p className="text-lg text-gray-300 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Transform your inventory management and prevent waste with the best system for window film and automotive wraps
           </p>
+          <Button 
+            size="lg" 
+            className="bg-primary hover:bg-primary/90 text-xl px-8 py-6 h-auto"
+            onClick={handleBuyNow}
+          >
+            Buy Now - Only $49
+          </Button>
         </div>
 
-        {/* Video Section */}
+        {/* Video Demo Section */}
         <div className="mb-16">
-          <div className="aspect-w-16 aspect-h-9 bg-black/20 rounded-lg mb-8">
-            {/* Replace with actual video embed */}
+          <div className="aspect-w-16 aspect-h-9 bg-card/50 backdrop-blur rounded-lg mb-8">
             <div className="flex items-center justify-center text-white">
-              Video Demonstration
+              Video Demonstration Coming Soon
             </div>
           </div>
           <p className="text-center text-lg text-gray-300 mb-8 max-w-3xl mx-auto">
-            With Tint QR Tracker, you'll have complete control over your rolls and remnants inventory. Save time and money by maximizing every material with QR Code tracking.
+            With Tint QR Tracker, you&apos;ll have complete control over your rolls and remnants inventory. Save time and money by maximizing every material with QR Code tracking.
           </p>
-          <div className="text-center">
-            <Button 
-              size="lg" 
-              className="bg-green-500 hover:bg-green-600 text-xl px-8 py-6 h-auto"
-              onClick={handleBuyNow}
-            >
-              Buy Now - Only $49
-            </Button>
-          </div>
         </div>
 
         {/* Benefits Section */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           <Card className="bg-card/50 backdrop-blur border-muted">
             <CardHeader>
-              <CardTitle className="text-white">Save Money</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <BarChart2 className="w-6 h-6 text-primary" />
+                Save Money
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300">
@@ -60,7 +58,10 @@ export default function Landing() {
 
           <Card className="bg-card/50 backdrop-blur border-muted">
             <CardHeader>
-              <CardTitle className="text-white">Stay Organized</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <CheckCircle className="w-6 h-6 text-primary" />
+                Stay Organized
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300">
@@ -71,7 +72,10 @@ export default function Landing() {
 
           <Card className="bg-card/50 backdrop-blur border-muted">
             <CardHeader>
-              <CardTitle className="text-white">Work Smarter</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <QrCode className="w-6 h-6 text-primary" />
+                Work Smarter
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300">
@@ -82,7 +86,10 @@ export default function Landing() {
 
           <Card className="bg-card/50 backdrop-blur border-muted">
             <CardHeader>
-              <CardTitle className="text-white">Total Control</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Shield className="w-6 h-6 text-primary" />
+                Total Control
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300">
@@ -125,7 +132,7 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-300">
-                  Just your smartphone! If you can scan a QR code, you're ready to go.
+                  Just your smartphone! If you can scan a QR code, you&apos;re ready to go.
                 </p>
               </CardContent>
             </Card>
@@ -142,7 +149,7 @@ export default function Landing() {
           </p>
           <Button 
             size="lg" 
-            className="bg-green-500 hover:bg-green-600 text-xl px-8 py-6 h-auto"
+            className="bg-primary hover:bg-primary/90 text-xl px-8 py-6 h-auto"
             onClick={handleBuyNow}
           >
             Buy Now - Only $49
