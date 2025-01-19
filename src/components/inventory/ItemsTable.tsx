@@ -148,11 +148,11 @@ export function ItemsTable() {
         itemToEdit={selectedItem}
       />
 
-      {selectedItem?.originId && (
+      {selectedItem?.type === 'retalho' && (
         <AddScrapDialog
           open={editScrapDialogOpen}
           onOpenChange={setEditScrapDialogOpen}
-          parentItemId={selectedItem.originId}
+          parentItemId={selectedItem.originId || ''}
         />
       )}
 
