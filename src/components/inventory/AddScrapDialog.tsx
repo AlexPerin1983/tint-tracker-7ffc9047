@@ -46,23 +46,10 @@ export function AddScrapDialog({
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
 
-  useEffect(() => {
-    if (open && !parentItem) {
-      toast({
-        title: "Error",
-        description: "Parent item not found",
-        variant: "destructive",
-      });
-      onOpenChange(false);
-    }
-  }, [open, parentItem, toast, onOpenChange]);
-
-  if (!parentItem) return null;
-
   const formSchema = z.object({
     width: z.number()
       .min(0.01, "Width must be greater than 0")
-      .max(parentItem.width, `Maximum width is ${parentItem.width}m`),
+      .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
     length: z.number()
       .min(0.01, "Length must be greater than 0"),
     quantity: z.number()
@@ -80,7 +67,27 @@ export function AddScrapDialog({
     },
   });
 
+  useEffect(() => {
+    if (open && !parentItem) {
+      toast({
+        title: "Error",
+        description: "Parent item not found",
+        variant: "destructive",
+      });
+      onOpenChange(false);
+    }
+  }, [open, parentItem, toast, onOpenChange]);
+
   const onSubmit = async (data: ScrapFormData) => {
+    if (!parentItem) {
+      toast({
+        title: "Error",
+        description: "Parent item not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (mode === "edit" && itemToEdit) {
       try {
         await updateScrap({
