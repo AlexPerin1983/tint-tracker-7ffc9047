@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrapFormData, Item } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 interface AddScrapDialogProps {
   open: boolean;
@@ -44,17 +45,19 @@ export function AddScrapDialog({
   
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
-  
-  // Se não encontrar o parentItem, mostra um erro e fecha o dialog
-  if (!parentItem) {
-    toast({
-      title: "Error",
-      description: "Parent item not found",
-      variant: "destructive",
-    });
-    onOpenChange(false);
-    return null;
-  }
+
+  useEffect(() => {
+    if (open && !parentItem) {
+      toast({
+        title: "Error",
+        description: "Parent item not found",
+        variant: "destructive",
+      });
+      onOpenChange(false);
+    }
+  }, [open, parentItem, toast, onOpenChange]);
+
+  if (!parentItem) return null;
 
   const formSchema = z.object({
     width: z.number()
