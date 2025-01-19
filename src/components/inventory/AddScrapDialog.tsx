@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ScrapFormData } from "@/types/inventory";
+import { ScrapFormData, Item } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 
@@ -28,10 +28,18 @@ interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   parentItemId: string;
+  mode?: "add" | "edit";
+  itemToEdit?: Item;
 }
 
-export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDialogProps) {
-  const { addScrap, items } = useItems();
+export function AddScrapDialog({ 
+  open, 
+  onOpenChange, 
+  parentItemId,
+  mode = "add",
+  itemToEdit 
+}: AddScrapDialogProps) {
+  const { addScrap, updateScrap, items } = useItems();
   const { toast } = useToast();
   
   const parentItem = items.find(item => item.id === parentItemId);
@@ -51,13 +59,38 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
   const form = useForm<ScrapFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      width: 0,
-      length: 0,
-      quantity: 1,
+      width: mode === "edit" && itemToEdit ? itemToEdit.width : 0,
+      length: mode === "edit" && itemToEdit ? itemToEdit.length : 0,
+      quantity: mode === "edit" && itemToEdit ? itemToEdit.quantity : 1,
+      observation: mode === "edit" && itemToEdit ? itemToEdit.observation : "",
     },
   });
 
   const onSubmit = async (data: ScrapFormData) => {
+    if (mode === "edit" && itemToEdit) {
+      try {
+        await updateScrap(itemToEdit.id, {
+          ...data,
+          originId: parentItemId,
+        });
+        
+        toast({
+          title: "Success",
+          description: "Scrap updated successfully!",
+        });
+        
+        onOpenChange(false);
+        form.reset();
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Error updating scrap",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
+
     if (!parentItem) {
       toast({
         title: "Error",
@@ -105,15 +138,11 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
     }
   };
 
-  if (!parentItem) {
-    return null;
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add New Scrap</DialogTitle>
+          <DialogTitle>{mode === "edit" ? "Edit Scrap" : "Add New Scrap"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -264,7 +293,7 @@ export function AddScrapDialog({ open, onOpenChange, parentItemId }: AddScrapDia
               >
                 Cancel
               </Button>
-              <Button type="submit">Save</Button>
+              <Button type="submit">{mode === "edit" ? "Update" : "Save"}</Button>
             </DialogFooter>
           </form>
         </Form>
