@@ -4,7 +4,9 @@ import { ArrowRight, CheckCircle2, Shield, Timer, Zap } from "lucide-react";
 
 const Landing = () => {
   const handleStartNow = () => {
-    window.location.href = "https://buy.stripe.com/28oaGF8YAebQg4UaEG";
+    // Usa a URL atual como base para o redirecionamento
+    const successUrl = `${window.location.origin}/app`;
+    window.location.href = `https://buy.stripe.com/28oaGF8YAebQg4UaEG?success_url=${encodeURIComponent(successUrl)}`;
   };
 
   return (
