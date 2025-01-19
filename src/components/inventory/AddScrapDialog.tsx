@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -147,6 +148,11 @@ export function AddScrapDialog({
           <DialogTitle>
             {editingScrap ? "Edit Scrap" : "Add New Scrap"}
           </DialogTitle>
+          <DialogDescription>
+            {editingScrap 
+              ? "Update the scrap's dimensions and details"
+              : "Add a new scrap with its dimensions and details"}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
