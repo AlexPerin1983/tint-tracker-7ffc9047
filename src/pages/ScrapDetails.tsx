@@ -130,13 +130,13 @@ const ScrapDetails = () => {
         )}
       </div>
 
-      {scrap.originId && (
-        <AddScrapDialog
-          open={editDialogOpen}
-          onOpenChange={setEditDialogOpen}
-          parentItemId={scrap.originId}
-        />
-      )}
+      <AddScrapDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        parentItemId={scrap.originId || ''}
+        mode="edit"
+        itemToEdit={scrap}
+      />
     </div>
   );
 };
