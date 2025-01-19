@@ -55,7 +55,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome do Material</FormLabel>
+              <FormLabel>Material Name</FormLabel>
               <FormControl>
                 <Input placeholder="Ex: Window Film Classic" {...field} />
               </FormControl>
@@ -69,14 +69,14 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Categoria</FormLabel>
+              <FormLabel>Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -94,8 +94,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
       <TabsContent value="dimensions" className="space-y-8 mt-4">
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
-            <span className="text-xs text-slate-400">Máx: 60m</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Length</span>
+            <span className="text-xs text-slate-400">Max: 60m</span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -135,8 +135,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
-            <span className="text-xs text-slate-400">Máx: 1.82m</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Width</span>
+            <span className="text-xs text-slate-400">Max: 1.82m</span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -196,8 +196,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">em estoque</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">in stock</span>
               </div>
             </div>
           </div>
@@ -223,8 +223,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">alerta estoque</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">stock alert</span>
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preço por m² (USD)</FormLabel>
+              <FormLabel>Price per m² (USD)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -261,10 +261,10 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="observation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observação</FormLabel>
+              <FormLabel>Notes</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Item esta localizado na prateleira..."
+                  placeholder="Item is located on shelf..."
                   className="min-h-[100px]"
                   {...field}
                 />

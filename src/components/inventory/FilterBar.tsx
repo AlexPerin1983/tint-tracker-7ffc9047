@@ -22,7 +22,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
   const handleClearFilters = () => {
     onClearFilters();
     toast({
-      title: "Filtros limpos!",
+      title: "Filters cleared!",
       duration: 2000,
     });
   };
@@ -33,7 +33,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
 
   const handleApplyFilters = () => {
     toast({
-      title: "Filtros aplicados com sucesso!",
+      title: "Filters applied successfully!",
       duration: 2000,
     });
   };
@@ -46,7 +46,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
           className="w-full bg-[#3B82F6] text-white hover:bg-[#2563EB]"
         >
           <FilterIcon className="w-4 h-4 mr-2" />
-          Filtrar
+          Filter
         </Button>
         <FilterSheet
           open={showFilterSheet}
@@ -77,7 +77,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
           className="bg-[#3B82F6] hover:bg-[#2563EB] text-white h-10"
         >
           <X className="h-4 w-4 mr-2" />
-          Limpar Filtros
+          Clear Filters
         </Button>
       </div>
     </div>

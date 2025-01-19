@@ -82,10 +82,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         onValueChange={(value) => handleInputChange("category", value)}
       >
         <SelectTrigger className="bg-[#1A1F2C] border-slate-700 hover:border-blue-500 transition-colors">
-          <SelectValue placeholder="Categoria">
+          <SelectValue placeholder="Category">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-blue-500" />
-              {filters.category === "all" ? "Todas" : filters.category}
+              {filters.category === "all" ? "All" : filters.category}
             </div>
           </SelectValue>
         </SelectTrigger>
@@ -93,7 +93,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           <SelectItem value="all">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4" />
-              Todas
+              All
             </div>
           </SelectItem>
           <SelectItem value="Window Tinting">Window Tinting</SelectItem>
@@ -106,8 +106,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         <div className="space-y-8 pt-4">
           <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento</span>
-              <span className="text-xs text-slate-400">Máx: 60m</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Length</span>
+              <span className="text-xs text-slate-400">Max: 60m</span>
             </div>
             <div 
               className="relative group cursor-pointer"
@@ -147,8 +147,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
           <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura</span>
-              <span className="text-xs text-slate-400">Máx: 1.82m</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Width</span>
+              <span className="text-xs text-slate-400">Max: 1.82m</span>
             </div>
             <div 
               className="relative group cursor-pointer"
@@ -189,7 +189,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
           <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700">
             <div className="flex items-center gap-3">
               <span className="text-blue-500 text-3xl font-bold">{itemCount || 0}</span>
-              <span className="text-slate-400 text-sm uppercase tracking-wider">itens encontrados</span>
+              <span className="text-slate-400 text-sm uppercase tracking-wider">items found</span>
             </div>
           </div>
         </div>
