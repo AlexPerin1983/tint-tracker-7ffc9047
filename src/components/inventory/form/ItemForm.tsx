@@ -44,8 +44,8 @@ const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          <TabsList className="w-full grid grid-cols-3 gap-2 bg-transparent p-0">
-            {tabs.map((tab) => {
+          <TabsList className="w-full flex bg-transparent p-0 mb-8">
+            {tabs.map((tab, index) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.value;
               
@@ -54,44 +54,54 @@ const ItemForm = memo(({ form, onSubmit }: ItemFormProps) => {
                   key={tab.value}
                   value={tab.value}
                   className={cn(
-                    "group relative flex items-center gap-3 p-4 rounded-lg border border-slate-800/50",
+                    "group relative flex-1 py-6 px-8",
+                    "border-b-2 border-slate-700/50",
                     "transition-all duration-300 ease-in-out",
-                    "hover:bg-slate-800/50 hover:border-blue-500/30",
-                    "data-[state=active]:border-blue-500 data-[state=active]:bg-gradient-to-br from-blue-500/10 to-blue-600/5",
-                    "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left",
-                    "after:scale-x-0 after:bg-blue-500 after:transition-transform",
-                    "data-[state=active]:after:scale-x-100"
+                    "hover:bg-slate-800/30",
+                    "data-[state=active]:border-blue-500",
+                    "first:rounded-tl-xl last:rounded-tr-xl",
+                    index !== tabs.length - 1 && "border-r border-r-slate-700/50"
                   )}
                 >
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "p-3 rounded-xl transition-all duration-300",
+                      "bg-gradient-to-br shadow-lg",
+                      isActive 
+                        ? "from-blue-500 to-blue-600 shadow-blue-500/20" 
+                        : "from-slate-700 to-slate-800 shadow-slate-900/20 group-hover:from-slate-600"
+                    )}>
+                      <Icon className={cn(
+                        "w-5 h-5 transition-colors duration-300",
+                        isActive ? "text-white" : "text-slate-400 group-hover:text-slate-300"
+                      )} />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <div className={cn(
+                        "font-semibold transition-colors duration-300",
+                        isActive ? "text-white" : "text-slate-400 group-hover:text-slate-300"
+                      )}>
+                        {tab.title}
+                      </div>
+                      <div className={cn(
+                        "text-xs transition-colors duration-300",
+                        isActive ? "text-blue-200" : "text-slate-500 group-hover:text-slate-400"
+                      )}>
+                        {tab.description}
+                      </div>
+                    </div>
+                  </div>
                   <div className={cn(
-                    "p-2 rounded-lg transition-all duration-300",
-                    "bg-gradient-to-br",
-                    isActive 
-                      ? "from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/20" 
-                      : "from-slate-800 to-slate-700 text-slate-400 group-hover:from-slate-700 group-hover:to-slate-600"
-                  )}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <div className={cn(
-                      "font-medium transition-colors duration-300",
-                      isActive ? "text-white" : "text-slate-400 group-hover:text-slate-300"
-                    )}>
-                      {tab.title}
-                    </div>
-                    <div className={cn(
-                      "text-xs transition-colors duration-300",
-                      isActive ? "text-blue-200" : "text-slate-500 group-hover:text-slate-400"
-                    )}>
-                      {tab.description}
-                    </div>
-                  </div>
+                    "absolute bottom-0 left-0 w-full h-0.5 bg-blue-500",
+                    "transform scale-x-0 transition-transform duration-300",
+                    isActive && "scale-x-100"
+                  )} />
                 </TabsTrigger>
               );
             })}
           </TabsList>
 
-          <div className="mt-8">
+          <div className="mt-8 animate-fade-in">
             <FormFields form={form} activeTab={activeTab} />
           </div>
         </Tabs>
