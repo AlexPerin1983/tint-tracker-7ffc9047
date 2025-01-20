@@ -72,7 +72,6 @@ export function AddScrapDialog({
     },
   });
 
-  // Reset form when editing scrap changes
   useEffect(() => {
     if (editingScrap) {
       form.reset({
@@ -95,7 +94,7 @@ export function AddScrapDialog({
     }
 
     const totalScrapArea = existingScraps
-      .filter(scrap => scrap.id !== editingScrap?.id) // Exclude current scrap when editing
+      .filter(scrap => scrap.id !== editingScrap?.id)
       .reduce(
         (acc, scrap) => acc + scrap.width * scrap.length * scrap.quantity,
         0
@@ -113,20 +112,21 @@ export function AddScrapDialog({
     }
 
     try {
-      await addScrap({
-        ...data,
-        originId: parentItemId,
-        id: editingScrap?.id,
-      });
-      
-      // Força a atualização dos dados após a edição
+      // Criar múltiplos retalhos individuais baseado na quantidade
+      const promises = Array.from({ length: data.quantity }).map(() => 
+        addScrap({
+          ...data,
+          quantity: 1, // Cada retalho terá quantidade 1
+          originId: parentItemId,
+        })
+      );
+
+      await Promise.all(promises);
       await refetchItems();
       
       toast({
         title: "Success",
-        description: editingScrap 
-          ? "Scrap updated successfully!"
-          : "Scrap added successfully!",
+        description: `${data.quantity} retalhos criados com sucesso!`,
       });
       
       onOpenChange(false);
