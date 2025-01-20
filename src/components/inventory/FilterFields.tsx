@@ -40,21 +40,32 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
   const handleNumericRangeInput = (
     field: "length" | "width",
-    values: number[]
+    values: number[],
+    index?: number
   ) => {
+    // Garante que o valor mínimo não ultrapasse o máximo
+    const ensureValidRange = (newValues: number[]) => {
+      if (newValues[0] > newValues[1]) {
+        return index === 0 ? [newValues[1], newValues[1]] : [newValues[0], newValues[0]];
+      }
+      return newValues;
+    };
+
     if (field === "length") {
-      setSliderLength(values);
+      const validValues = ensureValidRange(values);
+      setSliderLength(validValues);
       onFilterChange({
         ...filters,
-        minLength: values[0].toString(),
-        maxLength: values[1].toString(),
+        minLength: validValues[0].toString(),
+        maxLength: validValues[1].toString(),
       });
     } else {
-      setSliderWidth(values);
+      const validValues = ensureValidRange(values);
+      setSliderWidth(validValues);
       onFilterChange({
         ...filters,
-        minWidth: values[0].toString(),
-        maxWidth: values[1].toString(),
+        minWidth: validValues[0].toString(),
+        maxWidth: validValues[1].toString(),
       });
     }
   };
@@ -112,8 +123,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               value={sliderLength}
               max={60}
               step={0.01}
-              minStepsBetweenThumbs={1}
-              onValueChange={(value) => handleNumericRangeInput("length", value)}
+              minStepsBetweenThumbs={0.1}
+              onValueChange={(values, thumb) => handleNumericRangeInput("length", values, thumb)}
               className="py-4"
             />
           </div>
@@ -139,7 +150,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               max={1.82}
               step={0.01}
               minStepsBetweenThumbs={0.1}
-              onValueChange={(value) => handleNumericRangeInput("width", value)}
+              onValueChange={(values, thumb) => handleNumericRangeInput("width", values, thumb)}
               className="py-4"
             />
           </div>
