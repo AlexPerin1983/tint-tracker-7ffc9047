@@ -19,6 +19,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   const [showWidthInput, setShowWidthInput] = useState(false);
   const [sliderLength, setSliderLength] = useState([Number(filters.minLength) || 0, Number(filters.maxLength) || 60]);
   const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0, Number(filters.maxWidth) || 1.82]);
+  const [activeThumb, setActiveThumb] = useState<number | null>(null);
   const debouncedName = useDebounce(localName, 300);
 
   useEffect(() => {
@@ -67,6 +68,14 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
         maxWidth: validValues[1].toString(),
       });
     }
+  };
+
+  const handleTouchStart = (index: number) => {
+    setActiveThumb(index);
+  };
+
+  const handleTouchEnd = () => {
+    setActiveThumb(null);
   };
 
   const containerClass = variant === "vertical" 
@@ -124,6 +133,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               step={0.01}
               minStepsBetweenThumbs={0.1}
               onValueChange={values => handleNumericRangeInput("length", values)}
+              onTouchStart={() => handleTouchStart(0)}
+              onTouchEnd={handleTouchEnd}
               className="py-4"
             />
           </div>
@@ -150,6 +161,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               step={0.01}
               minStepsBetweenThumbs={0.1}
               onValueChange={values => handleNumericRangeInput("width", values)}
+              onTouchStart={() => handleTouchStart(1)}
+              onTouchEnd={handleTouchEnd}
               className="py-4"
             />
           </div>
