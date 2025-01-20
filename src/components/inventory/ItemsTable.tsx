@@ -40,18 +40,19 @@ export function ItemsTable() {
       const matchCategory = filters.category === "all" || item.category === filters.category;
       const matchName = !filters.name || 
         item.name.toLowerCase().includes(filters.name.toLowerCase());
-      const matchMinWidth = !filters.minWidth || 
-        item.width >= parseFloat(filters.minWidth);
-      const matchMaxWidth = !filters.maxWidth || 
-        item.width <= parseFloat(filters.maxWidth);
-      const matchMinLength = !filters.minLength || 
-        item.length >= parseFloat(filters.minLength);
-      const matchMaxLength = !filters.maxLength || 
-        item.length <= parseFloat(filters.maxLength);
+      
+      // Lógica atualizada para verificar os intervalos de largura e comprimento
+      const matchWidth = (
+        (!filters.minWidth || item.width >= parseFloat(filters.minWidth)) &&
+        (!filters.maxWidth || item.width <= parseFloat(filters.maxWidth))
+      );
+      
+      const matchLength = (
+        (!filters.minLength || item.length >= parseFloat(filters.minLength)) &&
+        (!filters.maxLength || item.length <= parseFloat(filters.maxLength))
+      );
 
-      return matchCategory && matchName && 
-             matchMinWidth && matchMaxWidth && 
-             matchMinLength && matchMaxLength;
+      return matchCategory && matchName && matchWidth && matchLength;
     });
   };
 
