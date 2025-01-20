@@ -19,6 +19,7 @@ import { AddScrapDialog } from "./AddScrapDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>({
     category: "all",
     name: "",
@@ -70,6 +71,7 @@ export function ItemsTable() {
   };
 
   const handleEditClick = (item: Item) => {
+    setSelectedItemId(item.id);
     setSelectedItem(item);
     if (item.type === 'retalho') {
       setEditScrapDialogOpen(true);
@@ -79,6 +81,7 @@ export function ItemsTable() {
   };
 
   const handleQRCodeClick = (item: Item) => {
+    setSelectedItemId(item.id);
     setSelectedItem(item);
     setQrCodeDialogOpen(true);
   };
@@ -106,7 +109,10 @@ export function ItemsTable() {
           </TableHeader>
           <TableBody>
             {filteredItems.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow 
+                key={item.id}
+                className={selectedItemId === item.id ? "bg-muted/30" : ""}
+              >
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <span>{item.code}</span>
@@ -120,7 +126,7 @@ export function ItemsTable() {
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
                 <TableCell className="text-right space-x-2">
-                  <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`}>
+                  <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`} onClick={() => setSelectedItemId(item.id)}>
                     <Button variant="ghost" size="icon" title="View Details">
                       <Eye className="h-4 w-4" />
                     </Button>
@@ -138,7 +144,10 @@ export function ItemsTable() {
                     size="icon" 
                     className="text-destructive" 
                     title="Delete"
-                    onClick={() => deleteItem(item.id)}
+                    onClick={() => {
+                      setSelectedItemId(item.id);
+                      deleteItem(item.id);
+                    }}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
