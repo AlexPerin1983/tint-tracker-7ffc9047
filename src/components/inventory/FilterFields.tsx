@@ -40,13 +40,12 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
   const handleNumericRangeInput = (
     field: "length" | "width",
-    values: number[],
-    index?: number
+    values: number[]
   ) => {
     // Garante que o valor mínimo não ultrapasse o máximo
     const ensureValidRange = (newValues: number[]) => {
       if (newValues[0] > newValues[1]) {
-        return index === 0 ? [newValues[1], newValues[1]] : [newValues[0], newValues[0]];
+        return [newValues[0], newValues[0]];
       }
       return newValues;
     };
@@ -124,7 +123,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               max={60}
               step={0.01}
               minStepsBetweenThumbs={0.1}
-              onValueChange={(values, thumb) => handleNumericRangeInput("length", values, thumb)}
+              onValueChange={values => handleNumericRangeInput("length", values)}
               className="py-4"
             />
           </div>
@@ -150,7 +149,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               max={1.82}
               step={0.01}
               minStepsBetweenThumbs={0.1}
-              onValueChange={(values, thumb) => handleNumericRangeInput("width", values, thumb)}
+              onValueChange={values => handleNumericRangeInput("width", values)}
               className="py-4"
             />
           </div>
