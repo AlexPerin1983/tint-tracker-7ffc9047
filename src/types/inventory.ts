@@ -6,7 +6,9 @@ export interface Filters {
   category: Category | "all";
   name: string;
   minWidth: string;
+  maxWidth: string;
   minLength: string;
+  maxLength: string;
 }
 
 export interface Item {
