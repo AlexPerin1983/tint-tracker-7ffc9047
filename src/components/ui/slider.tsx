@@ -15,9 +15,14 @@ const Slider = React.forwardRef<
     {...props}
   >
     <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden rounded-full bg-slate-700">
-      <SliderPrimitive.Range className="absolute h-full bg-yellow-400" />
+      <SliderPrimitive.Range className="absolute h-full bg-blue-500" />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-4 w-1 rounded-sm border-2 border-yellow-400 bg-yellow-400 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+    {Array.from({ length: 2 }).map((_, i) => (
+      <SliderPrimitive.Thumb
+        key={i}
+        className="block h-5 w-5 rounded-full border-2 border-blue-500 bg-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-blue-50 active:scale-95"
+      />
+    ))}
   </SliderPrimitive.Root>
 ));
 
