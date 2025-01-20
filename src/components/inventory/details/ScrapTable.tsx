@@ -1,7 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
 import { Item } from "@/types/inventory";
+import { Copy, Trash2, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Trash2, ExternalLink } from "lucide-react";
+import { useItems } from "@/hooks/use-items";
+import { useToast } from "@/hooks/use-toast";
 
 interface ScrapTableProps {
   scraps: Item[];
@@ -9,83 +19,86 @@ interface ScrapTableProps {
 }
 
 export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
+  const { addScrap, refetchItems } = useItems();
+  const { toast } = useToast();
+
+  const handleDuplicate = async (scrap: Item) => {
+    try {
+      await addScrap({
+        width: scrap.width,
+        length: scrap.length,
+        quantity: 1,
+        observation: scrap.observation,
+        originId: scrap.originId,
+      });
+      
+      await refetchItems();
+      
+      toast({
+        title: "Success",
+        description: "Retalho duplicado com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Erro ao duplicar retalho",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <div className="rounded-md border border-muted min-w-[600px]">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-muted bg-muted/50">
-              <th className="px-4 py-3 text-left text-sm font-medium">
-                Código
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium">
-                Dimensões (m)
-              </th>
-              <th className="px-4 py-3 text-right text-sm font-medium">
-                Área (m²)
-              </th>
-              <th className="px-4 py-3 text-right text-sm font-medium">
-                Qtd.
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-medium">
-                Obs.
-              </th>
-              <th className="px-4 py-3 text-right text-sm font-medium">
-                Ações
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {scraps.map((scrap, index) => (
-              <tr 
-                key={scrap.id} 
-                className={`border-b border-muted ${
-                  index % 2 === 0 ? 'bg-muted/20' : ''
-                }`}
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Código</TableHead>
+          <TableHead>Dimensões</TableHead>
+          <TableHead>Área</TableHead>
+          <TableHead>Observação</TableHead>
+          <TableHead className="text-right">Ações</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {scraps.map((scrap) => (
+          <TableRow key={scrap.id}>
+            <TableCell>{scrap.code}</TableCell>
+            <TableCell>
+              {scrap.width.toFixed(2)}m x {scrap.length.toFixed(2)}m
+            </TableCell>
+            <TableCell>
+              {(scrap.width * scrap.length).toFixed(2)}m²
+            </TableCell>
+            <TableCell>{scrap.observation || "-"}</TableCell>
+            <TableCell className="text-right space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDuplicate(scrap)}
+                className="text-blue-500 hover:text-blue-700"
               >
-                <td className="px-4 py-3 text-sm">
-                  <Link 
-                    to={`/scrap/${scrap.id}`}
-                    className="text-primary hover:underline inline-flex items-center gap-1"
-                  >
-                    {scrap.code}
-                    <ExternalLink className="w-3 h-3" />
-                  </Link>
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  {scrap.width.toFixed(2)} x {scrap.length.toFixed(2)}
-                </td>
-                <td className="px-4 py-3 text-sm text-right font-medium">
-                  {(scrap.width * scrap.length).toFixed(2)}
-                </td>
-                <td className="px-4 py-3 text-sm text-right font-medium">
-                  {scrap.quantity}
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  {scrap.observation || "-"}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex justify-end gap-2">
-                    <Link to={`/scrap/${scrap.id}`}>
-                      <Button variant="ghost" size="sm" className="h-8">
-                        Ver Detalhes
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete(scrap.id)}
-                      className="h-8 text-destructive hover:text-destructive/90"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                <Copy className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(scrap.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <Link to={`/scrap/${scrap.id}`}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </Button>
+              </Link>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

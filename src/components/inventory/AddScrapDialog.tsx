@@ -96,10 +96,10 @@ export function AddScrapDialog({
     const totalScrapArea = existingScraps
       .filter(scrap => scrap.id !== editingScrap?.id)
       .reduce(
-        (acc, scrap) => acc + scrap.width * scrap.length * scrap.quantity,
+        (acc, scrap) => acc + scrap.width * scrap.length,
         0
       );
-    const newScrapArea = data.width * data.length * data.quantity;
+    const newScrapArea = data.width * data.length;
     const parentArea = parentItem.width * parentItem.length;
 
     if (totalScrapArea + newScrapArea > parentArea) {
@@ -112,21 +112,17 @@ export function AddScrapDialog({
     }
 
     try {
-      // Criar múltiplos retalhos individuais baseado na quantidade
-      const promises = Array.from({ length: data.quantity }).map(() => 
-        addScrap({
-          ...data,
-          quantity: 1, // Cada retalho terá quantidade 1
-          originId: parentItemId,
-        })
-      );
-
-      await Promise.all(promises);
+      await addScrap({
+        ...data,
+        quantity: 1,
+        originId: parentItemId,
+      });
+      
       await refetchItems();
       
       toast({
         title: "Success",
-        description: `${data.quantity} retalhos criados com sucesso!`,
+        description: "Retalho criado com sucesso!",
       });
       
       onOpenChange(false);
