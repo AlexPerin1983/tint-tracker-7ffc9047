@@ -23,7 +23,9 @@ export function ItemsTable() {
     category: "all",
     name: "",
     minWidth: "",
+    maxWidth: "",
     minLength: "",
+    maxLength: "",
   });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
@@ -54,7 +56,9 @@ export function ItemsTable() {
       category: "all",
       name: "",
       minWidth: "",
+      maxWidth: "",
       minLength: "",
+      maxLength: "",
     });
   };
 
