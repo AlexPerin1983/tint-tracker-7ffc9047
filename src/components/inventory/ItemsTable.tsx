@@ -107,7 +107,12 @@ export function ItemsTable() {
           <TableBody>
             {filteredItems.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.code}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex flex-col">
+                    <span>{item.code}</span>
+                    <span className="text-xs text-muted-foreground">{item.name}</span>
+                  </div>
+                </TableCell>
                 <TableCell className="hidden md:table-cell">{item.name}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.category}</TableCell>
                 <TableCell className="hidden md:table-cell">
