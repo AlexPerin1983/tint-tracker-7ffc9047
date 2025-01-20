@@ -40,12 +40,18 @@ export function ItemsTable() {
       const matchCategory = filters.category === "all" || item.category === filters.category;
       const matchName = !filters.name || 
         item.name.toLowerCase().includes(filters.name.toLowerCase());
-      const matchWidth = !filters.minWidth || 
+      const matchMinWidth = !filters.minWidth || 
         item.width >= parseFloat(filters.minWidth);
-      const matchLength = !filters.minLength || 
+      const matchMaxWidth = !filters.maxWidth || 
+        item.width <= parseFloat(filters.maxWidth);
+      const matchMinLength = !filters.minLength || 
         item.length >= parseFloat(filters.minLength);
+      const matchMaxLength = !filters.maxLength || 
+        item.length <= parseFloat(filters.maxLength);
 
-      return matchCategory && matchName && matchWidth && matchLength;
+      return matchCategory && matchName && 
+             matchMinWidth && matchMaxWidth && 
+             matchMinLength && matchMaxLength;
     });
   };
 
