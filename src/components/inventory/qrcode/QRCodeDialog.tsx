@@ -12,7 +12,7 @@ interface QRCodeDialogProps {
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const baseUrl = window.location.origin;
-  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'remnant'}/${item.id}`;
+  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
   const dimensions = item.type === 'bobina' 
     ? `${item.remainingWidth?.toFixed(2)}ft x ${item.remainingLength?.toFixed(2)}ft`
@@ -96,7 +96,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>QR Code - {item.type === 'retalho' ? 'Remnant of ' : ''}{item.name}</DialogTitle>
+          <DialogTitle>QR Code - {item.type === 'retalho' ? 'Scrap from ' : ''}{item.name}</DialogTitle>
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
