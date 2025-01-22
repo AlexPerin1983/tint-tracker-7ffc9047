@@ -11,16 +11,20 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
-  // Gera a URL completa para o item usando window.location.origin
   const baseUrl = window.location.origin;
   const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
+  // Usar as dimensões restantes para bobinas e dimensões normais para retalhos
+  const dimensions = item.type === 'bobina' 
+    ? `${item.remainingWidth?.toFixed(2)}m x ${item.remainingLength?.toFixed(2)}m`
+    : `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`;
+
   const qrCodeData = {
     id: item.id,
     code: item.code,
     name: item.name,
     category: item.category,
-    dimensions: `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`,
+    dimensions: dimensions,
     url: itemUrl
   };
 
@@ -85,7 +89,6 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         url: itemUrl
       });
     } catch (error) {
-      // Fallback para copiar o link
       navigator.clipboard.writeText(itemUrl);
     }
   };
@@ -124,7 +127,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             </div>
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Dimensions:</span>
-              <span>{qrCodeData.dimensions}</span>
+              <span>{dimensions}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Link:</span>
