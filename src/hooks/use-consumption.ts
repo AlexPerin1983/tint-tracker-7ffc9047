@@ -12,7 +12,18 @@ export function useConsumption() {
   const { addScrap } = useScraps();
 
   const registerConsumptionMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string, data: ConsumptionFormData }) => {
+    mutationFn: async ({ 
+      id, 
+      data, 
+      newDimensions 
+    }: { 
+      id: string, 
+      data: ConsumptionFormData,
+      newDimensions: {
+        remainingLength: number;
+        remainingWidth: number;
+      }
+    }) => {
       const item = items.find(i => i.id === id);
       if (!item) throw new Error('Item não encontrado');
 
@@ -25,22 +36,14 @@ export function useConsumption() {
         throw new Error('A área solicitada excede a área disponível para consumo');
       }
 
-      if (data.width > item.remainingWidth) {
-        throw new Error('A largura solicitada excede a largura disponível');
-      }
-
-      if (data.length > item.remainingLength) {
-        throw new Error('O comprimento solicitado excede o comprimento disponível');
-      }
-
       const newConsumedArea = currentConsumedArea + consumedArea;
       const newRemainingArea = totalArea - newConsumedArea;
 
       await itemsDB.update(id, {
         ...item,
         remainingArea: newRemainingArea,
-        remainingWidth: item.remainingWidth,
-        remainingLength: item.remainingLength - data.length,
+        remainingWidth: newDimensions.remainingWidth,
+        remainingLength: newDimensions.remainingLength,
         consumedArea: newConsumedArea,
         isAvailable: newRemainingArea > 0,
       });

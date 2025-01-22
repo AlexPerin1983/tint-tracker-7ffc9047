@@ -65,19 +65,31 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
     if (consumedArea > remainingArea) {
       toast({
-        title: "Error",
-        description: "The consumed area cannot be greater than the available area",
+        title: "Erro",
+        description: "A área consumida não pode ser maior que a área disponível",
         variant: "destructive",
       });
       return;
+    }
+
+    // Calcula o novo comprimento restante baseado no consumo
+    let newRemainingLength = item.remainingLength;
+    
+    // Se o consumo for da largura total, subtrai diretamente do comprimento
+    if (data.width === item.remainingWidth) {
+      newRemainingLength -= data.length;
+    } else {
+      // Se for um consumo parcial, calcula a área consumida e ajusta o comprimento proporcionalmente
+      const areaRatio = consumedArea / item.remainingWidth;
+      newRemainingLength -= areaRatio;
     }
 
     if (data.createScrap) {
       const scrapArea = (data.scrapWidth || 0) * (data.scrapLength || 0);
       if (scrapArea + consumedArea > remainingArea) {
         toast({
-          title: "Error",
-          description: "The sum of consumed area and scrap cannot be greater than the available area",
+          title: "Erro",
+          description: "A soma da área consumida e do retalho não pode ser maior que a área disponível",
           variant: "destructive",
         });
         return;
@@ -85,19 +97,27 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     }
 
     try {
-      await registerConsumption({ id: item.id, data });
+      await registerConsumption({ 
+        id: item.id, 
+        data,
+        newDimensions: {
+          remainingLength: newRemainingLength,
+          remainingWidth: item.remainingWidth
+        }
+      });
+      
       toast({
-        title: "Success",
+        title: "Sucesso",
         description: data.createScrap 
-          ? "Consumption registered and scrap created successfully!"
-          : "Consumption registered successfully!",
+          ? "Consumo registrado e retalho criado com sucesso!"
+          : "Consumo registrado com sucesso!",
       });
       onOpenChange(false);
       form.reset();
     } catch (error) {
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Error registering consumption",
+        title: "Erro",
+        description: error instanceof Error ? error.message : "Erro ao registrar consumo",
         variant: "destructive",
       });
     }
@@ -107,9 +127,9 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Register Consumption</DialogTitle>
+          <DialogTitle>Registrar Consumo</DialogTitle>
           <DialogDescription>
-            Register material consumption and optionally create scrap.
+            Registre o consumo de material e opcionalmente crie um retalho.
           </DialogDescription>
         </DialogHeader>
 
