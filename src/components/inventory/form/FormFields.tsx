@@ -67,9 +67,9 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Material Name</FormLabel>
+              <FormLabel>Product Name</FormLabel>
               <FormControl>
-                <Input placeholder="Ex: Window Film Classic" {...field} />
+                <Input placeholder="e.g. Window Film Classic" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -125,7 +125,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
               />
               <div className="flex flex-col items-center gap-1">
                 <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">in stock</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">In Stock</span>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
               />
               <div className="flex flex-col items-center gap-1">
                 <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">stock alert</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Stock Alert</span>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
       <TabsContent value="dimensions" className="space-y-8 mt-4">
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Length</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
             <span className="text-xs text-slate-400">Max: 60m</span>
           </div>
           <div 
@@ -203,7 +203,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Width</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
             <span className="text-xs text-slate-400">Max: 1.82m</span>
           </div>
           <div 
@@ -273,7 +273,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="observation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Additional Notes</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Item is located on shelf..."
