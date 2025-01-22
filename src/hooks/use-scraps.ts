@@ -12,13 +12,13 @@ export function useScraps() {
   const addScrapMutation = useMutation({
     mutationFn: async (data: ScrapFormData) => {
       const parentItem = items.find(item => item.id === data.originId);
-      if (!parentItem) throw new Error('Item pai não encontrado');
+      if (!parentItem) throw new Error('Parent item not found');
 
       const newScrap = await itemsDB.add({
-        name: `Retalho de ${parentItem.name}`,
+        name: `Scrap of ${parentItem.name}`,
         category: parentItem.category,
-        type: 'retalho',
-        code: generateCode('retalho', items),
+        type: "scrap",
+        code: generateCode('scrap', items),
         width: data.width,
         length: data.length,
         quantity: data.quantity,
@@ -36,8 +36,8 @@ export function useScraps() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items'] });
       toast({
-        title: "Sucesso!",
-        description: "Retalho adicionado com sucesso!",
+        title: "Success!",
+        description: "Scrap added successfully!",
       });
     },
   });
@@ -47,7 +47,7 @@ export function useScraps() {
   };
 }
 
-function generateCode(type: 'bobina' | 'retalho', items: any[]) {
+function generateCode(type: 'bobina' | 'scrap', items: any[]) {
   const prefix = type === 'bobina' ? 'BOB' : 'RET';
   const existingCodes = items
     .filter(item => item.type === type)

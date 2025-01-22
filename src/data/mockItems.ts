@@ -38,9 +38,9 @@ export const mockItems: Item[] = [
   {
     id: "3",
     code: "RET001",
-    name: "Retalho Window Film",
+    name: "Scrap of Window Film",
     category: "Window Tinting",
-    type: "retalho",
+    type: "scrap",
     width: 0.5,
     length: 1.2,
     quantity: 1,

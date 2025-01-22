@@ -94,7 +94,7 @@ export function ItemsTable() {
   const handleEditClick = (item: Item) => {
     setSelectedItemId(item.id);
     setSelectedItem(item);
-    if (item.type === 'retalho') {
+    if (item.type === 'scrap') {
       setEditScrapDialogOpen(true);
     } else {
       setEditDialogOpen(true);
