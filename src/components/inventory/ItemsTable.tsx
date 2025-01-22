@@ -143,7 +143,7 @@ export function ItemsTable() {
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{item.name}</TableCell>
+                <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', 'Scrap of')}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.category}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {formatDimensions(item)}
