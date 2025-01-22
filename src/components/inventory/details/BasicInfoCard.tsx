@@ -12,24 +12,24 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
       <CardHeader className="p-4 md:p-6">
         <div className="flex items-start gap-2">
           <Info className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg md:text-xl">Basic Information</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Product Information</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-4 md:p-6 pt-0 space-y-4">
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Code</label>
+          <label className="text-sm text-muted-foreground font-medium">SKU</label>
           <p className="text-sm md:text-base font-semibold">{item.code}</p>
         </div>
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Name</label>
+          <label className="text-sm text-muted-foreground font-medium">Product Name</label>
           <p className="text-sm md:text-base font-semibold">{item.name}</p>
         </div>
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Category</label>
+          <label className="text-sm text-muted-foreground font-medium">Material Type</label>
           <p className="text-sm md:text-base font-semibold">{item.category}</p>
         </div>
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Dimensions</label>
+          <label className="text-sm text-muted-foreground font-medium">Roll Size</label>
           <p className="text-sm md:text-base font-semibold">
             {item.width.toFixed(2)}m x {item.length.toFixed(2)}m
           </p>
@@ -42,7 +42,7 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
         </div>
         {item.observation && (
           <div>
-            <label className="text-sm text-muted-foreground font-medium">Location</label>
+            <label className="text-sm text-muted-foreground font-medium">Storage Location</label>
             <p className="text-sm md:text-base font-semibold">{item.observation}</p>
           </div>
         )}
