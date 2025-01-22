@@ -141,7 +141,9 @@ export function ItemsTable() {
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <span>{item.code}</span>
-                    <span className="text-xs text-muted-foreground">{item.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{item.name}</TableCell>
