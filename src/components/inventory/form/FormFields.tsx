@@ -254,7 +254,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 <Input
                   type="number"
                   step="0.01"
-                  placeholder="Ex: 10.50"
+                  placeholder="e.g. $10.50"
                   {...field}
                   onChange={(e) =>
                     field.onChange(
