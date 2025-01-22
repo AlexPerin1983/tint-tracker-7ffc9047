@@ -72,17 +72,18 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
       return;
     }
 
-    // Calcula o novo comprimento restante baseado no consumo
-    let newRemainingLength = item.remainingLength;
+    // Calcula o comprimento linear equivalente baseado na largura do consumo
+    let linearLength = data.length;
     
-    // Se o consumo for da largura total, subtrai diretamente do comprimento
-    if (data.width === item.remainingWidth) {
-      newRemainingLength -= data.length;
-    } else {
-      // Se for um consumo parcial, calcula a área consumida e ajusta o comprimento proporcionalmente
-      const areaRatio = consumedArea / item.remainingWidth;
-      newRemainingLength -= areaRatio;
+    // Se a largura do consumo for menor que a largura total,
+    // ajusta o comprimento linear proporcionalmente
+    if (data.width < item.remainingWidth) {
+      const widthRatio = data.width / item.remainingWidth;
+      linearLength = data.length * widthRatio;
     }
+
+    // Calcula o novo comprimento restante
+    const newRemainingLength = item.remainingLength - linearLength;
 
     if (data.createScrap) {
       const scrapArea = (data.scrapWidth || 0) * (data.scrapLength || 0);
