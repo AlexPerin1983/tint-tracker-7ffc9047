@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { useState } from "react";
 
 const ScrapDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { items } = useItems();
   const isMobile = useIsMobile();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -22,6 +23,10 @@ const ScrapDetails = () => {
   const totalArea = scrap.width * scrap.length;
   const formattedArea = `${totalArea.toFixed(2)}m²`;
   const formattedDimensions = `${scrap.width.toFixed(2)}m x ${scrap.length.toFixed(2)}m`;
+
+  const handleBack = () => {
+    navigate('/', { state: { highlightedItemId: id } });
+  };
 
   // Prepare scrap data for editing
   const editingScrapData = {
@@ -36,11 +41,9 @@ const ScrapDetails = () => {
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-2 md:gap-4">
-          <Link to="/">
-            <Button variant="ghost" size={isMobile ? "sm" : "default"}>
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Voltar
-            </Button>
-          </Link>
+          <Button variant="ghost" size={isMobile ? "sm" : "default"} onClick={handleBack}>
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Voltar
+          </Button>
           <h1 className="text-lg md:text-2xl font-bold">Detalhes do Retalho</h1>
         </div>
         <Button 
