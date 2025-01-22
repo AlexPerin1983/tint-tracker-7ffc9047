@@ -139,7 +139,7 @@ export function ItemsTable() {
                   <div className="flex flex-col">
                     <span>{item.code}</span>
                     <span className="text-xs text-muted-foreground">
-                      {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name}
+                      {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name.replace('Retalho de ', '')}
                     </span>
                   </div>
                 </TableCell>
