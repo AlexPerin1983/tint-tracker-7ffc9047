@@ -36,12 +36,12 @@ export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
       
       toast({
         title: "Success",
-        description: "Retalho duplicado com sucesso!",
+        description: "Remnant duplicated successfully!",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Erro ao duplicar retalho",
+        description: "Error duplicating remnant",
         variant: "destructive",
       });
     }
