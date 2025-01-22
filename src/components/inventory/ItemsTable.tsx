@@ -40,7 +40,6 @@ export function ItemsTable() {
     if (state?.highlightedItemId) {
       setSelectedItemId(state.highlightedItemId);
       
-      // Scroll para o item destacado com um pequeno delay para garantir que a tabela foi renderizada
       setTimeout(() => {
         highlightedRowRef.current?.scrollIntoView({
           behavior: 'smooth',
@@ -48,7 +47,6 @@ export function ItemsTable() {
         });
       }, 100);
 
-      // Limpa o state após o scroll
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -66,7 +64,6 @@ export function ItemsTable() {
       const matchName = !filters.name || 
         item.name.toLowerCase().includes(filters.name.toLowerCase());
       
-      // Lógica atualizada para verificar os intervalos de largura e comprimento
       const matchWidth = (
         (!filters.minWidth || item.width >= parseFloat(filters.minWidth)) &&
         (!filters.maxWidth || item.width <= parseFloat(filters.maxWidth))
