@@ -12,12 +12,11 @@ interface QRCodeDialogProps {
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const baseUrl = window.location.origin;
-  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'remnant'}/${item.id}`;
   
-  // Usar as dimensões restantes para bobinas e dimensões normais para retalhos
   const dimensions = item.type === 'bobina' 
-    ? `${item.remainingWidth?.toFixed(2)}m x ${item.remainingLength?.toFixed(2)}m`
-    : `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`;
+    ? `${item.remainingWidth?.toFixed(2)}ft x ${item.remainingLength?.toFixed(2)}ft`
+    : `${item.width.toFixed(2)}ft x ${item.length.toFixed(2)}ft`;
 
   const qrCodeData = {
     id: item.id,
@@ -109,24 +108,24 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
           />
 
           <p className="text-sm text-muted-foreground text-center">
-            Scan this QR Code to directly access the item details page in the system.
+            Scan this QR Code to directly access the product details page in the system.
           </p>
 
           <div className="w-full space-y-2 text-sm">
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Code:</span>
+              <span className="font-medium">SKU:</span>
               <span>{item.code}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Name:</span>
+              <span className="font-medium">Product:</span>
               <span>{item.name}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Category:</span>
+              <span className="font-medium">Material:</span>
               <span>{item.category}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Dimensions:</span>
+              <span className="font-medium">Roll Size:</span>
               <span>{dimensions}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
