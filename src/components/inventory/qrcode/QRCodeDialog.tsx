@@ -96,7 +96,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>QR Code - {item.name}</DialogTitle>
+          <DialogTitle>QR Code - {item.type === 'retalho' ? 'Remnant of ' : ''}{item.name}</DialogTitle>
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
