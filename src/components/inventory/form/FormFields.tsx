@@ -241,62 +241,6 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             className="py-4"
           />
         </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between h-full">
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
-                    <FormControl>
-                      <QuantityPicker
-                        value={field.value || 1}
-                        onChange={field.onChange}
-                        min={1}
-                        max={100}
-                        step={1}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">in stock</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between h-full">
-              <FormField
-                control={form.control}
-                name="minQuantity"
-                render={({ field }) => (
-                  <FormItem className="space-y-0 flex-1 flex items-center justify-center">
-                    <FormControl>
-                      <QuantityPicker
-                        value={field.value || 1}
-                        onChange={(value) => field.onChange(value)}
-                        min={0}
-                        max={100}
-                        step={1}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">stock alert</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </TabsContent>
 
       <TabsContent value="price" className="space-y-4 mt-4">
