@@ -35,7 +35,7 @@ const ItemDetails = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-2 md:gap-4">
           <Button variant="ghost" size={isMobile ? "sm" : "default"} onClick={handleBack}>
-            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Voltar
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Back
           </Button>
           <h1 className="text-lg md:text-2xl font-bold">Item Details</h1>
         </div>

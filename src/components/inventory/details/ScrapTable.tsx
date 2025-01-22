@@ -51,11 +51,11 @@ export function ScrapTable({ scraps, onDelete }: ScrapTableProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Código</TableHead>
-          <TableHead>Dimensões</TableHead>
-          <TableHead>Área</TableHead>
-          <TableHead>Observação</TableHead>
-          <TableHead className="text-right">Ações</TableHead>
+          <TableHead>Code</TableHead>
+          <TableHead>Dimensions</TableHead>
+          <TableHead>Area</TableHead>
+          <TableHead>Notes</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
