@@ -35,7 +35,7 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
           </p>
         </div>
         <div>
-          <label className="text-sm text-muted-foreground font-medium">Total Area</label>
+          <label className="text-sm text-muted-foreground font-medium">Square Footage</label>
           <p className="text-sm md:text-base font-semibold">
             {(item.width * item.length).toFixed(2)}m²
           </p>
