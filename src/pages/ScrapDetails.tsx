@@ -77,7 +77,7 @@ const ScrapDetails = () => {
               <p className="text-sm md:text-base font-medium">{formattedDimensions}</p>
             </div>
             <div>
-              <label className="text-sm text-muted-foreground">Total Area</label>
+              <label className="text-sm text-muted-foreground">Square Footage</label>
               <p className="text-sm md:text-base font-medium">{formattedArea}</p>
             </div>
           </CardContent>
@@ -139,6 +139,7 @@ const ScrapDetails = () => {
             </CardContent>
           </Card>
         )}
+
       </div>
 
       {parentItem && (
