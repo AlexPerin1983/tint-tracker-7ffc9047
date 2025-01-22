@@ -9,17 +9,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FilterBar } from "./FilterBar";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
 import { AddItemDialog } from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
 
 export function ItemsTable() {
+  const location = useLocation();
   const { items, deleteItem } = useItems();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const highlightedRowRef = useRef<HTMLTableRowElement>(null);
   const [filters, setFilters] = useState<Filters>({
     category: "all",
     name: "",
@@ -32,6 +34,24 @@ export function ItemsTable() {
   const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
+
+  useEffect(() => {
+    const state = location.state as { highlightedItemId?: string };
+    if (state?.highlightedItemId) {
+      setSelectedItemId(state.highlightedItemId);
+      
+      // Scroll para o item destacado com um pequeno delay para garantir que a tabela foi renderizada
+      setTimeout(() => {
+        highlightedRowRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+
+      // Limpa o state após o scroll
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const formatDimensions = (item: Item) => {
     if (item.type === 'bobina') {
@@ -115,7 +135,8 @@ export function ItemsTable() {
             {filteredItems.map((item) => (
               <TableRow 
                 key={item.id}
-                className={selectedItemId === item.id ? "bg-muted/30" : ""}
+                ref={item.id === selectedItemId ? highlightedRowRef : undefined}
+                className={`${selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""}`}
               >
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
