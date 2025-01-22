@@ -72,18 +72,20 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
       return;
     }
 
-    // Calcula o comprimento linear equivalente baseado na largura do consumo
-    let linearLength = data.length;
-    
-    // Se a largura do consumo for menor que a largura total,
-    // ajusta o comprimento linear proporcionalmente
-    if (data.width < item.remainingWidth) {
-      const widthRatio = data.width / item.remainingWidth;
-      linearLength = data.length * widthRatio;
-    }
+    // Agora o comprimento linear é exatamente o comprimento consumido
+    const linearLength = data.length;
 
     // Calcula o novo comprimento restante
     const newRemainingLength = item.remainingLength - linearLength;
+
+    if (newRemainingLength < 0) {
+      toast({
+        title: "Erro",
+        description: "Não há comprimento suficiente disponível na bobina",
+        variant: "destructive",
+      });
+      return;
+    }
 
     if (data.createScrap) {
       const scrapArea = (data.scrapWidth || 0) * (data.scrapLength || 0);
