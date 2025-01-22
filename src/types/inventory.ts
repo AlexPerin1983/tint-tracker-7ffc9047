@@ -1,5 +1,5 @@
 export type Category = "Window Tinting" | "PPF" | "Wrap";
-export type ItemType = "bobina" | "retalho";
+export type ItemType = "bobina" | "scrap";
 export type TransactionType = "entrada" | "saida" | "corte";
 
 export interface Filters {
@@ -49,8 +49,8 @@ export interface ScrapFormData {
   length: number;
   quantity: number;
   observation?: string;
-  id?: string; // Adicionando o campo id como opcional
-  originId?: string; // Adicionando o campo originId como opcional
+  id?: string;
+  originId?: string;
 }
 
 export interface ConsumptionFormData {
