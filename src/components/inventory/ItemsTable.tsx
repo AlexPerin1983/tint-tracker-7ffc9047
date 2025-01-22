@@ -33,8 +33,12 @@ export function ItemsTable() {
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
-  const formatDimensions = (width: number, length: number) => 
-    `${width.toFixed(2)}m x ${length.toFixed(2)}m`;
+  const formatDimensions = (item: Item) => {
+    if (item.type === 'bobina') {
+      return `${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m`;
+    }
+    return `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`;
+  };
 
   const filterItems = (items: Item[]) => {
     return items.filter((item) => {
@@ -122,7 +126,7 @@ export function ItemsTable() {
                 <TableCell className="hidden md:table-cell">{item.name}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.category}</TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {formatDimensions(item.width, item.length)}
+                  {formatDimensions(item)}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
                 <TableCell className="text-right space-x-2">
