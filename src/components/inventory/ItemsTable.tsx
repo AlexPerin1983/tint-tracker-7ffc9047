@@ -1,4 +1,4 @@
-import { Eye, Edit, Trash2, QrCode } from "lucide-react";
+import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -16,6 +16,8 @@ import { Item, Filters } from "@/types/inventory";
 import { AddItemDialog } from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ItemsTable() {
   const location = useLocation();
@@ -107,6 +109,33 @@ export function ItemsTable() {
     setQrCodeDialogOpen(true);
   };
 
+  const isLowStock = (item: Item) => {
+    if (!item.minQuantity) return false;
+    return item.quantity <= item.minQuantity;
+  };
+
+  const renderQuantityCell = (item: Item) => {
+    if (isLowStock(item)) {
+      return (
+        <div className="flex items-center gap-2">
+          <span>{item.quantity}</span>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge variant="destructive" className="flex items-center gap-1">
+                <AlertTriangle className="w-3 h-3" />
+                Estoque Baixo
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Quantidade mínima: {item.minQuantity}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      );
+    }
+    return item.quantity;
+  };
+
   return (
     <div className="space-y-4">
       <FilterBar 
@@ -133,7 +162,9 @@ export function ItemsTable() {
               <TableRow 
                 key={item.id}
                 ref={item.id === selectedItemId ? highlightedRowRef : undefined}
-                className={`${selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""}`}
+                className={`${selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""} ${
+                  isLowStock(item) ? "bg-red-50/10" : ""
+                }`}
               >
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
@@ -148,7 +179,9 @@ export function ItemsTable() {
                 <TableCell className="hidden md:table-cell">
                   {formatDimensions(item)}
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{item.quantity}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {renderQuantityCell(item)}
+                </TableCell>
                 <TableCell className="text-right space-x-2">
                   <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`} onClick={() => setSelectedItemId(item.id)}>
                     <Button variant="ghost" size="icon" title="View Details">
