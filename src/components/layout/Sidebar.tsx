@@ -1,4 +1,4 @@
-import { Home, Box, Scissors, LogOut, ExternalLink } from "lucide-react";
+import { Home, Box, Scissors, LogOut, ExternalLink, Mail } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +29,12 @@ const externalLinks = [
     icon: ExternalLink,
   },
 ];
+
+const contactInfo = {
+  title: "Contato",
+  email: "windowfilm.br@gmail.com",
+  icon: Mail,
+};
 
 interface AppSidebarProps {
   userEmail?: string;
@@ -131,9 +137,38 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Section 4: Contact Information */}
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+            {contactInfo.title}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="px-3">
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  className={cn(
+                    "w-full rounded-lg px-3 py-2.5",
+                    "hover:bg-slate-700/50 active:bg-slate-600/50",
+                    "transition-colors duration-200"
+                  )}
+                >
+                  <a 
+                    href={`mailto:${contactInfo.email}`}
+                    className="flex items-center gap-3"
+                  >
+                    <contactInfo.icon className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-200">{contactInfo.email}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
-      {/* Section 4: Logout */}
+      {/* Section 5: Logout */}
       <SidebarFooter className="border-t border-slate-700/50 p-4">
         <SidebarMenu>
           <SidebarMenuItem>
