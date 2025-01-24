@@ -202,7 +202,7 @@ export default function Landing() {
         {/* Guarantee Section */}
         <div className="text-center mb-16 bg-white/5 rounded-lg p-4 md:p-8">
           <h2 className="text-2xl font-bold text-white mb-4">
-            7-Day Money-Back Guarantee
+            30-Day Money-Back Guarantee
           </h2>
           <p className="text-lg text-gray-300 mb-8">
             Try Tint QR Tracker risk-free. If you're not completely satisfied, we'll refund your purchase - no questions asked!
