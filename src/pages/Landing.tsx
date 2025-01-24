@@ -15,7 +15,7 @@ export default function Landing() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Stop Losing 30% of Your Inventory!<br />Smart Stock Control for Window Film Shops
+            Transform Waste into Profits!<br />Smart Inventory Control That Saves Up To 30% of Your Material
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Window Film, Paint Protection Film, and Wrap professionals: Transform your inventory management and prevent waste with Tint QR Tracker
