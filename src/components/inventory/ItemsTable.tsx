@@ -111,7 +111,7 @@ export function ItemsTable() {
 
   const isLowStock = (item: Item) => {
     if (!item.minQuantity) return false;
-    return item.quantity <= item.minQuantity;
+    return item.quantity <= item.minQuantity;  // Mudamos de < para <= para incluir o caso de igualdade
   };
 
   const renderQuantityCell = (item: Item) => {
