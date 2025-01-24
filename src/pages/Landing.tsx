@@ -220,21 +220,21 @@ export default function Landing() {
         {/* Legal Disclaimer Section */}
         <div className="mt-16 p-6 bg-card/30 backdrop-blur rounded-lg border border-muted/20">
           <div className="max-w-4xl mx-auto space-y-4 text-sm text-gray-400">
-            <h3 className="text-lg font-semibold text-white mb-4">Avisos Legais Importantes</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Important Legal Notices</h3>
             
             <div className="space-y-4">
               <p>
-                Este site não faz parte do Meta (Facebook) Inc. Além disso, este site NÃO é endossado pelo Meta de nenhuma maneira. 
-                FACEBOOK é uma marca comercial independente do Meta.
+                This website is not part of Meta (Facebook) Inc. Furthermore, this site is NOT endorsed by Meta in any way. 
+                FACEBOOK is an independent trademark of Meta.
               </p>
               
               <p>
-                <span className="text-white font-medium">Isenção de Responsabilidade:</span> Os resultados mencionados são exemplos e não garantimos que você obterá os mesmos resultados. 
-                O sucesso em qualquer negócio depende de fatores individuais como dedicação, implementação e experiência.
+                <span className="text-white font-medium">Disclaimer:</span> The results mentioned are examples, and we do not guarantee that you will obtain the same results. 
+                Success in any business depends on individual factors such as dedication, implementation, and experience.
               </p>
               
               <p>
-                © 2024 Tint QR Tracker - Todos os Direitos Reservados
+                © 2024 Tint QR Tracker - All Rights Reserved
               </p>
             </div>
           </div>
