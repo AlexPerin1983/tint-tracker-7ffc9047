@@ -82,15 +82,15 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
       <SidebarContent className="bg-gradient-to-b from-slate-900 to-slate-800 md:bg-none pt-16 md:pt-16">
         {/* User Profile Section */}
         <SidebarGroup>
-          <div className="flex items-center gap-3 p-6 border-b border-slate-700/50">
+          <div className="flex items-center gap-3 p-4">
             <Avatar>
               <AvatarImage src="" alt={userEmail} />
               <AvatarFallback className="bg-blue-600">
                 {userEmail.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-slate-200 truncate max-w-[150px]">
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-medium text-slate-200 truncate">
                 {userEmail}
               </span>
               <span className="text-xs text-slate-400">
@@ -101,12 +101,12 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
 
         {/* Navigation Section */}
-        <SidebarGroup className="mt-4">
-          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="px-3">
+            <SidebarMenu className="px-2">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
@@ -114,15 +114,18 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                     className={cn(
                       "w-full rounded-lg px-3 py-2.5",
                       "hover:bg-slate-700/50 active:bg-slate-600/50",
-                      "transition-colors duration-200",
-                      "relative group"
+                      "transition-colors duration-200"
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <item.icon className="h-5 w-5 text-slate-400" />
-                      <div className="flex flex-col">
-                        <span className="text-slate-200 font-medium">{item.title}</span>
-                        <span className="text-xs text-slate-400">{item.description}</span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <item.icon className="h-5 w-5 shrink-0 text-slate-400" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-medium text-slate-200 truncate">
+                          {item.title}
+                        </span>
+                        <span className="text-xs text-slate-400 truncate">
+                          {item.description}
+                        </span>
                       </div>
                     </div>
                   </SidebarMenuButton>
@@ -133,12 +136,12 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
 
         {/* External Links Section */}
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+        <SidebarGroup className="mt-4">
+          <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             Quick Links
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="px-3">
+            <SidebarMenu className="px-2">
               {externalLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
@@ -153,10 +156,10 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-3 min-w-0"
                     >
-                      <item.icon className="h-5 w-5 text-slate-400" />
-                      <span className="text-slate-200">{item.title}</span>
+                      <item.icon className="h-5 w-5 shrink-0 text-slate-400" />
+                      <span className="text-sm text-slate-200 truncate">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -166,12 +169,12 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
 
         {/* Contact Section */}
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
+        <SidebarGroup className="mt-4">
+          <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             {contactInfo.title}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="px-3">
+            <SidebarMenu className="px-2">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
@@ -183,10 +186,10 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                 >
                   <a 
                     href={`mailto:${contactInfo.email}`}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-3 min-w-0"
                   >
-                    <contactInfo.icon className="h-5 w-5 text-slate-400" />
-                    <span className="text-slate-200">{contactInfo.email}</span>
+                    <contactInfo.icon className="h-5 w-5 shrink-0 text-slate-400" />
+                    <span className="text-sm text-slate-200 truncate">{contactInfo.email}</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -196,7 +199,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
       </SidebarContent>
 
       {/* Logout Section */}
-      <SidebarFooter className="border-t border-slate-700/50 p-4">
+      <SidebarFooter className="border-t border-slate-700/50 p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton 
@@ -207,8 +210,8 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                 "transition-colors duration-200"
               )}
             >
-              <LogOut className="h-5 w-5 text-slate-400" />
-              <span className="text-slate-200">Logout</span>
+              <LogOut className="h-5 w-5 shrink-0 text-slate-400" />
+              <span className="text-sm text-slate-200">Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
