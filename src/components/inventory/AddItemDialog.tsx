@@ -28,7 +28,7 @@ const formSchema = z.object({
   width: z.number().min(0.01, "Width must be greater than 0"),
   length: z.number().min(0.01, "Length must be greater than 0"),
   quantity: z.number().min(1, "Quantity must be greater than 0"),
-  minQuantity: z.number().optional(),
+  minQuantity: z.number().min(1, "Minimum quantity must be greater than 0"),
   price: z.number().optional(),
   observation: z.string().optional(),
 });
@@ -57,6 +57,7 @@ export function AddItemDialog({
       width: 0,
       length: 0,
       quantity: 1,
+      minQuantity: 1, // Definindo valor padrão para minQuantity
     },
   });
 
@@ -79,6 +80,7 @@ export function AddItemDialog({
         width: 0,
         length: 0,
         quantity: 1,
+        minQuantity: 1, // Definindo valor padrão para minQuantity
       });
     }
   }, [mode, itemToEdit, form]);
