@@ -17,9 +17,24 @@ import { useToast } from "@/components/ui/use-toast";
 import { logoutUser } from "@/services/sheets";
 
 const navigationItems = [
-  { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Rolls", icon: Box, url: "/rolls" },
-  { title: "Scraps", icon: Scissors, url: "/scraps" },
+  { 
+    title: "Dashboard (Under Development)", 
+    icon: Home, 
+    disabled: true,
+    description: "Coming Soon"
+  },
+  { 
+    title: "Rolls (Coming Soon)", 
+    icon: Box, 
+    disabled: true,
+    description: "Under Construction"
+  },
+  { 
+    title: "Scraps (Beta)", 
+    icon: Scissors, 
+    disabled: true,
+    description: "Work in Progress"
+  },
 ];
 
 const externalLinks = [
@@ -87,17 +102,21 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    asChild
+                    disabled={item.disabled}
                     className={cn(
                       "w-full rounded-lg px-3 py-2.5",
                       "hover:bg-slate-700/50 active:bg-slate-600/50",
-                      "transition-colors duration-200"
+                      "transition-colors duration-200",
+                      "relative"
                     )}
                   >
-                    <a href={item.url} className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-slate-400" />
-                      <span className="text-slate-200">{item.title}</span>
-                    </a>
+                      <div className="flex flex-col">
+                        <span className="text-slate-200">{item.title}</span>
+                        <span className="text-xs text-slate-400">{item.description}</span>
+                      </div>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
