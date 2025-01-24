@@ -5,6 +5,7 @@ import { useToast } from '@/components/ui/use-toast';
 declare global {
   interface Window {
     fbq?: Function;
+    _fbq?: any;
   }
 }
 
@@ -13,26 +14,24 @@ export const PageViewTracker = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Função para inicializar o Facebook Pixel
     const initFacebookPixel = () => {
-      if (typeof window.fbq === 'undefined') {
+      if (!window.fbq) {
         // Adiciona o código do Facebook Pixel
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
+        (function(f,b,e,v,n,t,s) {
+          if(f.fbq) return;
+          n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;
+          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+          t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode?.insertBefore(t,s);
+        })(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
       }
     };
 
-    // Inicializa o pixel
     try {
       initFacebookPixel();
       
-      // Aqui você deve substituir 'YOUR-PIXEL-ID' pelo seu ID do Facebook Pixel
       if (window.fbq) {
         window.fbq('init', 'YOUR-PIXEL-ID');
         window.fbq('track', 'PageView');
