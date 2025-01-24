@@ -18,35 +18,35 @@ import { logoutUser } from "@/services/sheets";
 
 const navigationItems = [
   { 
-    title: "Dashboard (Under Development)", 
+    title: "Dashboard", 
     icon: Home, 
     disabled: true,
-    description: "Coming Soon"
+    description: "Under Development - Coming Q2 2024"
   },
   { 
-    title: "Rolls (Coming Soon)", 
+    title: "Rolls Management", 
     icon: Box, 
     disabled: true,
-    description: "Under Construction"
+    description: "Coming Soon - Release Date TBA"
   },
   { 
-    title: "Scraps (Beta)", 
+    title: "Scraps Management", 
     icon: Scissors, 
     disabled: true,
-    description: "Work in Progress"
+    description: "Beta Testing - Available Soon"
   },
 ];
 
 const externalLinks = [
   {
-    title: "Los_Pelikooss",
+    title: "Los_Pelikooss Store",
     url: "https://fumejp.com.br/los-pelikooss/",
     icon: ExternalLink,
   },
 ];
 
 const contactInfo = {
-  title: "Contact",
+  title: "Support",
   email: "windowfilm.br@gmail.com",
   icon: Mail,
 };
@@ -80,7 +80,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
   return (
     <Sidebar>
       <SidebarContent className="bg-gradient-to-b from-slate-900 to-slate-800 md:bg-none pt-16 md:pt-16">
-        {/* Section 1: User Profile */}
+        {/* User Profile Section */}
         <SidebarGroup>
           <div className="flex items-center gap-3 p-6 border-b border-slate-700/50">
             <Avatar>
@@ -89,10 +89,18 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                 {userEmail.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium text-slate-200">{userEmail}</span>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-slate-200 truncate max-w-[150px]">
+                {userEmail}
+              </span>
+              <span className="text-xs text-slate-400">
+                Active User
+              </span>
+            </div>
           </div>
         </SidebarGroup>
 
+        {/* Navigation Section */}
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
             Navigation
@@ -107,13 +115,13 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                       "w-full rounded-lg px-3 py-2.5",
                       "hover:bg-slate-700/50 active:bg-slate-600/50",
                       "transition-colors duration-200",
-                      "relative"
+                      "relative group"
                     )}
                   >
                     <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-slate-400" />
                       <div className="flex flex-col">
-                        <span className="text-slate-200">{item.title}</span>
+                        <span className="text-slate-200 font-medium">{item.title}</span>
                         <span className="text-xs text-slate-400">{item.description}</span>
                       </div>
                     </div>
@@ -124,10 +132,10 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Section 3: External Links */}
+        {/* External Links Section */}
         <SidebarGroup className="mt-6">
           <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
-            Links
+            Quick Links
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="px-3">
@@ -157,7 +165,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Section 4: Contact Information */}
+        {/* Contact Section */}
         <SidebarGroup className="mt-6">
           <SidebarGroupLabel className="px-6 text-slate-400 font-semibold">
             {contactInfo.title}
@@ -187,7 +195,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Section 5: Logout */}
+      {/* Logout Section */}
       <SidebarFooter className="border-t border-slate-700/50 p-4">
         <SidebarMenu>
           <SidebarMenuItem>
