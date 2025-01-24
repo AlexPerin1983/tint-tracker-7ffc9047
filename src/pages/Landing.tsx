@@ -216,6 +216,29 @@ export default function Landing() {
             One-Time Payment - Only $49
           </Button>
         </div>
+
+        {/* Legal Disclaimer Section */}
+        <div className="mt-16 p-6 bg-card/30 backdrop-blur rounded-lg border border-muted/20">
+          <div className="max-w-4xl mx-auto space-y-4 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold text-white mb-4">Avisos Legais Importantes</h3>
+            
+            <div className="space-y-4">
+              <p>
+                Este site não faz parte do Meta (Facebook) Inc. Além disso, este site NÃO é endossado pelo Meta de nenhuma maneira. 
+                FACEBOOK é uma marca comercial independente do Meta.
+              </p>
+              
+              <p>
+                <span className="text-white font-medium">Isenção de Responsabilidade:</span> Os resultados mencionados são exemplos e não garantimos que você obterá os mesmos resultados. 
+                O sucesso em qualquer negócio depende de fatores individuais como dedicação, implementação e experiência.
+              </p>
+              
+              <p>
+                © 2024 Tint QR Tracker - Todos os Direitos Reservados
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
