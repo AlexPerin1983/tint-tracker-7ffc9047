@@ -112,14 +112,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                   <FormItem className="space-y-0 flex-1 flex items-center justify-center">
                     <FormControl>
                       <QuantityPicker
-                        value={field.value}
-                        onChange={(value) => {
-                          field.onChange(value);
-                          // Se minQuantity não estiver definido, define como 1
-                          if (!form.getValues("minQuantity")) {
-                            form.setValue("minQuantity", 1);
-                          }
-                        }}
+                        value={field.value || 1}
+                        onChange={field.onChange}
                         min={1}
                         max={100}
                         step={1}
@@ -163,134 +157,134 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             </div>
           </div>
         </div>
+      </TabsContent>
 
-        <TabsContent value="dimensions" className="space-y-8 mt-4">
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-              <span className="text-xs text-slate-400">Max: 60m</span>
-            </div>
-            <div 
-              className="relative group cursor-pointer"
-              onClick={() => setShowLengthInput(true)}
-            >
-              {showLengthInput ? (
+      <TabsContent value="dimensions" className="space-y-8 mt-4">
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
+            <span className="text-xs text-slate-400">Max: 60m</span>
+          </div>
+          <div 
+            className="relative group cursor-pointer"
+            onClick={() => setShowLengthInput(true)}
+          >
+            {showLengthInput ? (
+              <Input
+                type="number"
+                value={form.getValues("length") || ""}
+                onChange={(e) => handleNumericInput("length", e.target.value)}
+                onClick={handleInputClick}
+                step="0.01"
+                min="0"
+                max="60"
+                className="text-3xl font-bold bg-transparent border-blue-500 h-12"
+                autoFocus
+                onBlur={() => setShowLengthInput(false)}
+              />
+            ) : (
+              <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                {(form.getValues("length") || 0).toFixed(2)}
+                <span className="text-lg ml-1 text-slate-400">m</span>
+              </div>
+            )}
+          </div>
+          <Slider
+            value={sliderLength}
+            max={60}
+            step={0.01}
+            onValueChange={(value) => {
+              setSliderLength(value);
+              form.setValue("length", value[0]);
+            }}
+            className="py-4"
+          />
+        </div>
+
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
+            <span className="text-xs text-slate-400">Max: 1.82m</span>
+          </div>
+          <div 
+            className="relative group cursor-pointer"
+            onClick={() => setShowWidthInput(true)}
+          >
+            {showWidthInput ? (
+              <Input
+                type="number"
+                value={form.getValues("width") || ""}
+                onChange={(e) => handleNumericInput("width", e.target.value)}
+                onClick={handleInputClick}
+                step="0.01"
+                min="0"
+                max="1.82"
+                className="text-3xl font-bold bg-transparent border-blue-500 h-12"
+                autoFocus
+                onBlur={() => setShowWidthInput(false)}
+              />
+            ) : (
+              <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
+                {(form.getValues("width") || 0).toFixed(2)}
+                <span className="text-lg ml-1 text-slate-400">m</span>
+              </div>
+            )}
+          </div>
+          <Slider
+            value={sliderWidth}
+            max={1.82}
+            step={0.01}
+            onValueChange={(value) => {
+              setSliderWidth(value);
+              form.setValue("width", value[0]);
+            }}
+            className="py-4"
+          />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="price" className="space-y-4 mt-4">
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price per m² (USD)</FormLabel>
+              <FormControl>
                 <Input
                   type="number"
-                  value={form.getValues("length") || ""}
-                  onChange={(e) => handleNumericInput("length", e.target.value)}
-                  onClick={handleInputClick}
                   step="0.01"
-                  min="0"
-                  max="60"
-                  className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-                  autoFocus
-                  onBlur={() => setShowLengthInput(false)}
+                  placeholder="e.g. $10.50"
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value ? parseFloat(e.target.value) : undefined
+                    )
+                  }
                 />
-              ) : (
-                <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                  {(form.getValues("length") || 0).toFixed(2)}
-                  <span className="text-lg ml-1 text-slate-400">m</span>
-                </div>
-              )}
-            </div>
-            <Slider
-              value={sliderLength}
-              max={60}
-              step={0.01}
-              onValueChange={(value) => {
-                setSliderLength(value);
-                form.setValue("length", value[0]);
-              }}
-              className="py-4"
-            />
-          </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-              <span className="text-xs text-slate-400">Max: 1.82m</span>
-            </div>
-            <div 
-              className="relative group cursor-pointer"
-              onClick={() => setShowWidthInput(true)}
-            >
-              {showWidthInput ? (
-                <Input
-                  type="number"
-                  value={form.getValues("width") || ""}
-                  onChange={(e) => handleNumericInput("width", e.target.value)}
-                  onClick={handleInputClick}
-                  step="0.01"
-                  min="0"
-                  max="1.82"
-                  className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-                  autoFocus
-                  onBlur={() => setShowWidthInput(false)}
+        <FormField
+          control={form.control}
+          name="observation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Additional Notes</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Item is located on shelf..."
+                  className="min-h-[100px]"
+                  {...field}
                 />
-              ) : (
-                <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                  {(form.getValues("width") || 0).toFixed(2)}
-                  <span className="text-lg ml-1 text-slate-400">m</span>
-                </div>
-              )}
-            </div>
-            <Slider
-              value={sliderWidth}
-              max={1.82}
-              step={0.01}
-              onValueChange={(value) => {
-                setSliderWidth(value);
-                form.setValue("width", value[0]);
-              }}
-              className="py-4"
-            />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="price" className="space-y-4 mt-4">
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price per m² (USD)</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    placeholder="e.g. $10.50"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? parseFloat(e.target.value) : undefined
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="observation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional Notes</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Item is located on shelf..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TabsContent>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </TabsContent>
     </>
   );
