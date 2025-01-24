@@ -117,14 +117,19 @@ export function ItemsTable() {
   const renderQuantityCell = (item: Item) => {
     if (isLowStock(item)) {
       return (
-        <Tooltip>
-          <TooltipTrigger>
-            <span>{item.quantity}</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Quantidade mínima: {item.minQuantity}</p>
-          </TooltipContent>
-        </Tooltip>
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-1">
+                <span>{item.quantity}</span>
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Quantidade mínima: {item.minQuantity}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       );
     }
     return item.quantity;
@@ -156,8 +161,10 @@ export function ItemsTable() {
               <TableRow 
                 key={item.id}
                 ref={item.id === selectedItemId ? highlightedRowRef : undefined}
-                className={`${selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""} ${
-                  isLowStock(item) ? "border-2 border-destructive" : ""
+                className={`${
+                  selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""
+                } ${
+                  isLowStock(item) ? "bg-amber-50/10" : ""
                 }`}
               >
                 <TableCell className="font-medium">
