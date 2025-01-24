@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { validateUser } from "@/services/sheets";
 import { useToast } from "@/components/ui/use-toast";
+import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import Index from "./pages/Index";
 import ItemDetails from "./pages/ItemDetails";
 import ScrapDetails from "./pages/ScrapDetails";
@@ -100,6 +101,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <PageViewTracker />
           <Routes>
             <Route path="/landing" element={<Landing />} />
             <Route
