@@ -31,7 +31,7 @@ const externalLinks = [
 ];
 
 const contactInfo = {
-  title: "Contato",
+  title: "Contact",
   email: "windowfilm.br@gmail.com",
   icon: Mail,
 };
