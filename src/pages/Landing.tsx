@@ -6,7 +6,8 @@ import { CheckCircle, BarChart2, QrCode, Shield, DollarSign, Star } from "lucide
 
 export default function Landing() {
   const handleBuyNow = () => {
-    window.location.href = "https://buy.stripe.com/28o6qp6QsaZEaKA8wz";
+    // Adiciona o parâmetro success=true na URL de retorno
+    window.location.href = "https://buy.stripe.com/28o6qp6QsaZEaKA8wz?success_url=https://preview--tint-qr-tracker.lovable.app/?success=true";
   };
 
   return (
