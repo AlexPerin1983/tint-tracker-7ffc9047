@@ -19,19 +19,21 @@ export function PageViewTracker() {
         // Sempre rastreia a visualização da página
         window.fbq('track', 'PageView');
 
-        // Se estiver na página de sucesso após o pagamento, rastreia a compra
-        if (location.pathname === '/') {
-          const urlParams = new URLSearchParams(location.search);
-          const success = urlParams.get('success');
+        // Se estiver na página de retorno após o pagamento, rastreia a compra
+        const urlParams = new URLSearchParams(location.search);
+        const success = urlParams.get('success');
+        
+        if (success === 'true') {
+          window.fbq('track', 'Purchase', {
+            value: 49,
+            currency: 'USD'
+          });
           
-          if (success === 'true') {
-            window.fbq('track', 'Purchase', {
-              value: 49,
-              currency: 'USD'
-            });
-            
-            console.log('Purchase event tracked');
-          }
+          console.log('Purchase event tracked');
+          toast({
+            title: "Compra Registrada",
+            description: "O evento de compra foi registrado com sucesso!",
+          });
         }
       }
     } catch (error) {
