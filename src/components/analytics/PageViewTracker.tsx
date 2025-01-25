@@ -20,7 +20,7 @@ export function PageViewTracker() {
         const success = urlParams.get('success');
         
         if (success === 'true') {
-          // Se for página de sucesso, apenas rastreia a compra
+          // Na página de sucesso, APENAS registra o evento de compra
           window.fbq('track', 'Purchase', {
             value: 49,
             currency: 'USD'
@@ -31,10 +31,10 @@ export function PageViewTracker() {
             title: "Compra Registrada",
             description: "O evento de compra foi registrado com sucesso!",
           });
-        } else {
-          // Se não for página de sucesso, rastreia o PageView normalmente
+        } else if (location.pathname === '/landing') {
+          // Na página de landing, registra apenas o PageView
           window.fbq('track', 'PageView');
-          console.log('PageView event tracked');
+          console.log('Landing PageView event tracked');
         }
       }
     } catch (error) {
