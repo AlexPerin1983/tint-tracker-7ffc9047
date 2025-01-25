@@ -18,7 +18,9 @@ export function PageViewTracker() {
       if (window.fbq) {
         const urlParams = new URLSearchParams(location.search);
         const success = urlParams.get('success');
-        const isLandingPage = location.pathname === '/landing';
+        
+        // Verifica se é exatamente a página /landing
+        const isExactlyLandingPage = location.pathname === '/landing' && !location.search;
         
         // Registra apenas o evento de compra na página de sucesso
         if (success === 'true') {
@@ -33,14 +35,18 @@ export function PageViewTracker() {
             description: "O evento de compra foi registrado com sucesso!",
           });
         } 
-        // Registra PageView APENAS se for exatamente a página /landing
-        else if (isLandingPage) {
+        // Registra PageView APENAS se for exatamente a página /landing sem parâmetros
+        else if (isExactlyLandingPage) {
           window.fbq('track', 'PageView');
-          console.log('Landing PageView event tracked');
+          console.log('Landing PageView event tracked - Exact match for /landing');
         } 
         // Log para outras páginas (ajuda no debug)
         else {
-          console.log('Página atual não registra eventos:', location.pathname);
+          console.log('Página atual não registra eventos:', {
+            pathname: location.pathname,
+            search: location.search,
+            isExactlyLandingPage
+          });
         }
       }
     } catch (error) {
