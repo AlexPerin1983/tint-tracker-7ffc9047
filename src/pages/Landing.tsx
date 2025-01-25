@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Link } from "react-router-dom";
 import { CheckCircle, BarChart2, QrCode, Shield, DollarSign, Star } from "lucide-react";
 
 export default function Landing() {
   const handleBuyNow = () => {
-    // Adiciona o parâmetro success=true na URL de retorno
-    window.location.href = "https://buy.stripe.com/28o6qp6QsaZEaKA8wz?success_url=https://preview--tint-qr-tracker.lovable.app/?success=true";
+    window.location.href = "https://buy.stripe.com/28o6qp6QsaZEaKA8wz";
   };
 
   return (
