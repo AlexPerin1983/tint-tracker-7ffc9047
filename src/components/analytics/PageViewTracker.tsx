@@ -16,14 +16,11 @@ export function PageViewTracker() {
   useEffect(() => {
     try {
       if (window.fbq) {
-        // Sempre rastreia a visualização da página
-        window.fbq('track', 'PageView');
-
-        // Se estiver na página de retorno após o pagamento, rastreia a compra
         const urlParams = new URLSearchParams(location.search);
         const success = urlParams.get('success');
         
         if (success === 'true') {
+          // Se for página de sucesso, apenas rastreia a compra
           window.fbq('track', 'Purchase', {
             value: 49,
             currency: 'USD'
@@ -34,6 +31,10 @@ export function PageViewTracker() {
             title: "Compra Registrada",
             description: "O evento de compra foi registrado com sucesso!",
           });
+        } else {
+          // Se não for página de sucesso, rastreia o PageView normalmente
+          window.fbq('track', 'PageView');
+          console.log('PageView event tracked');
         }
       }
     } catch (error) {
