@@ -16,13 +16,29 @@ export function PageViewTracker() {
   useEffect(() => {
     try {
       if (window.fbq) {
+        // Sempre rastreia a visualização da página
         window.fbq('track', 'PageView');
+
+        // Se estiver na página de sucesso após o pagamento, rastreia a compra
+        if (location.pathname === '/') {
+          const urlParams = new URLSearchParams(location.search);
+          const success = urlParams.get('success');
+          
+          if (success === 'true') {
+            window.fbq('track', 'Purchase', {
+              value: 49,
+              currency: 'USD'
+            });
+            
+            console.log('Purchase event tracked');
+          }
+        }
       }
     } catch (error) {
-      console.error('Erro ao rastrear visualização de página:', error);
+      console.error('Erro ao rastrear evento:', error);
       toast({
         title: "Erro de Rastreamento",
-        description: "Não foi possível registrar a visualização da página",
+        description: "Não foi possível registrar o evento",
         variant: "destructive",
       });
     }
