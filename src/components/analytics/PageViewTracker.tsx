@@ -14,6 +14,7 @@ export function PageViewTracker() {
   const location = useLocation();
   const { toast } = useToast();
 
+  // Inicializa o Facebook Pixel apenas uma vez
   useEffect(() => {
     if (!window.fbq) {
       const f = window as any;
@@ -39,6 +40,7 @@ export function PageViewTracker() {
       window.fbq('init', '1621095305954112');
     }
 
+    // Obtém o IP do usuário apenas uma vez
     fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(data => {
@@ -47,39 +49,39 @@ export function PageViewTracker() {
       .catch(() => {});
   }, []);
 
+  // Rastreia eventos de página e compra
   useEffect(() => {
     try {
       if (window.fbq) {
         const urlParams = new URLSearchParams(location.search);
         const success = urlParams.get('success');
-        const isExactlyLandingPage = location.pathname === '/landing' && !location.search;
+        const isLandingPage = location.pathname === '/landing';
         
         if (success === 'true') {
           window.fbq('track', 'Purchase', {
             value: 49,
             currency: 'USD'
           });
-          
           sendConversionEvent('Purchase', 49);
-          
           toast({
             title: "Compra Registrada",
             description: "O evento de compra foi registrado com sucesso!",
           });
         } 
-        else if (isExactlyLandingPage) {
+        else if (isLandingPage) {
           window.fbq('track', 'PageView');
           sendConversionEvent('PageView');
         }
       }
     } catch (error) {
+      console.error('Erro ao rastrear evento:', error);
       toast({
         title: "Erro de Rastreamento",
         description: "Não foi possível registrar o evento",
         variant: "destructive",
       });
     }
-  }, [location, toast]);
+  }, [location.pathname, location.search, toast]);
 
   return null;
 }
