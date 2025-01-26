@@ -38,6 +38,11 @@ export function PageViewTracker() {
       s.parentNode?.insertBefore(t, s);
       
       window.fbq('init', '1621095305954112');
+
+      // Desativa logs em desenvolvimento
+      if (process.env.NODE_ENV === 'development') {
+        (window as any).fbq.disablePushState = true;
+      }
     }
 
     // Obtém o IP do usuário apenas uma vez
@@ -58,6 +63,7 @@ export function PageViewTracker() {
         const isLandingPage = location.pathname === '/landing';
         
         if (success === 'true') {
+          console.log('🎉 Evento de compra registrado');
           window.fbq('track', 'Purchase', {
             value: 49,
             currency: 'USD'
@@ -69,6 +75,7 @@ export function PageViewTracker() {
           });
         } 
         else if (isLandingPage) {
+          console.log('📝 Evento PageView registrado');
           window.fbq('track', 'PageView');
           sendConversionEvent('PageView');
         }
