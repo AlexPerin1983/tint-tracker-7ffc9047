@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { sendConversionEvent } from "@/services/meta";
+import { useDebounce } from "@/hooks/use-debounce";
 
 declare global {
   interface Window {
@@ -13,6 +14,21 @@ declare global {
 export function PageViewTracker() {
   const location = useLocation();
   const { toast } = useToast();
+  
+  // Objeto para rastrear seções já visualizadas
+  const viewedSections = new Set();
+  
+  // Debounce para evitar múltiplos disparos do mesmo evento
+  const debouncedTrackViewContent = useDebounce((section: string) => {
+    if (!viewedSections.has(section) && window.fbq) {
+      window.fbq('track', 'ViewContent', {
+        content_name: section,
+        content_type: 'product_section'
+      });
+      sendConversionEvent('ViewContent');
+      viewedSections.add(section);
+    }
+  }, 1000);
 
   useEffect(() => {
     if (!window.fbq) {
@@ -70,6 +86,26 @@ export function PageViewTracker() {
         else if (isExactlyLandingPage) {
           window.fbq('track', 'PageView');
           sendConversionEvent('PageView');
+          
+          // Observar seções importantes com debounce
+          const handleViewContent = (section: string) => {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  debouncedTrackViewContent(section);
+                }
+              });
+            }, { threshold: 0.5 });
+
+            const element = document.getElementById(section);
+            if (element) observer.observe(element);
+
+            return () => observer.disconnect();
+          };
+
+          handleViewContent('benefits');
+          handleViewContent('testimonials');
+          handleViewContent('faq');
         }
       }
     } catch (error) {
@@ -79,7 +115,7 @@ export function PageViewTracker() {
         variant: "destructive",
       });
     }
-  }, [location, toast]);
+  }, [location, toast, debouncedTrackViewContent]);
 
   return null;
 }
