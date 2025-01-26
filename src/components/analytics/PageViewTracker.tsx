@@ -14,44 +14,56 @@ export function PageViewTracker() {
   const location = useLocation();
   const { toast } = useToast();
 
-  // Inicializa o Facebook Pixel apenas uma vez
+  // Inicializa o Facebook Pixel apenas uma vez e de forma assíncrona
   useEffect(() => {
     if (!window.fbq) {
-      const f = window as any;
-      const b = document;
-      let e: any, n: any, t: any, s: any;
-      
-      if (f.fbq) return;
-      n = f.fbq = function() {
-        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-      };
-      
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = true;
-      n.version = '2.0';
-      n.queue = [];
-      t = b.createElement('script');
-      t.async = true;
-      t.src = 'https://connect.facebook.net/en_US/fbevents.js';
-      s = b.getElementsByTagName('script')[0];
-      s.parentNode?.insertBefore(t, s);
-      
-      window.fbq('init', '1621095305954112');
+      const loadFacebookPixel = () => {
+        const f = window as any;
+        const b = document;
+        let e: any, n: any;
+        
+        if (f.fbq) return;
+        n = f.fbq = function() {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = true;
+        n.version = '2.0';
+        n.queue = [];
+        
+        e = b.createElement('script');
+        e.async = true;
+        e.defer = true;
+        e.src = 'https://connect.facebook.net/en_US/fbevents.js';
+        
+        const s = b.getElementsByTagName('script')[0];
+        s.parentNode?.insertBefore(e, s);
+        
+        window.fbq('init', '1621095305954112');
 
-      // Desativa logs em desenvolvimento
-      if (process.env.NODE_ENV === 'development') {
-        (window as any).fbq.disablePushState = true;
-      }
+        // Desativa logs em desenvolvimento
+        if (process.env.NODE_ENV === 'development') {
+          (window as any).fbq.disablePushState = true;
+          console.log('🔧 Facebook Pixel inicializado em modo desenvolvimento');
+        }
+      };
+
+      // Carrega o script com um pequeno delay para priorizar o carregamento da página
+      setTimeout(loadFacebookPixel, 1000);
     }
 
-    // Obtém o IP do usuário apenas uma vez
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => {
-        localStorage.setItem('client_ip', data.ip);
-      })
-      .catch(() => {});
+    // Obtém o IP do usuário apenas uma vez e armazena em cache
+    const cachedIp = localStorage.getItem('client_ip');
+    if (!cachedIp) {
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          localStorage.setItem('client_ip', data.ip);
+        })
+        .catch(() => {});
+    }
   }, []);
 
   // Rastreia eventos de página e compra
@@ -63,7 +75,9 @@ export function PageViewTracker() {
         const isLandingPage = location.pathname === '/landing';
         
         if (success === 'true') {
-          console.log('🎉 Evento de compra registrado');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🎉 Evento de compra registrado (desenvolvimento)');
+          }
           window.fbq('track', 'Purchase', {
             value: 49,
             currency: 'USD'
@@ -75,7 +89,9 @@ export function PageViewTracker() {
           });
         } 
         else if (isLandingPage) {
-          console.log('📝 Evento PageView registrado');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('📝 Evento PageView registrado (desenvolvimento)');
+          }
           window.fbq('track', 'PageView');
           sendConversionEvent('PageView');
         }
