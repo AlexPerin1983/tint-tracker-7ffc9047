@@ -8,6 +8,7 @@ declare global {
   interface Window {
     fbq?: Function;
     _fbq?: any;
+    testFacebookPixel?: Function;
   }
 }
 
@@ -27,8 +28,68 @@ export function PageViewTracker() {
       });
       sendConversionEvent('ViewContent');
       viewedSections.add(section);
+      
+      toast({
+        title: "Evento ViewContent Registrado",
+        description: `Seção: ${section}`,
+      });
     }
   }, 1000);
+
+  // Função de teste que será exposta globalmente
+  const testPixelEvents = () => {
+    if (!window.fbq) {
+      toast({
+        title: "Erro",
+        description: "Facebook Pixel não encontrado",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Testa PageView
+    window.fbq('track', 'PageView');
+    sendConversionEvent('PageView');
+    toast({
+      title: "Evento PageView Enviado",
+      description: "Evento básico de visualização de página",
+    });
+
+    // Testa ViewContent para cada seção
+    ['benefits', 'testimonials', 'faq'].forEach(section => {
+      window.fbq('track', 'ViewContent', {
+        content_name: section,
+        content_type: 'product_section'
+      });
+      sendConversionEvent('ViewContent');
+      toast({
+        title: "Evento ViewContent Enviado",
+        description: `Seção testada: ${section}`,
+      });
+    });
+
+    // Testa InitiateCheckout
+    window.fbq('track', 'InitiateCheckout', {
+      value: 49,
+      currency: 'USD'
+    });
+    sendConversionEvent('InitiateCheckout', 49);
+    toast({
+      title: "Evento InitiateCheckout Enviado",
+      description: "Simulação de início de checkout",
+    });
+
+    // Testa Purchase
+    window.fbq('track', 'Purchase', {
+      value: 49,
+      currency: 'USD'
+    });
+    sendConversionEvent('Purchase', 49);
+    toast({
+      title: "Evento Purchase Enviado",
+      description: "Simulação de compra concluída",
+    });
+  };
 
   useEffect(() => {
     if (!window.fbq) {
@@ -61,6 +122,9 @@ export function PageViewTracker() {
         localStorage.setItem('client_ip', data.ip);
       })
       .catch(() => {});
+
+    // Expõe a função de teste globalmente
+    window.testFacebookPixel = testPixelEvents;
   }, []);
 
   useEffect(() => {
