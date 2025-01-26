@@ -4,23 +4,39 @@ interface ConversionAPIEvent {
   user_data?: {
     client_ip_address?: string;
     client_user_agent?: string;
+    fbp?: string;          // Facebook Browser ID
+    fbc?: string;          // Facebook Click ID
   };
   custom_data?: {
     value?: number;
     currency?: string;
+    content_name?: string;
+    content_type?: string;
+    content_ids?: string[];
   };
+  event_source_url?: string;
+  action_source?: string;
 }
 
 const PIXEL_ID = '1621095305954112';
+
+function getFacebookCookie(name: string): string | undefined {
+  const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return match ? match.pop() : undefined;
+}
 
 export async function sendConversionEvent(eventName: string, value?: number) {
   try {
     const event: ConversionAPIEvent = {
       event_name: eventName,
       event_time: Math.floor(Date.now() / 1000),
+      event_source_url: window.location.href,
+      action_source: 'website',
       user_data: {
-        client_ip_address: window.localStorage.getItem('client_ip') || undefined,
+        client_ip_address: localStorage.getItem('client_ip') || undefined,
         client_user_agent: navigator.userAgent,
+        fbp: getFacebookCookie('_fbp'),         // Facebook Browser ID
+        fbc: getFacebookCookie('_fbc'),         // Facebook Click ID
       },
     };
 
@@ -28,6 +44,9 @@ export async function sendConversionEvent(eventName: string, value?: number) {
       event.custom_data = {
         value: value,
         currency: 'USD',
+        content_type: 'product',
+        content_name: 'Window Film Course',
+        content_ids: ['COURSE_001'],
       };
     }
 
