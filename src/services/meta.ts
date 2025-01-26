@@ -31,8 +31,14 @@ export async function sendConversionEvent(eventName: string, value?: number) {
       };
     }
 
+    const token = process.env.META_PIXEL_TOKEN;
+    if (!token) {
+      console.error('Meta Pixel Token não encontrado');
+      return null;
+    }
+
     const response = await fetch(
-      `https://graph.facebook.com/v17.0/${PIXEL_ID}/events?access_token=${process.env.META_PIXEL_TOKEN}`,
+      `https://graph.facebook.com/v17.0/${PIXEL_ID}/events?access_token=${token}`,
       {
         method: 'POST',
         headers: {
@@ -45,10 +51,10 @@ export async function sendConversionEvent(eventName: string, value?: number) {
     );
 
     const result = await response.json();
-    console.log('Conversion API Response:', result);
+    console.log('Resposta da API de Conversão:', result);
     return result;
   } catch (error) {
-    console.error('Error sending conversion event:', error);
+    console.error('Erro ao enviar evento de conversão:', error);
     return null;
   }
 }
