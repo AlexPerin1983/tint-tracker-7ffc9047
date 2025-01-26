@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { sendConversionEvent } from "@/services/meta";
 
 declare global {
   interface Window {
@@ -28,6 +29,14 @@ export function PageViewTracker() {
       window.fbq('init', '1621095305954112');
       console.log('Facebook Pixel inicializado');
     }
+
+    // Obtém o IP do cliente (apenas para demonstração)
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem('client_ip', data.ip);
+      })
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -46,6 +55,9 @@ export function PageViewTracker() {
             currency: 'USD'
           });
           
+          // Envia o evento também pela API de Conversões
+          sendConversionEvent('Purchase', 49);
+          
           console.log('Purchase event tracked');
           toast({
             title: "Compra Registrada",
@@ -55,6 +67,7 @@ export function PageViewTracker() {
         // Registra PageView APENAS se for exatamente a página /landing sem parâmetros
         else if (isExactlyLandingPage) {
           window.fbq('track', 'PageView');
+          sendConversionEvent('PageView');
           console.log('Landing PageView event tracked - Exact match for /landing');
         } 
         // Log para outras páginas (ajuda no debug)
