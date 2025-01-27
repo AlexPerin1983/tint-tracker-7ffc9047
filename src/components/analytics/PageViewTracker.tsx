@@ -72,13 +72,16 @@ export function PageViewTracker() {
       if (window.fbq) {
         const urlParams = new URLSearchParams(location.search);
         const success = urlParams.get('success');
+        const isLandingPage = location.pathname === '/landing';
         
-        // Registra PageView para todas as páginas
-        window.fbq('track', 'PageView');
-        sendConversionEvent('PageView');
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`📝 Evento PageView registrado para: ${location.pathname}`);
+        // Registra PageView apenas na página de landing
+        if (isLandingPage) {
+          window.fbq('track', 'PageView');
+          sendConversionEvent('PageView');
+          
+          if (process.env.NODE_ENV === 'development') {
+            console.log('📝 Evento PageView registrado na página de landing');
+          }
         }
 
         // Registra evento de compra apenas quando success=true
