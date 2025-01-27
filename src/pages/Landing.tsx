@@ -25,6 +25,7 @@ export default function Landing() {
               size="lg" 
               className="bg-primary hover:bg-primary/90 text-xl px-8 py-6 h-auto"
               onClick={handleBuyNow}
+              data-fb-track="top-button"
             >
               <DollarSign className="w-6 h-6" />
               One-Time Payment - Only $49
@@ -211,6 +212,7 @@ export default function Landing() {
             size="lg" 
             className="bg-primary hover:bg-primary/90 text-base md:text-xl px-4 md:px-8 py-4 md:py-6 h-auto w-full md:w-auto mx-auto"
             onClick={handleBuyNow}
+            data-fb-track="bottom-button"
           >
             <DollarSign className="w-5 h-5 md:w-6 md:h-6" />
             One-Time Payment - Only $49

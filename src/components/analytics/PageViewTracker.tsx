@@ -76,5 +76,34 @@ export function PageViewTracker() {
     }
   }, [location, toast]);
 
+  // Função para rastrear cliques nos botões
+  const trackButtonClick = (buttonLocation: string) => {
+    if (window.fbq) {
+      window.fbq('trackCustom', 'ButtonClick', {
+        location: buttonLocation,
+        page: 'landing'
+      });
+      console.log(`Button click tracked: ${buttonLocation}`);
+    }
+  };
+
+  // Adiciona os event listeners quando o componente é montado
+  useEffect(() => {
+    const topButton = document.querySelector('[data-fb-track="top-button"]');
+    const bottomButton = document.querySelector('[data-fb-track="bottom-button"]');
+
+    const handleTopButtonClick = () => trackButtonClick('top');
+    const handleBottomButtonClick = () => trackButtonClick('bottom');
+
+    topButton?.addEventListener('click', handleTopButtonClick);
+    bottomButton?.addEventListener('click', handleBottomButtonClick);
+
+    // Cleanup
+    return () => {
+      topButton?.removeEventListener('click', handleTopButtonClick);
+      bottomButton?.removeEventListener('click', handleBottomButtonClick);
+    };
+  }, []);
+
   return null;
 }
