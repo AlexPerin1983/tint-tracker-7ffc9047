@@ -2,51 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CheckCircle, BarChart2, QrCode, Shield, DollarSign, Star } from "lucide-react";
-import { useEffect } from "react";
-import { sendConversionEvent } from "@/services/meta";
 
 export default function Landing() {
   const handleBuyNow = () => {
-    // Enviar evento InitiateCheckout quando usuário clica em comprar
-    if (window.fbq) {
-      window.fbq('track', 'InitiateCheckout', {
-        value: 49,
-        currency: 'USD'
-      });
-      sendConversionEvent('InitiateCheckout', 49);
-    }
-    
     const successUrl = encodeURIComponent("https://preview--tint-qr-tracker.lovable.app/?success=true");
     window.location.href = `https://buy.stripe.com/28o6qp6QsaZEaKA8wz?success_url=${successUrl}`;
   };
-
-  // Rastrear interações com seções importantes
-  useEffect(() => {
-    const handleViewContent = (section: string) => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && window.fbq) {
-            window.fbq('track', 'ViewContent', {
-              content_name: section,
-              content_type: 'product_section'
-            });
-            sendConversionEvent('ViewContent');
-            observer.disconnect(); // Rastrear apenas primeira visualização
-          }
-        });
-      }, { threshold: 0.5 });
-
-      const element = document.getElementById(section);
-      if (element) observer.observe(element);
-
-      return () => observer.disconnect();
-    };
-
-    // Observar seções importantes
-    handleViewContent('benefits');
-    handleViewContent('testimonials');
-    handleViewContent('faq');
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1E293B] to-[#0F172A]">
@@ -85,7 +46,7 @@ export default function Landing() {
         </div>
 
         {/* Benefits Section */}
-        <div id="benefits" className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           <Card className="bg-card/50 backdrop-blur border-muted">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
@@ -144,7 +105,7 @@ export default function Landing() {
         </div>
 
         {/* Testimonials Section */}
-        <div id="testimonials" className="mb-16">
+        <div className="mb-16">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
             Trusted by Professional Shops
           </h2>
@@ -203,7 +164,7 @@ export default function Landing() {
         </div>
 
         {/* FAQ Section */}
-        <div id="faq" className="mb-16 max-w-3xl mx-auto">
+        <div className="mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
             Frequently Asked Questions
           </h2>
