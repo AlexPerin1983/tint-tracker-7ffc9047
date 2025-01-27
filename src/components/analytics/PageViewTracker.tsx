@@ -16,7 +16,7 @@ export function PageViewTracker() {
   // Inicializa o Facebook Pixel apenas quando o componente é montado
   useEffect(() => {
     // Verifica se o pixel já foi inicializado
-    if (!window.fbq) {
+    if (typeof window.fbq === 'undefined') {
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -32,7 +32,7 @@ export function PageViewTracker() {
 
   useEffect(() => {
     try {
-      if (window.fbq) {
+      if (typeof window.fbq === 'function') {
         const urlParams = new URLSearchParams(location.search);
         const success = urlParams.get('success');
         
@@ -78,7 +78,7 @@ export function PageViewTracker() {
 
   // Função para rastrear cliques nos botões
   const trackButtonClick = (buttonLocation: string) => {
-    if (window.fbq) {
+    if (typeof window.fbq === 'function') {
       window.fbq('trackCustom', 'ButtonClick', {
         location: buttonLocation,
         page: 'landing'
