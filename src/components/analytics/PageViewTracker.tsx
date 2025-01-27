@@ -68,46 +68,52 @@ export function PageViewTracker() {
 
   // Rastreia eventos de página e compra
   useEffect(() => {
-    try {
-      if (window.fbq) {
-        const urlParams = new URLSearchParams(location.search);
-        const success = urlParams.get('success');
-        const isLandingPage = location.pathname === '/landing';
-        
-        // Registra PageView apenas na página de landing
-        if (isLandingPage) {
-          window.fbq('track', 'PageView');
-          sendConversionEvent('PageView');
+    const handlePageView = () => {
+      try {
+        if (window.fbq) {
+          const urlParams = new URLSearchParams(location.search);
+          const success = urlParams.get('success');
+          const isLandingPage = location.pathname === '/landing';
           
-          if (process.env.NODE_ENV === 'development') {
-            console.log('📝 Evento PageView registrado na página de landing');
+          // Registra PageView apenas na página de landing
+          if (isLandingPage) {
+            console.log('Tentando registrar PageView na landing page');
+            window.fbq('track', 'PageView');
+            sendConversionEvent('PageView');
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log('📝 Evento PageView registrado na página de landing');
+            }
           }
-        }
 
-        // Registra evento de compra apenas quando success=true
-        if (success === 'true') {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('🎉 Evento de compra registrado (desenvolvimento)');
+          // Registra evento de compra apenas quando success=true
+          if (success === 'true') {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🎉 Evento de compra registrado (desenvolvimento)');
+            }
+            window.fbq('track', 'Purchase', {
+              value: 49,
+              currency: 'USD'
+            });
+            sendConversionEvent('Purchase', 49);
+            toast({
+              title: "Compra Registrada",
+              description: "O evento de compra foi registrado com sucesso!",
+            });
           }
-          window.fbq('track', 'Purchase', {
-            value: 49,
-            currency: 'USD'
-          });
-          sendConversionEvent('Purchase', 49);
-          toast({
-            title: "Compra Registrada",
-            description: "O evento de compra foi registrado com sucesso!",
-          });
         }
+      } catch (error) {
+        console.error('Erro ao rastrear evento:', error);
+        toast({
+          title: "Erro de Rastreamento",
+          description: "Não foi possível registrar o evento",
+          variant: "destructive",
+        });
       }
-    } catch (error) {
-      console.error('Erro ao rastrear evento:', error);
-      toast({
-        title: "Erro de Rastreamento",
-        description: "Não foi possível registrar o evento",
-        variant: "destructive",
-      });
-    }
+    };
+
+    // Executa o handlePageView quando a rota muda
+    handlePageView();
   }, [location.pathname, location.search, toast]);
 
   return null;
