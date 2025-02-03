@@ -4,7 +4,7 @@ import { Search, X, Filter as FilterIcon } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { FilterFields } from "./FilterFields";
 import { FilterSheet } from "./FilterSheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
@@ -21,8 +21,17 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Efeito para atualizar o filtro de nome quando o termo de busca mudar
+  useEffect(() => {
+    onFilterChange({
+      ...filters,
+      name: searchTerm
+    });
+  }, [searchTerm]);
+
   const handleClearFilters = () => {
     onClearFilters();
+    setSearchTerm("");
     toast({
       title: "Filtros limpos!",
       duration: 2000,
