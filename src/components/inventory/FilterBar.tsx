@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { X, Filter as FilterIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Search, X, Filter as FilterIcon } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { FilterFields } from "./FilterFields";
 import { FilterSheet } from "./FilterSheet";
@@ -16,13 +17,14 @@ interface FilterBarProps {
 
 export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }: FilterBarProps) {
   const [showFilterSheet, setShowFilterSheet] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleClearFilters = () => {
     onClearFilters();
     toast({
-      title: "Filters cleared!",
+      title: "Filtros limpos!",
       duration: 2000,
     });
   };
@@ -33,21 +35,45 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
 
   const handleApplyFilters = () => {
     toast({
-      title: "Filters applied successfully!",
+      title: "Filtros aplicados com sucesso!",
       duration: 2000,
     });
   };
 
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+
   if (isMobile) {
     return (
-      <div className="mb-6">
-        <Button 
-          onClick={() => setShowFilterSheet(true)}
-          className="w-full bg-[#3B82F6] text-white hover:bg-[#2563EB]"
-        >
-          <FilterIcon className="w-4 h-4 mr-2" />
-          Filter
-        </Button>
+      <div className="mb-6 space-y-4">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 pr-9"
+              placeholder="Buscar..."
+            />
+            {searchTerm && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+          <Button 
+            onClick={() => setShowFilterSheet(true)}
+            variant="outline"
+            size="icon"
+            className="bg-[#3B82F6] text-white hover:bg-[#2563EB]"
+          >
+            <FilterIcon className="h-4 w-4" />
+          </Button>
+        </div>
         <FilterSheet
           open={showFilterSheet}
           onOpenChange={setShowFilterSheet}
@@ -77,7 +103,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
           className="bg-[#3B82F6] hover:bg-[#2563EB] text-white h-10"
         >
           <X className="h-4 w-4 mr-2" />
-          Clear Filters
+          Limpar Filtros
         </Button>
       </div>
     </div>
