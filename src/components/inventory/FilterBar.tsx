@@ -63,7 +63,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 pr-9"
-              placeholder="Buscar..."
+              placeholder="Search..."
             />
             {searchTerm && (
               <button
