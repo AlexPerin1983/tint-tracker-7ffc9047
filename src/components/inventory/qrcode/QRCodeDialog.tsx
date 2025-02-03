@@ -14,21 +14,16 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const baseUrl = window.location.origin;
   const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
-  const dimensionsInFeet = item.type === 'bobina' 
-    ? `${item.remainingWidth?.toFixed(2)}ft x ${item.remainingLength?.toFixed(2)}ft`
-    : `${item.width.toFixed(2)}ft x ${item.length.toFixed(2)}ft`;
-
-  const metersToFeet = 3.28084;
-  const dimensionsInMeters = item.type === 'bobina'
-    ? `${(item.remainingWidth / metersToFeet)?.toFixed(2)}m x ${(item.remainingLength / metersToFeet)?.toFixed(2)}m`
-    : `${(item.width / metersToFeet).toFixed(2)}m x ${(item.length / metersToFeet).toFixed(2)}m`;
+  const dimensions = item.type === 'bobina' 
+    ? `${item.remainingWidth?.toFixed(2)}m x ${item.remainingLength?.toFixed(2)}m`
+    : `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`;
 
   const qrCodeData = {
     id: item.id,
     code: item.code,
     name: item.name,
     category: item.category,
-    dimensions: dimensionsInFeet,
+    dimensions: dimensions,
     url: itemUrl
   };
 
@@ -131,10 +126,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             </div>
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Roll Size:</span>
-              <div className="text-right">
-                <div>{dimensionsInFeet}</div>
-                <div className="text-xs text-muted-foreground">{dimensionsInMeters}</div>
-              </div>
+              <span>{dimensions}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
               <span className="font-medium">Link:</span>
