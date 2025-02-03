@@ -176,6 +176,9 @@ export function ItemsTable() {
                     <span className="text-xs text-muted-foreground">
                       {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name.replace('Retalho de ', '')}
                     </span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDimensions(item)}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', 'Scrap of')}</TableCell>
