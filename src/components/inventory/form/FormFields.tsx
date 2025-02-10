@@ -18,8 +18,8 @@ interface FormFieldsProps {
 const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
-  const [sliderLength, setSliderLength] = useState([form.getValues("length") || 0]);
-  const [sliderWidth, setSliderWidth] = useState([form.getValues("width") || 0]);
+  const [sliderLength, setSliderLength] = useState([form.getValues("length") * 39.37 || 0]);
+  const [sliderWidth, setSliderWidth] = useState([form.getValues("width") * 39.37 || 0]);
   const { toast } = useToast();
 
   const handleInputClick = (e: React.MouseEvent) => {
@@ -27,10 +27,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   };
 
   const handlePresetWidth = (width: number) => {
-    // Convertendo polegadas para metros
-    const widthInMeters = width * 0.0254;
-    setSliderWidth([widthInMeters]);
-    form.setValue("width", widthInMeters);
+    setSliderWidth([width]);
+    form.setValue("width", width / 39.37); // Convertendo polegadas para metros para salvar
   };
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
@@ -46,19 +44,19 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      const maxValue = field === "length" ? 60 : 1.82;
+      const maxValue = field === "length" ? 2362.2 : 71.65; // 60m e 1.82m convertidos para polegadas
       
       if (field === "width" && numValue > maxValue) {
         toast({
           title: "Invalid Width",
-          description: "Maximum roll width is 1.82m",
+          description: "Maximum roll width is 71.65\"",
           variant: "destructive",
         });
         return;
       }
       
       if (numValue <= maxValue) {
-        form.setValue(field, numValue);
+        form.setValue(field, numValue / 39.37); // Convertendo polegadas para metros para salvar
         if (field === "length") {
           setSliderLength([numValue]);
         } else {
@@ -172,7 +170,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-            <span className="text-xs text-slate-400">Max: 60m</span>
+            <span className="text-xs text-slate-400">Max: 2362.2"</span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -181,30 +179,30 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showLengthInput ? (
               <Input
                 type="number"
-                value={form.getValues("length") || ""}
+                value={(form.getValues("length") * 39.37).toFixed(2) || ""}
                 onChange={(e) => handleNumericInput("length", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
-                max="60"
+                max="2362.2"
                 className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                 autoFocus
                 onBlur={() => setShowLengthInput(false)}
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("length") || 0).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">m</span>
+                {(form.getValues("length") * 39.37).toFixed(2)}
+                <span className="text-lg ml-1 text-slate-400">"</span>
               </div>
             )}
           </div>
           <Slider
             value={sliderLength}
-            max={60}
+            max={2362.2}
             step={0.01}
             onValueChange={(value) => {
               setSliderLength(value);
-              form.setValue("length", value[0]);
+              form.setValue("length", value[0] / 39.37); // Convertendo polegadas para metros para salvar
             }}
             className="py-4"
           />
@@ -213,7 +211,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-            <span className="text-xs text-slate-400">Max: 1.82m</span>
+            <span className="text-xs text-slate-400">Max: 71.65"</span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -222,30 +220,30 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showWidthInput ? (
               <Input
                 type="number"
-                value={form.getValues("width") || ""}
+                value={(form.getValues("width") * 39.37).toFixed(2) || ""}
                 onChange={(e) => handleNumericInput("width", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
-                max="1.82"
+                max="71.65"
                 className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                 autoFocus
                 onBlur={() => setShowWidthInput(false)}
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("width") || 0).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">m</span>
+                {(form.getValues("width") * 39.37).toFixed(2)}
+                <span className="text-lg ml-1 text-slate-400">"</span>
               </div>
             )}
           </div>
           <Slider
             value={sliderWidth}
-            max={1.82}
+            max={71.65}
             step={0.01}
             onValueChange={(value) => {
               setSliderWidth(value);
-              form.setValue("width", value[0]);
+              form.setValue("width", value[0] / 39.37); // Convertendo polegadas para metros para salvar
             }}
             className="py-4"
           />
@@ -262,7 +260,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price per m² (USD)</FormLabel>
+              <FormLabel>Price per ft² (USD)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
