@@ -1,4 +1,3 @@
-
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -214,7 +213,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showLengthInput ? (
               <Input
                 type="number"
-                value={useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length")}
+                value={useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length").toFixed(2)}
                 onChange={(e) => handleNumericInput("length", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
@@ -226,7 +225,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length")}
+                {useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length").toFixed(2)}
                 <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
               </div>
             )}
@@ -257,7 +256,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showWidthInput ? (
               <Input
                 type="number"
-                value={useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width")}
+                value={useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width").toFixed(2)}
                 onChange={(e) => handleNumericInput("width", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
@@ -269,7 +268,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width")}
+                {useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width").toFixed(2)}
                 <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
               </div>
             )}
@@ -339,4 +338,3 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 };
 
 export default memo(FormFields);
-
