@@ -1,3 +1,4 @@
+
 import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,8 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
   const dimensions = item.type === 'bobina' 
-    ? `${item.remainingWidth?.toFixed(2)}m x ${item.remainingLength?.toFixed(2)}m`
-    : `${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m`;
+    ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
+    : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
 
   const qrCodeData = {
     id: item.id,
@@ -151,3 +152,4 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     </Dialog>
   );
 }
+
