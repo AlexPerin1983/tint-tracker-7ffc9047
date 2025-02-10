@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Item } from "@/types/inventory";
 import { ChartPieIcon } from "lucide-react";
@@ -27,6 +28,11 @@ export function AreaSummaryCard({ item, scraps }: AreaSummaryCardProps) {
   const consumedArea = calculateConsumedArea();
   const availableArea = totalArea - consumedArea;
 
+  const formatArea = (area: number) => {
+    const squareInches = area * 1550.0031; // 1 m² = 1550.0031 in²
+    return `${squareInches.toFixed(2)} in² (${area.toFixed(2)}m²)`;
+  };
+
   return (
     <Card className="shadow-md border border-muted hover:border-muted/80 transition-colors">
       <CardHeader className="p-4 md:p-6">
@@ -39,20 +45,20 @@ export function AreaSummaryCard({ item, scraps }: AreaSummaryCardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Roll Size</p>
-            <p className="text-lg font-semibold">{totalArea.toFixed(2)}m²</p>
+            <p className="text-lg font-semibold">{formatArea(totalArea)}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Material Used</p>
-            <p className="text-lg font-semibold">{consumedArea.toFixed(2)}m²</p>
+            <p className="text-lg font-semibold">{formatArea(consumedArea)}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Material Available</p>
-            <p className="text-lg font-semibold">{availableArea.toFixed(2)}m²</p>
+            <p className="text-lg font-semibold">{formatArea(availableArea)}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Remnant Size</p>
             <p className="text-lg font-semibold text-muted-foreground">
-              {scrapsArea.toFixed(2)}m² (reference)
+              {formatArea(scrapsArea)} (reference)
             </p>
           </div>
         </div>
