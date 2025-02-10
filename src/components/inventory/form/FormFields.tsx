@@ -9,6 +9,7 @@ import { memo, useState } from "react";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { useToast } from "@/hooks/use-toast";
 import { PresetDimensions } from "./PresetDimensions";
+import { Switch } from "@/components/ui/switch";
 
 interface FormFieldsProps {
   form: any;
@@ -18,6 +19,7 @@ interface FormFieldsProps {
 const FormFields = ({ form, activeTab }: FormFieldsProps) => {
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
+  const [useInches, setUseInches] = useState(true);
   const [sliderLength, setSliderLength] = useState([form.getValues("length") * 39.37 || 0]);
   const [sliderWidth, setSliderWidth] = useState([form.getValues("width") * 39.37 || 0]);
   const { toast } = useToast();
@@ -44,23 +46,45 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      const maxValue = field === "length" ? 2362.2 : 71.65; // 60m e 1.82m convertidos para polegadas
-      
-      if (field === "width" && numValue > maxValue) {
-        toast({
-          title: "Invalid Width",
-          description: "Maximum roll width is 71.65\"",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      if (numValue <= maxValue) {
-        form.setValue(field, numValue / 39.37); // Convertendo polegadas para metros para salvar
-        if (field === "length") {
-          setSliderLength([numValue]);
-        } else {
-          setSliderWidth([numValue]);
+      if (useInches) {
+        const maxValue = field === "length" ? 2362.2 : 71.65; // 60m e 1.82m convertidos para polegadas
+        
+        if (field === "width" && numValue > maxValue) {
+          toast({
+            title: "Largura inválida",
+            description: "A largura máxima do rolo é 71.65\"",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (numValue <= maxValue) {
+          form.setValue(field, numValue / 39.37); // Convertendo polegadas para metros para salvar
+          if (field === "length") {
+            setSliderLength([numValue]);
+          } else {
+            setSliderWidth([numValue]);
+          }
+        }
+      } else {
+        const maxValue = field === "length" ? 60 : 1.82; // valores máximos em metros
+        
+        if (field === "width" && numValue > maxValue) {
+          toast({
+            title: "Largura inválida",
+            description: "A largura máxima do rolo é 1.82m",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (numValue <= maxValue) {
+          form.setValue(field, numValue);
+          if (field === "length") {
+            setSliderLength([numValue * 39.37]);
+          } else {
+            setSliderWidth([numValue * 39.37]);
+          }
         }
       }
     }
@@ -74,9 +98,9 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Name</FormLabel>
+              <FormLabel>Nome do Produto</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Window Film Classic" {...field} />
+                <Input placeholder="Ex: Window Film Classic" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,14 +112,14 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Categoria</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Selecione a categoria" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -131,8 +155,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">In Stock</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Em Estoque</span>
               </div>
             </div>
           </div>
@@ -158,8 +182,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Stock Alert</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alerta</span>
               </div>
             </div>
           </div>
@@ -167,10 +191,21 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
       </TabsContent>
 
       <TabsContent value="dimensions" className="space-y-8 mt-4">
+        <div className="flex items-center justify-end space-x-2 mb-4">
+          <span className="text-sm text-slate-400">Metros</span>
+          <Switch
+            checked={useInches}
+            onCheckedChange={setUseInches}
+          />
+          <span className="text-sm text-slate-400">Polegadas</span>
+        </div>
+
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-            <span className="text-xs text-slate-400">Max: 2362.2"</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento do Rolo</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "2362.2\"" : "60m"}
+            </span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -179,30 +214,30 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showLengthInput ? (
               <Input
                 type="number"
-                value={(form.getValues("length") * 39.37).toFixed(2) || ""}
+                value={useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length")}
                 onChange={(e) => handleNumericInput("length", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
-                max="2362.2"
+                max={useInches ? "2362.2" : "60"}
                 className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                 autoFocus
                 onBlur={() => setShowLengthInput(false)}
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("length") * 39.37).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">"</span>
+                {useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length")}
+                <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
               </div>
             )}
           </div>
           <Slider
             value={sliderLength}
-            max={2362.2}
+            max={useInches ? 2362.2 : 60}
             step={0.01}
             onValueChange={(value) => {
               setSliderLength(value);
-              form.setValue("length", value[0] / 39.37); // Convertendo polegadas para metros para salvar
+              form.setValue("length", useInches ? value[0] / 39.37 : value[0]); // Convertendo se necessário
             }}
             className="py-4"
           />
@@ -210,8 +245,10 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-            <span className="text-xs text-slate-400">Max: 71.65"</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura do Rolo</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "71.65\"" : "1.82m"}
+            </span>
           </div>
           <div 
             className="relative group cursor-pointer"
@@ -220,30 +257,30 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             {showWidthInput ? (
               <Input
                 type="number"
-                value={(form.getValues("width") * 39.37).toFixed(2) || ""}
+                value={useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width")}
                 onChange={(e) => handleNumericInput("width", e.target.value)}
                 onClick={handleInputClick}
                 step="0.01"
                 min="0"
-                max="71.65"
+                max={useInches ? "71.65" : "1.82"}
                 className="text-3xl font-bold bg-transparent border-blue-500 h-12"
                 autoFocus
                 onBlur={() => setShowWidthInput(false)}
               />
             ) : (
               <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                {(form.getValues("width") * 39.37).toFixed(2)}
-                <span className="text-lg ml-1 text-slate-400">"</span>
+                {useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width")}
+                <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
               </div>
             )}
           </div>
           <Slider
             value={sliderWidth}
-            max={71.65}
+            max={useInches ? 71.65 : 1.82}
             step={0.01}
             onValueChange={(value) => {
               setSliderWidth(value);
-              form.setValue("width", value[0] / 39.37); // Convertendo polegadas para metros para salvar
+              form.setValue("width", useInches ? value[0] / 39.37 : value[0]); // Convertendo se necessário
             }}
             className="py-4"
           />
@@ -260,12 +297,12 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price per ft² (USD)</FormLabel>
+              <FormLabel>Preço por ft² (USD)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   step="0.01"
-                  placeholder="e.g. $10.50"
+                  placeholder="Ex: $10.50"
                   {...field}
                   onChange={(e) =>
                     field.onChange(
@@ -284,10 +321,10 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="observation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Additional Notes</FormLabel>
+              <FormLabel>Observações Adicionais</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Item is located on shelf..."
+                  placeholder="Item está localizado na prateleira..."
                   className="min-h-[100px]"
                   {...field}
                 />
@@ -302,3 +339,4 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 };
 
 export default memo(FormFields);
+
