@@ -30,7 +30,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
   const handlePresetWidth = (width: number) => {
     setSliderWidth([width]);
-    form.setValue("width", width / 39.37); // Convertendo polegadas para metros para salvar
+    form.setValue("width", width / 39.37); // Converting inches to meters for storage
   };
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
@@ -47,19 +47,19 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       if (useInches) {
-        const maxValue = field === "length" ? 2362.2 : 71.65; // 60m e 1.82m convertidos para polegadas
+        const maxValue = field === "length" ? 2362.2 : 71.65; // 60m and 1.82m converted to inches
         
         if (field === "width" && numValue > maxValue) {
           toast({
-            title: "Largura inválida",
-            description: "A largura máxima do rolo é 71.65\"",
+            title: "Invalid Width",
+            description: "Maximum roll width is 71.65\"",
             variant: "destructive",
           });
           return;
         }
         
         if (numValue <= maxValue) {
-          form.setValue(field, numValue / 39.37); // Convertendo polegadas para metros para salvar
+          form.setValue(field, numValue / 39.37); // Converting inches to meters for storage
           if (field === "length") {
             setSliderLength([numValue]);
           } else {
@@ -67,12 +67,12 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           }
         }
       } else {
-        const maxValue = field === "length" ? 60 : 1.82; // valores máximos em metros
+        const maxValue = field === "length" ? 60 : 1.82; // maximum values in meters
         
         if (field === "width" && numValue > maxValue) {
           toast({
-            title: "Largura inválida",
-            description: "A largura máxima do rolo é 1.82m",
+            title: "Invalid Width",
+            description: "Maximum roll width is 1.82m",
             variant: "destructive",
           });
           return;
@@ -98,7 +98,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome do Produto</FormLabel>
+              <FormLabel>Product Name</FormLabel>
               <FormControl>
                 <Input placeholder="Ex: Window Film Classic" {...field} />
               </FormControl>
@@ -112,14 +112,14 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Categoria</FormLabel>
+              <FormLabel>Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -155,8 +155,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Em Estoque</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">In Stock</span>
               </div>
             </div>
           </div>
@@ -182,8 +182,8 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
                 )}
               />
               <div className="flex flex-col items-center gap-1">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alerta</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
+                <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alert</span>
               </div>
             </div>
           </div>
@@ -192,17 +192,17 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
       <TabsContent value="dimensions" className="space-y-8 mt-4">
         <div className="flex items-center justify-end space-x-2 mb-4">
-          <span className="text-sm text-slate-400">Metros</span>
+          <span className="text-sm text-slate-400">Meters</span>
           <Switch
             checked={useInches}
             onCheckedChange={setUseInches}
           />
-          <span className="text-sm text-slate-400">Polegadas</span>
+          <span className="text-sm text-slate-400">Inches</span>
         </div>
 
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Comprimento do Rolo</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
             <span className="text-xs text-slate-400">
               Max: {useInches ? "2362.2\"" : "60m"}
             </span>
@@ -237,7 +237,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             step={0.01}
             onValueChange={(value) => {
               setSliderLength(value);
-              form.setValue("length", useInches ? value[0] / 39.37 : value[0]); // Convertendo se necessário
+              form.setValue("length", useInches ? value[0] / 39.37 : value[0]); // Converting if needed
             }}
             className="py-4"
           />
@@ -245,7 +245,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Largura do Rolo</span>
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
             <span className="text-xs text-slate-400">
               Max: {useInches ? "71.65\"" : "1.82m"}
             </span>
@@ -280,7 +280,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
             step={0.01}
             onValueChange={(value) => {
               setSliderWidth(value);
-              form.setValue("width", useInches ? value[0] / 39.37 : value[0]); // Convertendo se necessário
+              form.setValue("width", useInches ? value[0] / 39.37 : value[0]); // Converting if needed
             }}
             className="py-4"
           />
@@ -297,7 +297,7 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preço por ft² (USD)</FormLabel>
+              <FormLabel>Price per ft² (USD)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -321,10 +321,10 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
           name="observation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observações Adicionais</FormLabel>
+              <FormLabel>Additional Notes</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Item está localizado na prateleira..."
+                  placeholder="Item is located on shelf..."
                   className="min-h-[100px]"
                   {...field}
                 />
