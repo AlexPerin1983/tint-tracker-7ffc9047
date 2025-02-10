@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Item } from "@/types/inventory";
 import { Info } from "lucide-react";
@@ -7,6 +8,17 @@ interface BasicInfoCardProps {
 }
 
 export function BasicInfoCard({ item }: BasicInfoCardProps) {
+  const formatDimensions = (width: number, length: number) => {
+    const widthInInches = width * 39.37;
+    const lengthInInches = length * 39.37;
+    return `${widthInInches.toFixed(2)}" x ${lengthInInches.toFixed(2)}" (${width.toFixed(2)}m x ${length.toFixed(2)}m)`;
+  };
+
+  const formatArea = (area: number) => {
+    const squareInches = area * 1550.0031; // 1 m² = 1550.0031 in²
+    return `${squareInches.toFixed(2)} in² (${area.toFixed(2)}m²)`;
+  };
+
   return (
     <Card className="shadow-md border border-muted hover:border-muted/80 transition-colors">
       <CardHeader className="p-4 md:p-6">
@@ -31,13 +43,13 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
         <div>
           <label className="text-sm text-muted-foreground font-medium">Roll Size</label>
           <p className="text-sm md:text-base font-semibold">
-            {item.width.toFixed(2)}m x {item.length.toFixed(2)}m
+            {formatDimensions(item.width, item.length)}
           </p>
         </div>
         <div>
           <label className="text-sm text-muted-foreground font-medium">Square Footage</label>
           <p className="text-sm md:text-base font-semibold">
-            {(item.width * item.length).toFixed(2)}m²
+            {formatArea(item.width * item.length)}
           </p>
         </div>
         {item.observation && (
