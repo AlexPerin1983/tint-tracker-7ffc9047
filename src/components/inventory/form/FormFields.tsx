@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { memo, useState } from "react";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { useToast } from "@/hooks/use-toast";
+import { PresetDimensions } from "./PresetDimensions";
 
 interface FormFieldsProps {
   form: any;
@@ -22,6 +24,13 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
 
   const handleInputClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const handlePresetWidth = (width: number) => {
+    // Convertendo polegadas para metros
+    const widthInMeters = width * 0.0254;
+    setSliderWidth([widthInMeters]);
+    form.setValue("width", widthInMeters);
   };
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
@@ -239,6 +248,10 @@ const FormFields = ({ form, activeTab }: FormFieldsProps) => {
               form.setValue("width", value[0]);
             }}
             className="py-4"
+          />
+          <PresetDimensions 
+            category={form.getValues("category")} 
+            onSelectWidth={handlePresetWidth}
           />
         </div>
       </TabsContent>
