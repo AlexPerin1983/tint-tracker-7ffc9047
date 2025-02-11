@@ -27,15 +27,19 @@ export function DimensionsFields({
   useInches,
   onUnitChange
 }: DimensionsFieldsProps) {
-  const convertToInches = (meters: number) => (meters * 39.37).toFixed(2);
-  const convertToMeters = (inches: number) => (inches / 39.37).toFixed(2);
+  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
+  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      const finalValue = useInches ? parseFloat(convertToMeters(numValue)) : numValue;
+      const finalValue = useInches ? convertToMeters(numValue) : numValue;
       form.setValue(name as any, finalValue);
     }
+  };
+
+  const formatDisplayValue = (value: number) => {
+    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
   return (
@@ -63,9 +67,9 @@ export function DimensionsFields({
                 min={0}
                 max={useInches ? maxWidth * 39.37 : maxWidth}
                 step={0.01}
-                value={[useInches ? parseFloat(convertToInches(field.value)) : field.value]}
+                value={[useInches ? convertToInches(field.value) : field.value]}
                 onValueChange={(value) => {
-                  const finalValue = useInches ? parseFloat(convertToMeters(value[0])) : value[0];
+                  const finalValue = useInches ? convertToMeters(value[0]) : value[0];
                   field.onChange(finalValue);
                 }}
                 className="w-full"
@@ -77,13 +81,13 @@ export function DimensionsFields({
                     type="number"
                     step="0.01"
                     placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
-                    value={useInches ? convertToInches(field.value) : field.value.toFixed(2)}
+                    value={formatDisplayValue(field.value)}
                     onChange={(e) => handleNumericInput(widthName, e.target.value)}
                     className="w-24 text-right"
                   />
                 </FormControl>
                 <span className="text-sm text-muted-foreground">
-                  {useInches ? (maxWidth * 39.37).toFixed(2) + '"' : maxWidth + 'm'}
+                  {useInches ? (maxWidth * 39.37).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}
                 </span>
               </div>
             </div>
@@ -103,9 +107,9 @@ export function DimensionsFields({
                 min={0}
                 max={useInches ? maxLength * 39.37 : maxLength}
                 step={0.01}
-                value={[useInches ? parseFloat(convertToInches(field.value)) : field.value]}
+                value={[useInches ? convertToInches(field.value) : field.value]}
                 onValueChange={(value) => {
-                  const finalValue = useInches ? parseFloat(convertToMeters(value[0])) : value[0];
+                  const finalValue = useInches ? convertToMeters(value[0]) : value[0];
                   field.onChange(finalValue);
                 }}
                 className="w-full"
@@ -117,13 +121,13 @@ export function DimensionsFields({
                     type="number"
                     step="0.01"
                     placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
-                    value={useInches ? convertToInches(field.value) : field.value.toFixed(2)}
+                    value={formatDisplayValue(field.value)}
                     onChange={(e) => handleNumericInput(lengthName, e.target.value)}
                     className="w-24 text-right"
                   />
                 </FormControl>
                 <span className="text-sm text-muted-foreground">
-                  {useInches ? (maxLength * 39.37).toFixed(2) + '"' : maxLength + 'm'}
+                  {useInches ? (maxLength * 39.37).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}
                 </span>
               </div>
             </div>
@@ -134,3 +138,4 @@ export function DimensionsFields({
     </div>
   );
 }
+
