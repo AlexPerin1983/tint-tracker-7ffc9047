@@ -1,3 +1,4 @@
+
 import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FilterBar } from "./FilterBar";
 import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
-import { AddItemDialog } from "./AddItemDialog";
+import AddItemDialog from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
 import { Badge } from "@/components/ui/badge";
