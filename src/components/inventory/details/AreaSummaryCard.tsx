@@ -29,7 +29,7 @@ export function AreaSummaryCard({ item, scraps }: AreaSummaryCardProps) {
   const availableArea = totalArea - consumedArea;
 
   const formatArea = (area: number) => {
-    const squareInches = area * 1550.0031; // 1 m² = 1550.0031 in²
+    const squareInches = area * 1550.0031;
     return `${squareInches.toFixed(2)} in² (${area.toFixed(2)}m²)`;
   };
 
@@ -66,3 +66,4 @@ export function AreaSummaryCard({ item, scraps }: AreaSummaryCardProps) {
     </Card>
   );
 }
+

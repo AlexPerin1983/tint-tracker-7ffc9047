@@ -9,14 +9,14 @@ interface BasicInfoCardProps {
 
 export function BasicInfoCard({ item }: BasicInfoCardProps) {
   const formatDimensions = (width: number, length: number) => {
-    const widthInInches = width * 39.37;
-    const lengthInInches = length * 39.37;
-    return `${widthInInches.toFixed(2)}" x ${lengthInInches.toFixed(2)}" (${width.toFixed(2)}m x ${length.toFixed(2)}m)`;
+    const widthInInches = (width * 39.37).toFixed(2);
+    const lengthInInches = (length * 39.37).toFixed(2);
+    return `${widthInInches}" x ${lengthInInches}" (${width.toFixed(2)}m x ${length.toFixed(2)}m)`;
   };
 
   const formatArea = (area: number) => {
-    const squareInches = area * 1550.0031; // 1 m² = 1550.0031 in²
-    return `${squareInches.toFixed(2)} in² (${area.toFixed(2)}m²)`;
+    const squareInches = (area * 1550.0031).toFixed(2);
+    return `${squareInches} in² (${area.toFixed(2)}m²)`;
   };
 
   return (
@@ -62,3 +62,4 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
     </Card>
   );
 }
+
