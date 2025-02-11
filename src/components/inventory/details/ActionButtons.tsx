@@ -1,7 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Edit, Plus, Scissors } from "lucide-react";
 import { useState } from "react";
-import { AddItemDialog } from "../AddItemDialog";
+import AddItemDialog from "@/components/inventory/AddItemDialog";
 import { ConsumptionDialog } from "../consumption/ConsumptionDialog";
 import { Item } from "@/types/inventory";
 
