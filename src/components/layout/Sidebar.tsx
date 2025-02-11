@@ -1,4 +1,3 @@
-
 import { Home, Box, Scissors, LogOut, ExternalLink, Mail, Code, Globe, Bug } from "lucide-react";
 import {
   Sidebar,
@@ -80,7 +79,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
 
   const getWhatsAppLink = (message: string) => {
     const encodedMessage = encodeURIComponent(message);
-    return `https://wa.me/+5511999999999?text=${encodedMessage}`;
+    return `https://wa.me/+5583994100008?text=${encodedMessage}`;
   };
 
   const handleLogout = async () => {
@@ -104,7 +103,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
   return (
     <Sidebar>
       <SidebarContent className="bg-gradient-to-b from-slate-900 to-slate-800 md:bg-none pt-16 md:pt-16">
-        {/* User Profile Section */}
         <SidebarGroup>
           <div className="flex items-center gap-3 p-4">
             <Avatar>
@@ -124,7 +122,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </div>
         </SidebarGroup>
 
-        {/* Navigation Section */}
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             Navigation
@@ -159,7 +156,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Contact Us Section */}
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             Contact Us
@@ -192,7 +188,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* External Links Section */}
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             Quick Links
@@ -225,7 +220,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Contact Section */}
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
             {contactInfo.title}
@@ -255,7 +249,6 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Logout Section */}
       <SidebarFooter className="border-t border-slate-700/50 p-2">
         <SidebarMenu>
           <SidebarMenuItem>
