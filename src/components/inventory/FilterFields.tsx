@@ -108,34 +108,36 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
   return (
     <div className={containerClass}>
-      <Select
-        value={filters.category}
-        onValueChange={(value) => handleInputChange("category", value)}
-      >
-        <SelectTrigger className="bg-[#1A1F2C] border-slate-700 hover:border-blue-500 transition-colors">
-          <SelectValue placeholder="Category">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-blue-500" />
-              {filters.category === "all" ? "All" : filters.category}
-            </div>
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4" />
-              All
-            </div>
-          </SelectItem>
-          <SelectItem value="Window Tinting">Window Tinting</SelectItem>
-          <SelectItem value="PPF">PPF</SelectItem>
-          <SelectItem value="Wrap">Wrap</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 hover:border-blue-500/50 transition-colors">
+        <Select
+          value={filters.category}
+          onValueChange={(value) => handleInputChange("category", value)}
+        >
+          <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
+            <SelectValue placeholder="Category">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-blue-500" />
+                {filters.category === "all" ? "All" : filters.category}
+              </div>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                All
+              </div>
+            </SelectItem>
+            <SelectItem value="Window Tinting">Window Tinting</SelectItem>
+            <SelectItem value="PPF">PPF</SelectItem>
+            <SelectItem value="Wrap">Wrap</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {variant === "vertical" && (
-        <div className="space-y-8 pt-4">
-          <div className="flex items-center justify-end space-x-2 mb-4">
+        <div className="space-y-4">
+          <div className="flex items-center justify-end space-x-2">
             <span className="text-sm text-slate-400">Meters</span>
             <Switch
               checked={useInches}
@@ -144,7 +146,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             <span className="text-sm text-slate-400">Inches</span>
           </div>
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
               <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Length Range</span>
               <span className="text-xs text-slate-400">
@@ -152,11 +154,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {formatValue(sliderLength[0])}
               </div>
               <div className="text-sm text-slate-400">to</div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {formatValue(sliderLength[1])}
               </div>
             </div>
@@ -168,11 +170,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               onValueChange={values => handleNumericRangeInput("length", values)}
               onTouchStart={() => handleTouchStart(0)}
               onTouchEnd={handleTouchEnd}
-              className="py-4"
+              className="py-2"
             />
           </div>
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 space-y-4 hover:border-blue-500/50 transition-colors">
             <div className="flex items-center justify-between">
               <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Width Range</span>
               <span className="text-xs text-slate-400">
@@ -180,11 +182,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {formatValue(sliderWidth[0])}
               </div>
               <div className="text-sm text-slate-400">to</div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {formatValue(sliderWidth[1])}
               </div>
             </div>
@@ -196,11 +198,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               onValueChange={values => handleNumericRangeInput("width", values)}
               onTouchStart={() => handleTouchStart(1)}
               onTouchEnd={handleTouchEnd}
-              className="py-4"
+              className="py-2"
             />
           </div>
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700">
+          <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50">
             <div className="flex items-center gap-3">
               <span className="text-blue-500 text-3xl font-bold">{itemCount || 0}</span>
               <span className="text-slate-400 text-sm uppercase tracking-wider">items found</span>
