@@ -17,11 +17,11 @@ interface ConsumptionFormProps {
 }
 
 export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength }: ConsumptionFormProps) {
-  const [useInches, setUseInches] = useState(false);
+  const [useInches, setUseInches] = useState(true);
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col min-h-0">
-      <div className="px-4 py-6 space-y-6 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+      <div className="px-4 py-6 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
         <DimensionsFields
           form={form}
           label="Consumed"
@@ -42,7 +42,7 @@ export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength 
         />
       </div>
 
-      <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] sticky bottom-0 mt-auto">
+      <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] mt-auto shrink-0">
         <div className="flex gap-3 w-full">
           <Button
             type="button"
