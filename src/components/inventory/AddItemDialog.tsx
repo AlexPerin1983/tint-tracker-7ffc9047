@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -57,7 +58,7 @@ export function AddItemDialog({
       width: 0,
       length: 0,
       quantity: 1,
-      minQuantity: 1, // Definindo valor padrão para minQuantity
+      minQuantity: 1,
     },
   });
 
@@ -80,7 +81,7 @@ export function AddItemDialog({
         width: 0,
         length: 0,
         quantity: 1,
-        minQuantity: 1, // Definindo valor padrão para minQuantity
+        minQuantity: 1,
       });
     }
   }, [mode, itemToEdit, form]);
@@ -108,25 +109,27 @@ export function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col"
+        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col animate-in slide-in-from-bottom duration-500"
       }
     : {
-        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh]"
+        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh] animate-in zoom-in-90 duration-300"
       };
 
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent className="p-6 border-b border-slate-700 shrink-0">
+        <DialogHeaderComponent className="p-6 border-b border-slate-700 shrink-0 bg-gradient-to-r from-slate-800 to-slate-700">
           <div className="flex items-center gap-2">
-            <Plus className="w-5 h-5 text-blue-500" />
-            <DialogTitleComponent className="text-white text-xl font-semibold">
+            <div className="p-2 rounded-full bg-blue-500/10">
+              <Plus className="w-5 h-5 text-blue-500" />
+            </div>
+            <DialogTitleComponent className="text-white text-xl font-semibold group-hover:text-blue-400 transition-colors">
               {mode === "edit" ? "Edit Item" : "Add New Item"}
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
 
-        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8">
+        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
@@ -135,19 +138,19 @@ export function AddItemDialog({
           />
         </div>
 
-        <div className="border-t border-slate-700 p-6 bg-[#1E293B] mt-auto shrink-0">
+        <div className="border-t border-slate-700 p-6 bg-gradient-to-b from-slate-800 to-slate-700 mt-auto shrink-0">
           <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
               onClick={handleCancel}
-              className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+              className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white hover:scale-105 transition-all duration-300"
             >
               <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              className="bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 transition-all duration-300"
             >
               <Plus className="w-4 h-4 mr-2" />
               {mode === "edit" ? "Save" : "Add"}
