@@ -1,4 +1,5 @@
-import { Home, Box, Scissors, LogOut, ExternalLink, Mail } from "lucide-react";
+
+import { Home, Box, Scissors, LogOut, ExternalLink, Mail, Code, Globe, Bug } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -51,6 +52,24 @@ const contactInfo = {
   icon: Mail,
 };
 
+const whatsappLinks = [
+  {
+    title: "Custom Software",
+    icon: Code,
+    getMessage: (email: string) => `Hello, I'm a user with email "${email}". I need a quote for developing a custom tool to manage my business. Looking forward to hearing from you!`,
+  },
+  {
+    title: "Website Development",
+    icon: Globe,
+    getMessage: (email: string) => `Hello, I'm a user with email ${email}. I need a quote for developing a website. Looking forward to hearing from you!`,
+  },
+  {
+    title: "Report Bug",
+    icon: Bug,
+    getMessage: (email: string) => `Bug Report from user ${email}: I would like to report an issue I encountered while using the application. Here are the details: [Please describe the bug, steps to reproduce, and any relevant information]`,
+  },
+];
+
 interface AppSidebarProps {
   userEmail?: string;
 }
@@ -58,6 +77,11 @@ interface AppSidebarProps {
 export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const getWhatsAppLink = (message: string) => {
+    const encodedMessage = encodeURIComponent(message);
+    return `https://wa.me/+5511999999999?text=${encodedMessage}`;
+  };
 
   const handleLogout = async () => {
     try {
@@ -128,6 +152,39 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                         </span>
                       </div>
                     </div>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Contact Us Section */}
+        <SidebarGroup className="mt-4">
+          <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
+            Contact Us
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="px-2">
+              {whatsappLinks.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "w-full rounded-lg px-3 py-2.5",
+                      "hover:bg-slate-700/50 active:bg-slate-600/50",
+                      "transition-colors duration-200"
+                    )}
+                  >
+                    <a 
+                      href={getWhatsAppLink(item.getMessage(userEmail))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 min-w-0"
+                    >
+                      <item.icon className="h-5 w-5 shrink-0 text-slate-400" />
+                      <span className="text-sm text-slate-200 truncate">{item.title}</span>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
