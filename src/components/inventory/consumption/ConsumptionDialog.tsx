@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -65,23 +66,20 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
     if (consumedArea > remainingArea) {
       toast({
-        title: "Erro",
-        description: "A área consumida não pode ser maior que a área disponível",
+        title: "Error",
+        description: "Consumed area cannot be greater than available area",
         variant: "destructive",
       });
       return;
     }
 
-    // Agora o comprimento linear é exatamente o comprimento consumido
     const linearLength = data.length;
-
-    // Calcula o novo comprimento restante
     const newRemainingLength = item.remainingLength - linearLength;
 
     if (newRemainingLength < 0) {
       toast({
-        title: "Erro",
-        description: "Não há comprimento suficiente disponível na bobina",
+        title: "Error",
+        description: "Not enough length available in the roll",
         variant: "destructive",
       });
       return;
@@ -91,8 +89,8 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
       const scrapArea = (data.scrapWidth || 0) * (data.scrapLength || 0);
       if (scrapArea + consumedArea > remainingArea) {
         toast({
-          title: "Erro",
-          description: "A soma da área consumida e do retalho não pode ser maior que a área disponível",
+          title: "Error",
+          description: "Sum of consumed area and scrap cannot be greater than available area",
           variant: "destructive",
         });
         return;
@@ -110,17 +108,17 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
       });
       
       toast({
-        title: "Sucesso",
+        title: "Success",
         description: data.createScrap 
-          ? "Consumo registrado e retalho criado com sucesso!"
-          : "Consumo registrado com sucesso!",
+          ? "Consumption registered and scrap created successfully!"
+          : "Consumption registered successfully!",
       });
       onOpenChange(false);
       form.reset();
     } catch (error) {
       toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Erro ao registrar consumo",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error registering consumption",
         variant: "destructive",
       });
     }
@@ -130,9 +128,9 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Registrar Consumo</DialogTitle>
+          <DialogTitle>Register Consumption</DialogTitle>
           <DialogDescription>
-            Registre o consumo de material e opcionalmente crie um retalho.
+            Register material consumption and optionally create scrap.
           </DialogDescription>
         </DialogHeader>
 
