@@ -121,7 +121,7 @@ export default function AddItemDialog({
         <DialogHeaderComponent className="p-4 border-b border-slate-800/50 shrink-0 bg-gradient-to-b from-slate-800 to-[#111318]">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-full bg-blue-500/10">
-              <Plus className="w-3.5 h-3.5 text-blue-500" />
+              <Plus className="w-4 h-4 text-blue-500" />
             </div>
             <DialogTitleComponent className="text-white text-base font-medium">
               {mode === "edit" ? "Edit Item" : "Add New Item"}
@@ -142,20 +142,20 @@ export default function AddItemDialog({
         </div>
 
         <div className="border-t border-slate-800/50 p-4 bg-gradient-to-b from-[#111318] to-slate-800 mt-auto shrink-0">
-          <div className="flex gap-3 justify-end">
+          <div className="flex gap-3 justify-between">
             <Button
               variant="outline"
               onClick={handleCancel}
-              className="bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
+              className="flex-1 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
             >
-              <X className="w-3.5 h-3.5 mr-1.5" />
+              <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
+              className="flex-1 bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
             >
-              <Plus className="w-3.5 h-3.5 mr-1.5" />
+              <Plus className="w-4 h-4 mr-2" />
               {mode === "edit" ? "Save" : "Add"}
             </Button>
           </div>
