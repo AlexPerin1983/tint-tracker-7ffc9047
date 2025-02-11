@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { ItemsTable } from "@/components/inventory/ItemsTable";
-import { AddItemDialog } from "@/components/inventory/AddItemDialog";
+import AddItemDialog from "@/components/inventory/AddItemDialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
