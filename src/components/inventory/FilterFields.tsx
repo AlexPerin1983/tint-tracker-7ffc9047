@@ -1,6 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter } from "lucide-react";
+import { Filter, Search, X } from "lucide-react";
 import { Filters } from "@/types/inventory";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
@@ -98,6 +98,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     setActiveThumb(null);
   };
 
+  const handleClearSearch = () => {
+    setLocalName("");
+  };
+
   const containerClass = variant === "vertical" 
     ? "space-y-6" 
     : "grid grid-cols-1 md:grid-cols-3 gap-4";
@@ -109,30 +113,49 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   return (
     <div className={containerClass}>
       <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 hover:border-blue-500/50 transition-colors">
-        <Select
-          value={filters.category}
-          onValueChange={(value) => handleInputChange("category", value)}
-        >
-          <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
-            <SelectValue placeholder="Category">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-blue-500" />
-                {filters.category === "all" ? "All" : filters.category}
-              </div>
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4" />
-                All
-              </div>
-            </SelectItem>
-            <SelectItem value="Window Tinting">Window Tinting</SelectItem>
-            <SelectItem value="PPF">PPF</SelectItem>
-            <SelectItem value="Wrap">Wrap</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={localName}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+              className="pl-9 pr-9 bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors"
+              placeholder="Search..."
+            />
+            {localName && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+          <Select
+            value={filters.category}
+            onValueChange={(value) => handleInputChange("category", value)}
+          >
+            <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
+              <SelectValue placeholder="Category">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-blue-500" />
+                  {filters.category === "all" ? "All" : filters.category}
+                </div>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4" />
+                  All
+                </div>
+              </SelectItem>
+              <SelectItem value="Window Tinting">Window Tinting</SelectItem>
+              <SelectItem value="PPF">PPF</SelectItem>
+              <SelectItem value="Wrap">Wrap</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {variant === "vertical" && (
