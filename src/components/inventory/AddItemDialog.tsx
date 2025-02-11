@@ -109,7 +109,7 @@ export function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col animate-in slide-in-from-bottom duration-500"
+        className: "h-[85vh] w-full bg-[#1E293B] border-none p-0 flex flex-col animate-in slide-in-from-bottom duration-500"
       }
     : {
         className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh] animate-in zoom-in-90 duration-300"
@@ -118,18 +118,21 @@ export function AddItemDialog({
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent className="p-6 border-b border-slate-700 shrink-0 bg-gradient-to-r from-slate-800 to-slate-700">
+        <DialogHeaderComponent className="p-4 border-b border-slate-700 shrink-0 bg-gradient-to-r from-slate-800 to-slate-700">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-full bg-blue-500/10">
-              <Plus className="w-5 h-5 text-blue-500" />
+              <Plus className="w-4 h-4 text-blue-500" />
             </div>
-            <DialogTitleComponent className="text-white text-xl font-semibold group-hover:text-blue-400 transition-colors">
+            <DialogTitleComponent className="text-white text-lg font-semibold group-hover:text-blue-400 transition-colors">
               {mode === "edit" ? "Edit Item" : "Add New Item"}
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
 
-        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
+        <div className={cn(
+          "flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800",
+          isMobile && "max-h-[calc(85vh-8rem)]"
+        )}>
           <ItemForm 
             form={form} 
             onSubmit={onSubmit} 
@@ -138,7 +141,7 @@ export function AddItemDialog({
           />
         </div>
 
-        <div className="border-t border-slate-700 p-6 bg-gradient-to-b from-slate-800 to-slate-700 mt-auto shrink-0">
+        <div className="border-t border-slate-700 p-4 bg-gradient-to-b from-slate-800 to-slate-700 mt-auto shrink-0">
           <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
