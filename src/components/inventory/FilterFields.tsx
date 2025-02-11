@@ -113,8 +113,8 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   return (
     <div className={containerClass}>
       <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 hover:border-blue-500/50 transition-colors">
-        <div className="space-y-4">
-          <div className="relative">
+        <div className="flex gap-4">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={localName}
@@ -135,7 +135,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             value={filters.category}
             onValueChange={(value) => handleInputChange("category", value)}
           >
-            <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
+            <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors min-w-[180px]">
               <SelectValue placeholder="Category">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-blue-500" />
