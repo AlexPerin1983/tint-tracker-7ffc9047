@@ -1,4 +1,3 @@
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter, Search, X } from "lucide-react";
 import { Filters } from "@/types/inventory";
@@ -112,14 +111,14 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
 
   return (
     <div className={containerClass}>
-      <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 hover:border-blue-500/50 transition-colors">
+      <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 hover:border-blue-500/50 transition-colors md:col-span-2">
         <div className="flex gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={localName}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="pl-9 pr-9 bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors"
+              className="pl-9 pr-9 bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors w-full"
               placeholder="Search..."
             />
             {localName && (
@@ -135,7 +134,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             value={filters.category}
             onValueChange={(value) => handleInputChange("category", value)}
           >
-            <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors min-w-[180px]">
+            <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors w-[220px]">
               <SelectValue placeholder="Category">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-blue-500" />
