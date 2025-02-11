@@ -38,7 +38,8 @@ export function DimensionsFields({
     }
   };
 
-  const formatDisplayValue = (value: number) => {
+  const formatDisplayValue = (value: number | undefined) => {
+    if (value === undefined || isNaN(value)) return "0.00";
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
@@ -67,7 +68,7 @@ export function DimensionsFields({
                 min={0}
                 max={useInches ? maxWidth * 39.37 : maxWidth}
                 step={0.01}
-                value={[useInches ? convertToInches(field.value) : field.value]}
+                value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
                 onValueChange={(value) => {
                   const finalValue = useInches ? convertToMeters(value[0]) : value[0];
                   field.onChange(finalValue);
@@ -107,7 +108,7 @@ export function DimensionsFields({
                 min={0}
                 max={useInches ? maxLength * 39.37 : maxLength}
                 step={0.01}
-                value={[useInches ? convertToInches(field.value) : field.value]}
+                value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
                 onValueChange={(value) => {
                   const finalValue = useInches ? convertToMeters(value[0]) : value[0];
                   field.onChange(finalValue);
@@ -138,4 +139,3 @@ export function DimensionsFields({
     </div>
   );
 }
-
