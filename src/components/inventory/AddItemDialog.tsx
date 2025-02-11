@@ -109,28 +109,28 @@ export default function AddItemDialog({
   const contentProps = isMobile 
     ? { 
         side: "bottom" as const,
-        className: "h-[100dvh] w-full bg-[#1E293B] border-none p-0 flex flex-col animate-in slide-in-from-bottom duration-500"
+        className: "h-[100dvh] w-full bg-[#111318] border-none p-0 flex flex-col"
       }
     : {
-        className: "sm:max-w-[600px] bg-[#1E293B] border-none p-0 flex flex-col h-[90vh] animate-in zoom-in-90 duration-300"
+        className: "sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[90vh]"
       };
 
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>
       <DialogContentComponent {...contentProps}>
-        <DialogHeaderComponent className="p-3 border-b border-slate-700 shrink-0 bg-gradient-to-r from-slate-800 to-slate-700">
+        <DialogHeaderComponent className="p-3 border-b border-slate-800/50 shrink-0 bg-gradient-to-b from-slate-800 to-[#111318]">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-full bg-blue-500/10">
               <Plus className="w-3.5 h-3.5 text-blue-500" />
             </div>
-            <DialogTitleComponent className="text-white text-base font-semibold group-hover:text-blue-400 transition-colors">
+            <DialogTitleComponent className="text-white text-base font-medium">
               {mode === "edit" ? "Edit Item" : "Add New Item"}
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
 
         <div className={cn(
-          "flex-1 overflow-y-auto px-3 py-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800",
+          "flex-1 overflow-y-auto px-3 py-4 space-y-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318]",
           isMobile && "max-h-[calc(100dvh-7.5rem)]"
         )}>
           <ItemForm 
@@ -141,19 +141,19 @@ export default function AddItemDialog({
           />
         </div>
 
-        <div className="border-t border-slate-700 p-3 bg-gradient-to-b from-slate-800 to-slate-700 mt-auto shrink-0">
+        <div className="border-t border-slate-800/50 p-3 bg-gradient-to-b from-[#111318] to-slate-800 mt-auto shrink-0">
           <div className="flex gap-2 justify-end">
             <Button
               variant="outline"
               onClick={handleCancel}
-              className="bg-transparent border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white hover:scale-105 transition-all duration-300"
+              className="bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
             >
               <X className="w-3.5 h-3.5 mr-1.5" />
               Cancel
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              className="bg-blue-500 text-white hover:bg-blue-600 hover:scale-105 transition-all duration-300"
+              className="bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
             >
               <Plus className="w-3.5 h-3.5 mr-1.5" />
               {mode === "edit" ? "Save" : "Add"}
