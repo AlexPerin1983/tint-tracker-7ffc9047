@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormControl, FormLabel } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
@@ -8,9 +9,11 @@ interface ScrapFieldsProps {
   form: UseFormReturn<ConsumptionFormData>;
   maxWidth: number;
   maxLength: number;
+  useInches: boolean;
+  onUnitChange: () => void;
 }
 
-export function ScrapFields({ form, maxWidth, maxLength }: ScrapFieldsProps) {
+export function ScrapFields({ form, maxWidth, maxLength, useInches, onUnitChange }: ScrapFieldsProps) {
   const createScrap = form.watch("createScrap");
 
   return (
@@ -41,6 +44,8 @@ export function ScrapFields({ form, maxWidth, maxLength }: ScrapFieldsProps) {
           lengthName="scrapLength"
           maxWidth={maxWidth}
           maxLength={maxLength}
+          useInches={useInches}
+          onUnitChange={onUnitChange}
         />
       )}
     </>
