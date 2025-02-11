@@ -27,6 +27,7 @@ import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
+import { Scissors } from "lucide-react";
 
 interface AddScrapDialogProps {
   open: boolean;
@@ -157,140 +158,159 @@ export function AddScrapDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>
-            {editingScrap ? "Edit Scrap" : "Add New Scrap"}
-          </DialogTitle>
-          <DialogDescription>
-            {editingScrap 
-              ? "Update the scrap's dimensions and details"
-              : "Add a new scrap with its dimensions and details"}
-          </DialogDescription>
+      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col max-h-[85vh]">
+        <DialogHeader className="p-4 border-b border-slate-800/50 shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-full bg-blue-500/10">
+              <Scissors className="w-4 h-4 text-blue-500" />
+            </div>
+            <div>
+              <DialogTitle className="text-lg font-semibold text-white">
+                {editingScrap ? "Edit Scrap" : "Add New Scrap"}
+              </DialogTitle>
+              <DialogDescription className="text-sm text-slate-400 mt-1">
+                {editingScrap 
+                  ? "Update the scrap's dimensions and details"
+                  : "Add a new scrap with its dimensions and details"}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium">Dimensions</span>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm">Meters</span>
-                <Switch
-                  checked={useInches}
-                  onCheckedChange={setUseInches}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+            <div className="px-4 py-6 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-slate-200">Dimensions</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-slate-400">Meters</span>
+                  <Switch
+                    checked={useInches}
+                    onCheckedChange={setUseInches}
+                  />
+                  <span className="text-sm text-slate-400">Inches</span>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="width"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-200">
+                        Width ({useInches ? "inches" : "meters"})
+                      </FormLabel>
+                      <div className="space-y-2">
+                        <Slider
+                          min={0}
+                          max={useInches ? parentItem.width * 39.37 : parentItem.width}
+                          step={0.01}
+                          value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                          onValueChange={(value) => {
+                            const finalValue = useInches ? convertToMeters(value[0]) : value[0];
+                            field.onChange(finalValue);
+                          }}
+                          className="w-full"
+                        />
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-400">0{useInches ? '"' : 'm'}</span>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
+                              value={formatDisplayValue(field.value)}
+                              onChange={(e) => handleNumericInput("width", e.target.value)}
+                              className="w-24 text-right bg-slate-800/50 border-slate-700 text-slate-200"
+                            />
+                          </FormControl>
+                          <span className="text-sm text-slate-400">
+                            {useInches ? (parentItem.width * 39.37).toFixed(2) + '"' : parentItem.width.toFixed(2) + 'm'}
+                          </span>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <span className="text-sm">Inches</span>
+
+                <FormField
+                  control={form.control}
+                  name="length"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-200">
+                        Length ({useInches ? "inches" : "meters"})
+                      </FormLabel>
+                      <div className="space-y-2">
+                        <Slider
+                          min={0}
+                          max={useInches ? 60 * 39.37 : 60}
+                          step={0.01}
+                          value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                          onValueChange={(value) => {
+                            const finalValue = useInches ? convertToMeters(value[0]) : value[0];
+                            field.onChange(finalValue);
+                          }}
+                          className="w-full"
+                        />
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-400">0{useInches ? '"' : 'm'}</span>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
+                              value={formatDisplayValue(field.value)}
+                              onChange={(e) => handleNumericInput("length", e.target.value)}
+                              className="w-24 text-right bg-slate-800/50 border-slate-700 text-slate-200"
+                            />
+                          </FormControl>
+                          <span className="text-sm text-slate-400">
+                            {useInches ? (60 * 39.37).toFixed(2) + '"' : "60m"}
+                          </span>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="observation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-slate-200">Observation</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Additional information about the scrap"
+                          className="bg-slate-800/50 border-slate-700 text-slate-200 resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
-              <FormField
-                control={form.control}
-                name="width"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Width ({useInches ? "inches" : "meters"})</FormLabel>
-                    <div className="space-y-2">
-                      <Slider
-                        min={0}
-                        max={useInches ? parentItem.width * 39.37 : parentItem.width}
-                        step={0.01}
-                        value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
-                        onValueChange={(value) => {
-                          const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                          field.onChange(finalValue);
-                        }}
-                        className="w-full"
-                      />
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
-                            value={formatDisplayValue(field.value)}
-                            onChange={(e) => handleNumericInput("width", e.target.value)}
-                            className="w-24 text-right"
-                          />
-                        </FormControl>
-                        <span className="text-sm text-muted-foreground">
-                          {useInches ? (parentItem.width * 39.37).toFixed(2) + '"' : parentItem.width.toFixed(2) + 'm'}
-                        </span>
-                      </div>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="length"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Length ({useInches ? "inches" : "meters"})</FormLabel>
-                    <div className="space-y-2">
-                      <Slider
-                        min={0}
-                        max={useInches ? 60 * 39.37 : 60}
-                        step={0.01}
-                        value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
-                        onValueChange={(value) => {
-                          const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                          field.onChange(finalValue);
-                        }}
-                        className="w-full"
-                      />
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
-                            value={formatDisplayValue(field.value)}
-                            onChange={(e) => handleNumericInput("length", e.target.value)}
-                            className="w-24 text-right"
-                          />
-                        </FormControl>
-                        <span className="text-sm text-muted-foreground">
-                          {useInches ? (60 * 39.37).toFixed(2) + '"' : "60m"}
-                        </span>
-                      </div>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="observation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Observation</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Additional information about the scrap"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
+            <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] mt-auto shrink-0">
+              <div className="flex gap-3 w-full">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  className="flex-1 bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-200"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" className="flex-1 bg-blue-500 hover:bg-blue-600">
+                  Save
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>
