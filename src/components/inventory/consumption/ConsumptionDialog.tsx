@@ -14,6 +14,7 @@ import { ConsumptionFormData, Item } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 import { ConsumptionForm } from "./ConsumptionForm";
+import { Scale } from "lucide-react";
 
 interface ConsumptionDialogProps {
   open: boolean;
@@ -126,10 +127,15 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Register Consumption</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col">
+        <DialogHeader className="p-4 border-b border-slate-800/50">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-full bg-blue-500/10">
+              <Scale className="w-4 h-4 text-blue-500" />
+            </div>
+            <DialogTitle className="text-white text-base font-medium">Register Consumption</DialogTitle>
+          </div>
+          <DialogDescription className="text-slate-400">
             Register material consumption and optionally create scrap.
           </DialogDescription>
         </DialogHeader>
