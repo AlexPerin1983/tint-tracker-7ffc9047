@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -21,10 +22,11 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 interface AddScrapDialogProps {
   open: boolean;
@@ -47,6 +49,7 @@ export function AddScrapDialog({
 }: AddScrapDialogProps) {
   const { addScrap, items, refetchItems } = useItems();
   const { toast } = useToast();
+  const [useInches, setUseInches] = useState(true);
   
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
@@ -78,6 +81,22 @@ export function AddScrapDialog({
       });
     }
   }, [editingScrap, form]);
+
+  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
+  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
+
+  const handleNumericInput = (name: string, value: string) => {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      const finalValue = useInches ? convertToMeters(numValue) : numValue;
+      form.setValue(name as any, finalValue);
+    }
+  };
+
+  const formatDisplayValue = (value: number | undefined) => {
+    if (value === undefined || isNaN(value)) return "0.00";
+    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
+  };
 
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
@@ -152,40 +171,52 @@ export function AddScrapDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-medium">Dimensions</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm">Meters</span>
+                <Switch
+                  checked={useInches}
+                  onCheckedChange={setUseInches}
+                />
+                <span className="text-sm">Inches</span>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
                 name="width"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Width (meters)</FormLabel>
+                    <FormLabel>Width ({useInches ? "inches" : "meters"})</FormLabel>
                     <div className="space-y-2">
                       <Slider
                         min={0}
-                        max={parentItem.width}
+                        max={useInches ? parentItem.width * 39.37 : parentItem.width}
                         step={0.01}
-                        value={[field.value]}
-                        onValueChange={(value) => field.onChange(value[0])}
+                        value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                        onValueChange={(value) => {
+                          const finalValue = useInches ? convertToMeters(value[0]) : value[0];
+                          field.onChange(finalValue);
+                        }}
                         className="w-full"
                       />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">0m</span>
+                        <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
                         <FormControl>
                           <Input
                             type="number"
                             step="0.01"
-                            placeholder="Ex: 0.5"
-                            {...field}
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value);
-                              if (!isNaN(value) && value <= parentItem.width) {
-                                field.onChange(value);
-                              }
-                            }}
+                            placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
+                            value={formatDisplayValue(field.value)}
+                            onChange={(e) => handleNumericInput("width", e.target.value)}
                             className="w-24 text-right"
                           />
                         </FormControl>
-                        <span className="text-sm text-muted-foreground">{parentItem.width}m</span>
+                        <span className="text-sm text-muted-foreground">
+                          {useInches ? (parentItem.width * 39.37).toFixed(2) + '"' : parentItem.width.toFixed(2) + 'm'}
+                        </span>
                       </div>
                     </div>
                     <FormMessage />
@@ -198,34 +229,34 @@ export function AddScrapDialog({
                 name="length"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Length (meters)</FormLabel>
+                    <FormLabel>Length ({useInches ? "inches" : "meters"})</FormLabel>
                     <div className="space-y-2">
                       <Slider
                         min={0}
-                        max={60}
+                        max={useInches ? 60 * 39.37 : 60}
                         step={0.01}
-                        value={[field.value]}
-                        onValueChange={(value) => field.onChange(value[0])}
+                        value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                        onValueChange={(value) => {
+                          const finalValue = useInches ? convertToMeters(value[0]) : value[0];
+                          field.onChange(finalValue);
+                        }}
                         className="w-full"
                       />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">0m</span>
+                        <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
                         <FormControl>
                           <Input
                             type="number"
                             step="0.01"
-                            placeholder="Ex: 1.2"
-                            {...field}
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value);
-                              if (!isNaN(value) && value <= 60) {
-                                field.onChange(value);
-                              }
-                            }}
+                            placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
+                            value={formatDisplayValue(field.value)}
+                            onChange={(e) => handleNumericInput("length", e.target.value)}
                             className="w-24 text-right"
                           />
                         </FormControl>
-                        <span className="text-sm text-muted-foreground">60m</span>
+                        <span className="text-sm text-muted-foreground">
+                          {useInches ? (60 * 39.37).toFixed(2) + '"' : "60m"}
+                        </span>
                       </div>
                     </div>
                     <FormMessage />
