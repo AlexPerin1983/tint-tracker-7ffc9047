@@ -1,5 +1,4 @@
 
-```typescript
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -42,7 +41,7 @@ interface AddItemDialogProps {
   itemToEdit?: Item;
 }
 
-export function AddItemDialog({ 
+export default function AddItemDialog({ 
   open, 
   onOpenChange, 
   mode = "add",
@@ -165,4 +164,3 @@ export function AddItemDialog({
     </DialogComponent>
   );
 }
-```
