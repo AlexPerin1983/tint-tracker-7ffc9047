@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { FilterSheet } from "./FilterSheet";
 
 interface FilterFieldsProps {
   filters: Filters;
@@ -19,6 +21,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   const [useInches, setUseInches] = useState(true);
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [sliderLength, setSliderLength] = useState([Number(filters.minLength) || 0, Number(filters.maxLength) || 60]);
   const [sliderWidth, setSliderWidth] = useState([Number(filters.minWidth) || 0, Number(filters.maxWidth) || 1.82]);
   const [activeThumb, setActiveThumb] = useState<number | null>(null);
@@ -101,6 +104,10 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
     setLocalName("");
   };
 
+  const handleApplyFilters = () => {
+    setShowFilterSheet(false);
+  };
+
   const containerClass = variant === "vertical" 
     ? "space-y-6" 
     : "grid grid-cols-1 md:grid-cols-3 gap-4";
@@ -154,8 +161,26 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               <SelectItem value="Wrap">Wrap</SelectItem>
             </SelectContent>
           </Select>
+          <Button 
+            onClick={() => setShowFilterSheet(true)}
+            variant="outline"
+            size="icon"
+            className="bg-[#3B82F6] text-white hover:bg-[#2563EB] hidden md:flex"
+          >
+            <Filter className="h-4 w-4" />
+          </Button>
         </div>
       </div>
+
+      <FilterSheet
+        open={showFilterSheet}
+        onOpenChange={setShowFilterSheet}
+        filters={filters}
+        onFilterChange={onFilterChange}
+        onClearFilters={() => {}}
+        onApplyFilters={handleApplyFilters}
+        itemCount={itemCount}
+      />
 
       {variant === "vertical" && (
         <div className="space-y-4">
