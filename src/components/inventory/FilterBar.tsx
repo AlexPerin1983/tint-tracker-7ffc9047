@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, X, Filter as FilterIcon } from "lucide-react";
@@ -112,7 +113,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
           className="bg-[#3B82F6] hover:bg-[#2563EB] text-white h-10"
         >
           <X className="h-4 w-4 mr-2" />
-          Limpar Filtros
+          Clear Filters
         </Button>
       </div>
     </div>
