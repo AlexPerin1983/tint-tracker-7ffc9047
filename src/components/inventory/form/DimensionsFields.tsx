@@ -9,7 +9,7 @@ interface DimensionsFieldsProps {
   form: any;
 }
 
-const DimensionsFields = ({ form }: DimensionsFieldsProps) {
+const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const [useInches, setUseInches] = useState(true);
   const [sliderLength, setSliderLength] = useState([0]);
   const [sliderWidth, setSliderWidth] = useState([0]);
