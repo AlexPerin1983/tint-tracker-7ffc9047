@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -59,30 +60,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     }
   };
 
-  const handlePresetWidth = (value: number) => {
-    const meters = useInches ? convertToMeters(value) : value;
-    form.setValue("width", meters);
-    setSliderWidth([value]);
-  };
-
-  const handlePresetLength = (value: number) => {
-    const meters = useInches ? convertToMeters(value) : value;
-    form.setValue("length", meters);
-    setSliderLength([value]);
-  };
-
-  const handleUnitChange = (checked: boolean) => {
-    setUseInches(checked);
-    const currentLength = form.getValues("length") || 0;
-    const currentWidth = form.getValues("width") || 0;
-    
-    const lengthValue = checked ? convertToInches(currentLength) : currentLength;
-    const widthValue = checked ? convertToInches(currentWidth) : currentWidth;
-    
-    setSliderLength([lengthValue]);
-    setSliderWidth([widthValue]);
-  };
-
   const handleSliderChange = (field: "length" | "width", value: number[]) => {
     const inMeters = useInches ? convertToMeters(value[0]) : value[0];
     form.setValue(field, inMeters);
@@ -92,38 +69,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       setSliderWidth(value);
     }
   };
-
-  const presetLengths = useInches 
-    ? [
-        { label: "39.37\"", value: convertToInches(1.0) },
-        { label: "78.74\"", value: convertToInches(2.0) },
-        { label: "196.85\"", value: convertToInches(5.0) },
-        { label: "295.28\"", value: convertToInches(7.5) },
-        { label: "393.70\"", value: convertToInches(10.0) },
-        { label: "590.55\"", value: convertToInches(15.0) }
-      ]
-    : [
-        { label: "1.0m", value: 1.0 },
-        { label: "2.0m", value: 2.0 },
-        { label: "5.0m", value: 5.0 },
-        { label: "7.5m", value: 7.5 },
-        { label: "10m", value: 10.0 },
-        { label: "15m", value: 15.0 }
-      ];
-
-  const presetWidths = useInches 
-    ? [
-        { label: "40\"", value: 40 },
-        { label: "38\"", value: 38 },
-        { label: "36\"", value: 36 },
-        { label: "60\"", value: 60 }
-      ]
-    : [
-        { label: "0.50m", value: 0.50 },
-        { label: "1.00m", value: 1.00 },
-        { label: "1.22m", value: 1.22 },
-        { label: "1.52m", value: 1.52 }
-      ];
 
   return (
     <Tabs defaultValue="dimensions">
@@ -168,18 +113,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                     onValueChange={(value) => handleSliderChange("length", value)}
                     className="py-4"
                   />
-                  <div className="grid grid-cols-3 gap-2 mt-4">
-                    {presetLengths.map((preset, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => handlePresetLength(preset.value)}
-                        className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               </FormItem>
             )}
@@ -217,18 +150,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                     onValueChange={(value) => handleSliderChange("width", value)}
                     className="py-4"
                   />
-                  <div className="grid grid-cols-4 gap-2 mt-4">
-                    {presetWidths.map((preset, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => handlePresetWidth(preset.value)}
-                        className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               </FormItem>
             )}
