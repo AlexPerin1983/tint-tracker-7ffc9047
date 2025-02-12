@@ -38,9 +38,17 @@ export function FilterSheet({
   };
 
   const handleCategoryChange = (value: string) => {
-    // Garantir que o valor é um dos tipos permitidos
     const categoryValue = value as Category | "all";
     onFilterChange({ ...filters, category: categoryValue });
+  };
+
+  const formatValue = (value: string) => {
+    const numValue = parseFloat(value);
+    return !isNaN(numValue) 
+      ? useInches 
+        ? `${(numValue * 39.37).toFixed(2)}"`
+        : `${numValue.toFixed(2)}m`
+      : "0";
   };
 
   return (
@@ -100,6 +108,11 @@ export function FilterSheet({
                   Max: {maxLength}{useInches ? '"' : 'm'}
                 </span>
               </div>
+              <div className="flex justify-between items-center text-xl font-bold">
+                <span>{formatValue(filters.minLength || "0")}</span>
+                <span className="text-sm text-slate-400">to</span>
+                <span>{formatValue(filters.maxLength || maxLength.toString())}</span>
+              </div>
               <Slider
                 defaultValue={[0, maxLength]}
                 max={maxLength}
@@ -121,6 +134,11 @@ export function FilterSheet({
                 <span className="text-xs text-slate-400">
                   Max: {maxWidth}{useInches ? '"' : 'm'}
                 </span>
+              </div>
+              <div className="flex justify-between items-center text-xl font-bold">
+                <span>{formatValue(filters.minWidth || "0")}</span>
+                <span className="text-sm text-slate-400">to</span>
+                <span>{formatValue(filters.maxWidth || maxWidth.toString())}</span>
               </div>
               <Slider
                 defaultValue={[0, maxWidth]}
