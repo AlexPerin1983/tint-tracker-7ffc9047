@@ -1,9 +1,9 @@
 
+import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 
 interface DimensionsFieldsProps {
@@ -16,7 +16,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const [sliderWidth, setSliderWidth] = useState([0]);
 
   const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
-  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
+  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(4));
 
   // Valores máximos em metros
   const maxLength = 60; // 60m = ~2362.2"
@@ -61,7 +61,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const handlePresetWidth = (inches: number) => {
     const meters = convertToMeters(inches);
     form.setValue("width", meters);
-    setSliderWidth([inches]);
+    setSliderWidth([inches]); // Usando o valor exato em polegadas
   };
 
   const handleUnitChange = (checked: boolean) => {
@@ -99,13 +99,13 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
             <FormItem>
               <div className="space-y-2">
                 <div className="text-3xl font-bold text-white">
-                  {useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  {useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
                   <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
                 </div>
                 <Slider
                   value={sliderLength}
                   max={useInches ? 2362.2 : 60}
-                  step={0.01}
+                  step={useInches ? 1 : 0.01}
                   onValueChange={(value) => {
                     setSliderLength(value);
                     form.setValue("length", useInches ? convertToMeters(value[0]) : value[0]);
@@ -114,7 +114,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                 />
                 <Input
                   type="number"
-                  value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
                   onChange={(e) => handleNumericInput("length", e.target.value)}
                   className="hidden"
                 />
@@ -138,13 +138,13 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
             <FormItem>
               <div className="space-y-2">
                 <div className="text-3xl font-bold text-white">
-                  {useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  {useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
                   <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
                 </div>
                 <Slider
                   value={sliderWidth}
                   max={useInches ? 71.65 : 1.82}
-                  step={0.01}
+                  step={useInches ? 1 : 0.01}
                   onValueChange={(value) => {
                     setSliderWidth(value);
                     form.setValue("width", useInches ? convertToMeters(value[0]) : value[0]);
@@ -153,7 +153,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                 />
                 <Input
                   type="number"
-                  value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
                   onChange={(e) => handleNumericInput("width", e.target.value)}
                   className="hidden"
                 />
