@@ -158,7 +158,7 @@ export function AddScrapDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col max-h-[85vh]">
+      <DialogContent className="w-full sm:max-w-[425px] bg-[#111318] border-none p-0 flex flex-col max-h-[85vh]">
         <DialogHeader className="p-4 border-b border-slate-800/50 shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-full bg-blue-500/10">
@@ -179,7 +179,7 @@ export function AddScrapDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-            <div className="px-4 py-6 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
+            <div className="p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-slate-200">Dimensions</span>
                 <div className="flex items-center space-x-2">
@@ -193,7 +193,7 @@ export function AddScrapDialog({
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <FormField
                   control={form.control}
                   name="width"
@@ -308,7 +308,10 @@ export function AddScrapDialog({
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="flex-1 bg-blue-500 hover:bg-blue-600">
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-blue-500 hover:bg-blue-600"
+                >
                   Save
                 </Button>
               </div>
