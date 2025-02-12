@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -60,7 +59,8 @@ export function AddScrapDialog({
       .min(0.01, "Width must be greater than 0")
       .max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
     length: z.number()
-      .min(0.01, "Length must be greater than 0"),
+      .min(0.01, "Length must be greater than 0")
+      .max(parentItem?.length || 0, `Maximum length is ${parentItem?.length}m`),
     observation: z.string().optional(),
   });
 
@@ -187,6 +187,7 @@ export function AddScrapDialog({
                   <Switch
                     checked={useInches}
                     onCheckedChange={setUseInches}
+                    className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-slate-700"
                   />
                   <span className="text-sm text-slate-400">Inches</span>
                 </div>
@@ -246,7 +247,7 @@ export function AddScrapDialog({
                       <div className="space-y-2">
                         <Slider
                           min={0}
-                          max={useInches ? 60 * 39.37 : 60}
+                          max={useInches ? parentItem.length * 39.37 : parentItem.length}
                           step={0.01}
                           value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
                           onValueChange={(value) => {
@@ -268,7 +269,7 @@ export function AddScrapDialog({
                             />
                           </FormControl>
                           <span className="text-sm text-slate-400">
-                            {useInches ? (60 * 39.37).toFixed(2) + '"' : "60m"}
+                            {useInches ? (parentItem.length * 39.37).toFixed(2) + '"' : parentItem.length.toFixed(2) + 'm'}
                           </span>
                         </div>
                       </div>
