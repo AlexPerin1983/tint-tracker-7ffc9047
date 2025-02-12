@@ -58,10 +58,11 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     }
   };
 
-  const handlePresetWidth = (inches: number) => {
-    const meters = convertToMeters(inches);
+  const handlePresetWidth = (value: number) => {
+    // O valor já está na unidade correta (metros ou polegadas)
+    const meters = useInches ? convertToMeters(value) : value;
     form.setValue("width", meters);
-    setSliderWidth([inches]); // Usando o valor exato em polegadas
+    setSliderWidth([value]); // Usar o valor na unidade atual do display
   };
 
   const handleUnitChange = (checked: boolean) => {
@@ -73,6 +74,20 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     setSliderLength([checked ? convertToInches(currentLength) : currentLength]);
     setSliderWidth([checked ? convertToInches(currentWidth) : currentWidth]);
   };
+
+  const presetWidths = useInches 
+    ? [
+        { label: "40\"", value: 40 },
+        { label: "38\"", value: 38 },
+        { label: "36\"", value: 36 },
+        { label: "60\"", value: 60 }
+      ]
+    : [
+        { label: "0.50m", value: 0.50 },
+        { label: "1.00m", value: 1.00 },
+        { label: "1.22m", value: 1.22 },
+        { label: "1.52m", value: 1.52 }
+      ];
 
   return (
     <TabsContent value="dimensions" className="space-y-8 mt-4">
@@ -158,34 +173,16 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                   className="hidden"
                 />
                 <div className="grid grid-cols-4 gap-2 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => handlePresetWidth(40)}
-                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                  >
-                    40"
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetWidth(38)}
-                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                  >
-                    38"
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetWidth(36)}
-                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                  >
-                    36"
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handlePresetWidth(60)}
-                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                  >
-                    60"
-                  </button>
+                  {presetWidths.map((preset, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handlePresetWidth(preset.value)}
+                      className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
                 </div>
               </div>
             </FormItem>
