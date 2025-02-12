@@ -22,24 +22,38 @@ export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
       <div className="px-4 py-6 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
-        <DimensionsFields
-          form={form}
-          label="Consumed"
-          widthName="width"
-          lengthName="length"
-          maxWidth={maxWidth}
-          maxLength={maxLength}
-          useInches={useInches}
-          onUnitChange={() => setUseInches(!useInches)}
-        />
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Consumed Material</span>
+            <span className="text-xs text-slate-400">
+              Max: {maxWidth}" x {maxLength}"
+            </span>
+          </div>
+          <DimensionsFields
+            form={form}
+            label="Consumed"
+            widthName="width"
+            lengthName="length"
+            maxWidth={maxWidth}
+            maxLength={maxLength}
+            useInches={useInches}
+            onUnitChange={() => setUseInches(!useInches)}
+          />
+        </div>
 
-        <ScrapFields 
-          form={form} 
-          maxWidth={maxWidth} 
-          maxLength={maxLength}
-          useInches={useInches}
-          onUnitChange={() => setUseInches(!useInches)}
-        />
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Scrap Material</span>
+            <span className="text-xs text-slate-400">Optional</span>
+          </div>
+          <ScrapFields 
+            form={form} 
+            maxWidth={maxWidth} 
+            maxLength={maxLength}
+            useInches={useInches}
+            onUnitChange={() => setUseInches(!useInches)}
+          />
+        </div>
       </div>
 
       <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] mt-auto shrink-0">
