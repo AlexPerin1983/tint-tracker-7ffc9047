@@ -1,11 +1,9 @@
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -127,17 +125,14 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col max-h-[90vh]">
-        <DialogHeader className="p-4 border-b border-slate-800/50 shrink-0">
+      <DialogContent className="sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[100dvh] sm:h-auto">
+        <DialogHeader className="p-4 border-b border-slate-800/50 shrink-0 bg-gradient-to-b from-slate-800 to-[#111318]">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-full bg-blue-500/10">
               <Scale className="w-4 h-4 text-blue-500" />
             </div>
             <DialogTitle className="text-white text-base font-medium">Register Consumption</DialogTitle>
           </div>
-          <DialogDescription className="text-slate-400">
-            Register material consumption and optionally create scrap.
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

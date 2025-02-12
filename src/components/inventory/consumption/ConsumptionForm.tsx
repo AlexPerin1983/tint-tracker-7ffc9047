@@ -21,45 +21,43 @@ export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength 
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-6 space-y-6">
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Consumed Material</span>
-              <span className="text-xs text-slate-400">
-                Max: {useInches ? `${(maxWidth * 39.37).toFixed(2)}" x ${(maxLength * 39.37).toFixed(2)}"` : `${maxWidth}m x ${maxLength}m`}
-              </span>
-            </div>
-            <DimensionsFields
-              form={form}
-              label="Dimensions"
-              widthName="width"
-              lengthName="length"
-              maxWidth={maxWidth}
-              maxLength={maxLength}
-              useInches={useInches}
-              onUnitChange={() => setUseInches(!useInches)}
-            />
+      <div className={`flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318] max-h-[calc(100dvh-8rem)]`}>
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Consumed Material</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? `${(maxWidth * 39.37).toFixed(2)}" x ${(maxLength * 39.37).toFixed(2)}"` : `${maxWidth}m x ${maxLength}m`}
+            </span>
           </div>
+          <DimensionsFields
+            form={form}
+            label="Dimensions"
+            widthName="width"
+            lengthName="length"
+            maxWidth={maxWidth}
+            maxLength={maxLength}
+            useInches={useInches}
+            onUnitChange={() => setUseInches(!useInches)}
+          />
+        </div>
 
-          <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Scrap Material</span>
-              <span className="text-xs text-slate-400">Optional</span>
-            </div>
-            <ScrapFields 
-              form={form} 
-              maxWidth={maxWidth} 
-              maxLength={maxLength}
-              useInches={useInches}
-              onUnitChange={() => setUseInches(!useInches)}
-            />
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Scrap Material</span>
+            <span className="text-xs text-slate-400">Optional</span>
           </div>
+          <ScrapFields 
+            form={form} 
+            maxWidth={maxWidth} 
+            maxLength={maxLength}
+            useInches={useInches}
+            onUnitChange={() => setUseInches(!useInches)}
+          />
         </div>
       </div>
 
-      <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] mt-auto shrink-0">
-        <div className="flex gap-3 w-full">
+      <DialogFooter className="border-t border-slate-800/50 p-4 bg-gradient-to-b from-[#111318] to-slate-800 mt-auto shrink-0">
+        <div className="flex gap-3 justify-between">
           <Button
             type="button"
             variant="outline"
