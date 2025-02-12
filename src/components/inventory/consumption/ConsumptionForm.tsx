@@ -21,7 +21,7 @@ export function ConsumptionForm({ form, onSubmit, onCancel, maxWidth, maxLength 
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-      <div className={`flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318] max-h-[calc(100dvh-8rem)]`}>
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318] max-h-[calc(100vh-12rem)] sm:max-h-[460px]">
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Consumed Material</span>
