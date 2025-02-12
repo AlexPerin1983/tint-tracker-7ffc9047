@@ -9,24 +9,15 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { ScrapFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Scissors } from "lucide-react";
+import { DimensionsFields } from "./form/DimensionsFields";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AddScrapDialogProps {
   open: boolean;
@@ -49,7 +40,6 @@ export function AddScrapDialog({
 }: AddScrapDialogProps) {
   const { addScrap, items, refetchItems } = useItems();
   const { toast } = useToast();
-  const [useInches, setUseInches] = useState(true);
   
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
@@ -72,32 +62,6 @@ export function AddScrapDialog({
       observation: editingScrap?.observation || "",
     },
   });
-
-  useEffect(() => {
-    if (editingScrap) {
-      form.reset({
-        width: editingScrap.width,
-        length: editingScrap.length,
-        observation: editingScrap.observation,
-      });
-    }
-  }, [editingScrap, form]);
-
-  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
-  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
-
-  const handleNumericInput = (name: string, value: string) => {
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue)) {
-      const finalValue = useInches ? convertToMeters(numValue) : numValue;
-      form.setValue(name as any, finalValue);
-    }
-  };
-
-  const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || isNaN(value)) return "0.00";
-    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
-  };
 
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
@@ -166,12 +130,10 @@ export function AddScrapDialog({
             </div>
             <div>
               <DialogTitle className="text-lg font-semibold text-white">
-                {editingScrap ? "Edit Scrap" : "Add New Scrap"}
+                Add New Scrap
               </DialogTitle>
               <DialogDescription className="text-sm text-slate-400 mt-1">
-                {editingScrap 
-                  ? "Update the scrap's dimensions and details"
-                  : "Add a new scrap with its dimensions and details"}
+                Add a new scrap with its dimensions and details
               </DialogDescription>
             </div>
           </div>
@@ -179,126 +141,27 @@ export function AddScrapDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-            <div className="p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-200">Dimensions</span>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-slate-400">Meters</span>
-                  <Switch
-                    checked={useInches}
-                    onCheckedChange={setUseInches}
-                    className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-slate-700"
-                  />
-                  <span className="text-sm text-slate-400">Inches</span>
-                </div>
+            <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318] max-h-[calc(100vh-12rem)] sm:max-h-[460px]">
+              <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+                <DimensionsFields form={form} />
               </div>
 
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="width"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-200">
-                        Width ({useInches ? "inches" : "meters"})
-                      </FormLabel>
-                      <div className="space-y-2">
-                        <Slider
-                          min={0}
-                          max={useInches ? parentItem.width * 39.37 : parentItem.width}
-                          step={0.01}
-                          value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
-                          onValueChange={(value) => {
-                            const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                            field.onChange(finalValue);
-                          }}
-                          className="w-full"
-                        />
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-400">0{useInches ? '"' : 'm'}</span>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
-                              value={formatDisplayValue(field.value)}
-                              onChange={(e) => handleNumericInput("width", e.target.value)}
-                              className="w-24 text-right bg-slate-800/50 border-slate-700 text-slate-200"
-                            />
-                          </FormControl>
-                          <span className="text-sm text-slate-400">
-                            {useInches ? (parentItem.width * 39.37).toFixed(2) + '"' : parentItem.width.toFixed(2) + 'm'}
-                          </span>
-                        </div>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="length"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-200">
-                        Length ({useInches ? "inches" : "meters"})
-                      </FormLabel>
-                      <div className="space-y-2">
-                        <Slider
-                          min={0}
-                          max={useInches ? parentItem.length * 39.37 : parentItem.length}
-                          step={0.01}
-                          value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
-                          onValueChange={(value) => {
-                            const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                            field.onChange(finalValue);
-                          }}
-                          className="w-full"
-                        />
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-400">0{useInches ? '"' : 'm'}</span>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
-                              value={formatDisplayValue(field.value)}
-                              onChange={(e) => handleNumericInput("length", e.target.value)}
-                              className="w-24 text-right bg-slate-800/50 border-slate-700 text-slate-200"
-                            />
-                          </FormControl>
-                          <span className="text-sm text-slate-400">
-                            {useInches ? (parentItem.length * 39.37).toFixed(2) + '"' : parentItem.length.toFixed(2) + 'm'}
-                          </span>
-                        </div>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="observation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-slate-200">Observation</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Additional information about the scrap"
-                          className="bg-slate-800/50 border-slate-700 text-slate-200 resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Observation</span>
+                  <span className="text-xs text-slate-400">Optional</span>
+                </div>
+                <div className="space-y-4">
+                  <Textarea
+                    placeholder="Additional information about the scrap"
+                    className="bg-slate-800/50 border-slate-700 text-slate-200 resize-none min-h-[100px]"
+                    {...form.register("observation")}
+                  />
+                </div>
               </div>
             </div>
 
-            <DialogFooter className="border-t border-slate-800/50 p-4 bg-[#111318] mt-auto shrink-0">
+            <DialogFooter className="border-t border-slate-800/50 p-4 bg-gradient-to-b from-[#111318] to-slate-800 mt-auto shrink-0">
               <div className="flex gap-3 w-full">
                 <Button
                   type="button"
