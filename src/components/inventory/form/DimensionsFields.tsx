@@ -3,7 +3,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 
 interface DimensionsFieldsProps {
@@ -12,8 +12,8 @@ interface DimensionsFieldsProps {
 
 const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const [useInches, setUseInches] = useState(true);
-  const [sliderLength, setSliderLength] = useState([form.getValues("length") * 39.37 || 0]);
-  const [sliderWidth, setSliderWidth] = useState([form.getValues("width") * 39.37 || 0]);
+  const [sliderLength, setSliderLength] = useState([0]);
+  const [sliderWidth, setSliderWidth] = useState([0]);
 
   const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
@@ -22,6 +22,15 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const maxLength = 60; // 60m = ~2362.2"
   const maxWidth = 1.82; // 1.82m = ~71.65"
 
+  // Efeito para atualizar os sliders quando os valores do form mudarem
+  useEffect(() => {
+    const currentLength = form.getValues("length") || 0;
+    const currentWidth = form.getValues("width") || 0;
+    
+    setSliderLength([useInches ? convertToInches(currentLength) : currentLength]);
+    setSliderWidth([useInches ? convertToInches(currentWidth) : currentWidth]);
+  }, [useInches, form]);
+
   const handleNumericInput = (field: "length" | "width", value: string) => {
     if (value === "") {
       if (field === "length") {
@@ -29,7 +38,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       } else {
         setSliderWidth([0]);
       }
-      form.setValue(field, "");
+      form.setValue(field, 0);
       return;
     }
 
@@ -55,13 +64,23 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     setSliderWidth([inches]);
   };
 
+  const handleUnitChange = (checked: boolean) => {
+    setUseInches(checked);
+    // Atualiza os sliders com os valores convertidos
+    const currentLength = form.getValues("length") || 0;
+    const currentWidth = form.getValues("width") || 0;
+    
+    setSliderLength([checked ? convertToInches(currentLength) : currentLength]);
+    setSliderWidth([checked ? convertToInches(currentWidth) : currentWidth]);
+  };
+
   return (
     <TabsContent value="dimensions" className="space-y-8 mt-4">
       <div className="flex items-center justify-end space-x-2 mb-4">
         <span className="text-sm text-slate-400">Meters</span>
         <Switch
           checked={useInches}
-          onCheckedChange={setUseInches}
+          onCheckedChange={handleUnitChange}
         />
         <span className="text-sm text-slate-400">Inches</span>
       </div>
