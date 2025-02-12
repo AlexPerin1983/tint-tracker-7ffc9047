@@ -65,6 +65,12 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     setSliderWidth([value]); // Usar o valor na unidade atual do display
   };
 
+  const handlePresetLength = (value: number) => {
+    const meters = useInches ? convertToMeters(value) : value;
+    form.setValue("length", meters);
+    setSliderLength([value]);
+  };
+
   const handleUnitChange = (checked: boolean) => {
     setUseInches(checked);
     // Atualiza os sliders com os valores convertidos
@@ -74,6 +80,24 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     setSliderLength([checked ? convertToInches(currentLength) : currentLength]);
     setSliderWidth([checked ? convertToInches(currentWidth) : currentWidth]);
   };
+
+  const presetLengths = useInches 
+    ? [
+        { label: "39.37\"", value: convertToInches(1.0) },
+        { label: "78.74\"", value: convertToInches(2.0) },
+        { label: "196.85\"", value: convertToInches(5.0) },
+        { label: "295.28\"", value: convertToInches(7.5) },
+        { label: "393.70\"", value: convertToInches(10.0) },
+        { label: "590.55\"", value: convertToInches(15.0) }
+      ]
+    : [
+        { label: "1.0m", value: 1.0 },
+        { label: "2.0m", value: 2.0 },
+        { label: "5.0m", value: 5.0 },
+        { label: "7.5m", value: 7.5 },
+        { label: "10m", value: 10.0 },
+        { label: "15m", value: 15.0 }
+      ];
 
   const presetWidths = useInches 
     ? [
@@ -133,6 +157,18 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                   onChange={(e) => handleNumericInput("length", e.target.value)}
                   className="hidden"
                 />
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  {presetLengths.map((preset, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handlePresetLength(preset.value)}
+                      className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </FormItem>
           )}
