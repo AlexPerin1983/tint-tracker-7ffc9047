@@ -33,14 +33,27 @@ export function DimensionsFields({
   const handleNumericInput = (name: string, value: string) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      const finalValue = useInches ? convertToMeters(numValue) : numValue;
-      form.setValue(name as any, finalValue);
+      // Se estiver em polegadas, converte para metros antes de salvar
+      const convertedValue = useInches ? convertToMeters(numValue) : numValue;
+      form.setValue(name as any, convertedValue);
     }
   };
 
   const formatDisplayValue = (value: number | undefined) => {
     if (value === undefined || isNaN(value)) return "0.00";
+    // Converte o valor armazenado (em metros) para polegadas se necessário
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
+  };
+
+  const getSliderValue = (value: number) => {
+    // O valor está sempre armazenado em metros
+    return useInches ? convertToInches(value) : value;
+  };
+
+  const getSliderMax = (isWidth: boolean) => {
+    // Converte o máximo para polegadas se necessário
+    const max = isWidth ? maxWidth : maxLength;
+    return useInches ? convertToInches(max) : max;
   };
 
   return (
@@ -66,12 +79,13 @@ export function DimensionsFields({
             <div className="space-y-2">
               <Slider
                 min={0}
-                max={useInches ? maxWidth * 39.37 : maxWidth}
+                max={getSliderMax(true)}
                 step={0.01}
-                value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                value={[getSliderValue(field.value || 0)]}
                 onValueChange={(value) => {
-                  const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                  field.onChange(finalValue);
+                  // Converte de volta para metros antes de salvar
+                  const convertedValue = useInches ? convertToMeters(value[0]) : value[0];
+                  field.onChange(convertedValue);
                 }}
                 className="w-full"
               />
@@ -88,7 +102,7 @@ export function DimensionsFields({
                   />
                 </FormControl>
                 <span className="text-sm text-muted-foreground">
-                  {useInches ? (maxWidth * 39.37).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}
+                  {formatDisplayValue(maxWidth) + (useInches ? '"' : 'm')}
                 </span>
               </div>
             </div>
@@ -106,12 +120,13 @@ export function DimensionsFields({
             <div className="space-y-2">
               <Slider
                 min={0}
-                max={useInches ? maxLength * 39.37 : maxLength}
+                max={getSliderMax(false)}
                 step={0.01}
-                value={[useInches ? convertToInches(field.value || 0) : (field.value || 0)]}
+                value={[getSliderValue(field.value || 0)]}
                 onValueChange={(value) => {
-                  const finalValue = useInches ? convertToMeters(value[0]) : value[0];
-                  field.onChange(finalValue);
+                  // Converte de volta para metros antes de salvar
+                  const convertedValue = useInches ? convertToMeters(value[0]) : value[0];
+                  field.onChange(convertedValue);
                 }}
                 className="w-full"
               />
@@ -128,7 +143,7 @@ export function DimensionsFields({
                   />
                 </FormControl>
                 <span className="text-sm text-muted-foreground">
-                  {useInches ? (maxLength * 39.37).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}
+                  {formatDisplayValue(maxLength) + (useInches ? '"' : 'm')}
                 </span>
               </div>
             </div>
