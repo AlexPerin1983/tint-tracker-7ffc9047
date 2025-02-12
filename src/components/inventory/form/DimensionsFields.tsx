@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 
@@ -126,115 +126,117 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       ];
 
   return (
-    <TabsContent value="dimensions" className="space-y-8 mt-4">
-      <div className="flex items-center justify-end space-x-2 mb-4">
-        <span className="text-sm text-[#8E9196] font-medium">Meters</span>
-        <Switch
-          checked={useInches}
-          onCheckedChange={handleUnitChange}
-        />
-        <span className="text-sm text-[#8E9196] font-medium">Inches</span>
-      </div>
-
-      <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-        <div className="flex items-center justify-between">
-          <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-          <span className="text-xs text-slate-400">
-            Max: {useInches ? "2362.2\"" : "60m"}
-          </span>
+    <Tabs defaultValue="dimensions">
+      <TabsContent value="dimensions" className="space-y-8 mt-4">
+        <div className="flex items-center justify-end space-x-2 mb-4">
+          <span className="text-sm text-[#8E9196] font-medium">Meters</span>
+          <Switch
+            checked={useInches}
+            onCheckedChange={setUseInches}
+          />
+          <span className="text-sm text-[#8E9196] font-medium">Inches</span>
         </div>
-        <FormField
-          control={form.control}
-          name="length"
-          render={({ field }) => (
-            <FormItem>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="text-3xl font-bold text-white flex-1">
-                    <Input
-                      type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
-                      onChange={(e) => handleNumericInput("length", e.target.value)}
-                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  </div>
-                  <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
-                </div>
-                <Slider
-                  value={sliderLength}
-                  max={useInches ? convertToInches(maxLength) : maxLength}
-                  step={useInches ? 1 : 0.01}
-                  onValueChange={(value) => handleSliderChange("length", value)}
-                  className="py-4"
-                />
-                <div className="grid grid-cols-3 gap-2 mt-4">
-                  {presetLengths.map((preset, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => handlePresetLength(preset.value)}
-                      className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </FormItem>
-          )}
-        />
-      </div>
 
-      <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
-        <div className="flex items-center justify-between">
-          <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-          <span className="text-xs text-slate-400">
-            Max: {useInches ? "71.65\"" : "1.82m"}
-          </span>
-        </div>
-        <FormField
-          control={form.control}
-          name="width"
-          render={({ field }) => (
-            <FormItem>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="text-3xl font-bold text-white flex-1">
-                    <Input
-                      type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
-                      onChange={(e) => handleNumericInput("width", e.target.value)}
-                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "2362.2\"" : "60m"}
+            </span>
+          </div>
+          <FormField
+            control={form.control}
+            name="length"
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="text-3xl font-bold text-white flex-1">
+                      <Input
+                        type="number"
+                        value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                        onChange={(e) => handleNumericInput("length", e.target.value)}
+                        className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
                   </div>
-                  <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
+                  <Slider
+                    value={sliderLength}
+                    max={useInches ? convertToInches(maxLength) : maxLength}
+                    step={useInches ? 1 : 0.01}
+                    onValueChange={(value) => handleSliderChange("length", value)}
+                    className="py-4"
+                  />
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {presetLengths.map((preset, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handlePresetLength(preset.value)}
+                        className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <Slider
-                  value={sliderWidth}
-                  max={useInches ? convertToInches(maxWidth) : maxWidth}
-                  step={useInches ? 1 : 0.01}
-                  onValueChange={(value) => handleSliderChange("width", value)}
-                  className="py-4"
-                />
-                <div className="grid grid-cols-4 gap-2 mt-4">
-                  {presetWidths.map((preset, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => handlePresetWidth(preset.value)}
-                      className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "71.65\"" : "1.82m"}
+            </span>
+          </div>
+          <FormField
+            control={form.control}
+            name="width"
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="text-3xl font-bold text-white flex-1">
+                      <Input
+                        type="number"
+                        value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                        onChange={(e) => handleNumericInput("width", e.target.value)}
+                        className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
+                  </div>
+                  <Slider
+                    value={sliderWidth}
+                    max={useInches ? convertToInches(maxWidth) : maxWidth}
+                    step={useInches ? 1 : 0.01}
+                    onValueChange={(value) => handleSliderChange("width", value)}
+                    className="py-4"
+                  />
+                  <div className="grid grid-cols-4 gap-2 mt-4">
+                    {presetWidths.map((preset, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handlePresetWidth(preset.value)}
+                        className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </FormItem>
-          )}
-        />
-      </div>
-    </TabsContent>
+              </FormItem>
+            )}
+          />
+        </div>
+      </TabsContent>
+    </Tabs>
   );
-}
+};
 
 export default DimensionsFields;

@@ -10,13 +10,20 @@ interface FormFieldsProps {
 }
 
 const FormFields = ({ form, activeTab }: FormFieldsProps) => {
-  return (
-    <>
-      <BasicFields form={form} />
-      <DimensionsFields form={form} />
-      <PriceFields form={form} />
-    </>
-  );
+  const renderContent = () => {
+    switch (activeTab) {
+      case "basic":
+        return <BasicFields form={form} />;
+      case "dimensions":
+        return <DimensionsFields form={form} />;
+      case "price":
+        return <PriceFields form={form} />;
+      default:
+        return null;
+    }
+  };
+
+  return renderContent();
 };
 
 export default memo(FormFields);
