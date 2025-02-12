@@ -136,10 +136,17 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
           name="length"
           render={({ field }) => (
             <FormItem>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-white">
-                  {useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
-                  <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <div className="text-3xl font-bold text-white flex-1">
+                    <Input
+                      type="number"
+                      value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
+                      onChange={(e) => handleNumericInput("length", e.target.value)}
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  </div>
+                  <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
                 </div>
                 <Slider
                   value={sliderLength}
@@ -150,12 +157,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                     form.setValue("length", useInches ? convertToMeters(value[0]) : value[0]);
                   }}
                   className="py-4"
-                />
-                <Input
-                  type="number"
-                  value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
-                  onChange={(e) => handleNumericInput("length", e.target.value)}
-                  className="hidden"
                 />
                 <div className="grid grid-cols-3 gap-2 mt-4">
                   {presetLengths.map((preset, index) => (
@@ -187,10 +188,17 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
           name="width"
           render={({ field }) => (
             <FormItem>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-white">
-                  {useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
-                  <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <div className="text-3xl font-bold text-white flex-1">
+                    <Input
+                      type="number"
+                      value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
+                      onChange={(e) => handleNumericInput("width", e.target.value)}
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  </div>
+                  <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
                 </div>
                 <Slider
                   value={sliderWidth}
@@ -201,12 +209,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                     form.setValue("width", useInches ? convertToMeters(value[0]) : value[0]);
                   }}
                   className="py-4"
-                />
-                <Input
-                  type="number"
-                  value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
-                  onChange={(e) => handleNumericInput("width", e.target.value)}
-                  className="hidden"
                 />
                 <div className="grid grid-cols-4 gap-2 mt-4">
                   {presetWidths.map((preset, index) => (
