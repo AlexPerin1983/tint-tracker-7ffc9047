@@ -17,11 +17,9 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(4));
 
-  // Valores máximos em metros
   const maxLength = 60; // 60m = ~2362.2"
   const maxWidth = 1.82; // 1.82m = ~71.65"
 
-  // Efeito para atualizar os sliders quando os valores do form mudarem
   useEffect(() => {
     const currentLength = form.getValues("length") || 0;
     const currentWidth = form.getValues("width") || 0;
@@ -51,7 +49,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       
       if (inMeters <= maxValue) {
         form.setValue(field, inMeters);
-        // Atualizar o slider com o valor correto na unidade atual
         const sliderValue = useInches ? numValue : inMeters;
         if (field === "length") {
           setSliderLength([sliderValue]);
@@ -65,7 +62,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   const handlePresetWidth = (value: number) => {
     const meters = useInches ? convertToMeters(value) : value;
     form.setValue("width", meters);
-    setSliderWidth([value]); // Usar o valor na unidade atual do display
+    setSliderWidth([value]);
   };
 
   const handlePresetLength = (value: number) => {
@@ -76,7 +73,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
 
   const handleUnitChange = (checked: boolean) => {
     setUseInches(checked);
-    // Atualiza os sliders com os valores convertidos
     const currentLength = form.getValues("length") || 0;
     const currentWidth = form.getValues("width") || 0;
     
@@ -132,12 +128,12 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
   return (
     <TabsContent value="dimensions" className="space-y-8 mt-4">
       <div className="flex items-center justify-end space-x-2 mb-4">
-        <span className="text-sm text-slate-400">Meters</span>
+        <span className="text-sm text-[#8E9196] font-medium">Meters</span>
         <Switch
           checked={useInches}
           onCheckedChange={handleUnitChange}
         />
-        <span className="text-sm text-slate-400">Inches</span>
+        <span className="text-sm text-[#8E9196] font-medium">Inches</span>
       </div>
 
       <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
