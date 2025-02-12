@@ -1,11 +1,9 @@
 
-import { FormControl } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { PresetDimensions } from "./PresetDimensions";
 import { Switch } from "@/components/ui/switch";
 
 interface DimensionsFieldsProps {
@@ -13,21 +11,16 @@ interface DimensionsFieldsProps {
 }
 
 const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
-  const [showLengthInput, setShowLengthInput] = useState(false);
-  const [showWidthInput, setShowWidthInput] = useState(false);
   const [useInches, setUseInches] = useState(true);
   const [sliderLength, setSliderLength] = useState([form.getValues("length") * 39.37 || 0]);
   const [sliderWidth, setSliderWidth] = useState([form.getValues("width") * 39.37 || 0]);
-  const { toast } = useToast();
 
-  const handleInputClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
+  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
-  const handlePresetWidth = (width: number) => {
-    setSliderWidth([width]);
-    form.setValue("width", width / 39.37);
-  };
+  // Valores máximos em metros
+  const maxLength = 60; // 60m = ~2362.2"
+  const maxWidth = 1.82; // 1.82m = ~71.65"
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
     if (value === "") {
@@ -42,48 +35,24 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      if (useInches) {
-        const maxValue = field === "length" ? 2362.2 : 71.65;
-        
-        if (field === "width" && numValue > maxValue) {
-          toast({
-            title: "Invalid Width",
-            description: "Maximum roll width is 71.65\"",
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        if (numValue <= maxValue) {
-          form.setValue(field, numValue / 39.37);
-          if (field === "length") {
-            setSliderLength([numValue]);
-          } else {
-            setSliderWidth([numValue]);
-          }
-        }
-      } else {
-        const maxValue = field === "length" ? 60 : 1.82;
-        
-        if (field === "width" && numValue > maxValue) {
-          toast({
-            title: "Invalid Width",
-            description: "Maximum roll width is 1.82m",
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        if (numValue <= maxValue) {
-          form.setValue(field, numValue);
-          if (field === "length") {
-            setSliderLength([numValue * 39.37]);
-          } else {
-            setSliderWidth([numValue * 39.37]);
-          }
+      const inMeters = useInches ? convertToMeters(numValue) : numValue;
+      const maxValue = field === "width" ? maxWidth : maxLength;
+      
+      if (inMeters <= maxValue) {
+        form.setValue(field, inMeters);
+        if (field === "length") {
+          setSliderLength([useInches ? numValue : convertToInches(numValue)]);
+        } else {
+          setSliderWidth([useInches ? numValue : convertToInches(numValue)]);
         }
       }
     }
+  };
+
+  const handlePresetWidth = (inches: number) => {
+    const meters = convertToMeters(inches);
+    form.setValue("width", meters);
+    setSliderWidth([inches]);
   };
 
   return (
@@ -104,39 +73,35 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
             Max: {useInches ? "2362.2\"" : "60m"}
           </span>
         </div>
-        <div 
-          className="relative group cursor-pointer"
-          onClick={() => setShowLengthInput(true)}
-        >
-          {showLengthInput ? (
-            <Input
-              type="number"
-              value={useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length").toFixed(2)}
-              onChange={(e) => handleNumericInput("length", e.target.value)}
-              onClick={handleInputClick}
-              step="0.01"
-              min="0"
-              max={useInches ? "2362.2" : "60"}
-              className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-              autoFocus
-              onBlur={() => setShowLengthInput(false)}
-            />
-          ) : (
-            <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-              {useInches ? (form.getValues("length") * 39.37).toFixed(2) : form.getValues("length").toFixed(2)}
-              <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
-            </div>
+        <FormField
+          control={form.control}
+          name="length"
+          render={({ field }) => (
+            <FormItem>
+              <div className="space-y-2">
+                <div className="text-3xl font-bold text-white">
+                  {useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
+                </div>
+                <Slider
+                  value={sliderLength}
+                  max={useInches ? 2362.2 : 60}
+                  step={0.01}
+                  onValueChange={(value) => {
+                    setSliderLength(value);
+                    form.setValue("length", useInches ? convertToMeters(value[0]) : value[0]);
+                  }}
+                  className="py-4"
+                />
+                <Input
+                  type="number"
+                  value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  onChange={(e) => handleNumericInput("length", e.target.value)}
+                  className="hidden"
+                />
+              </div>
+            </FormItem>
           )}
-        </div>
-        <Slider
-          value={sliderLength}
-          max={useInches ? 2362.2 : 60}
-          step={0.01}
-          onValueChange={(value) => {
-            setSliderLength(value);
-            form.setValue("length", useInches ? value[0] / 39.37 : value[0]);
-          }}
-          className="py-4"
         />
       </div>
 
@@ -147,43 +112,65 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
             Max: {useInches ? "71.65\"" : "1.82m"}
           </span>
         </div>
-        <div 
-          className="relative group cursor-pointer"
-          onClick={() => setShowWidthInput(true)}
-        >
-          {showWidthInput ? (
-            <Input
-              type="number"
-              value={useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width").toFixed(2)}
-              onChange={(e) => handleNumericInput("width", e.target.value)}
-              onClick={handleInputClick}
-              step="0.01"
-              min="0"
-              max={useInches ? "71.65" : "1.82"}
-              className="text-3xl font-bold bg-transparent border-blue-500 h-12"
-              autoFocus
-              onBlur={() => setShowWidthInput(false)}
-            />
-          ) : (
-            <div className="text-3xl font-bold text-white group-hover:text-blue-500 transition-colors">
-              {useInches ? (form.getValues("width") * 39.37).toFixed(2) : form.getValues("width").toFixed(2)}
-              <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
-            </div>
+        <FormField
+          control={form.control}
+          name="width"
+          render={({ field }) => (
+            <FormItem>
+              <div className="space-y-2">
+                <div className="text-3xl font-bold text-white">
+                  {useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  <span className="text-lg ml-1 text-slate-400">{useInches ? '"' : 'm'}</span>
+                </div>
+                <Slider
+                  value={sliderWidth}
+                  max={useInches ? 71.65 : 1.82}
+                  step={0.01}
+                  onValueChange={(value) => {
+                    setSliderWidth(value);
+                    form.setValue("width", useInches ? convertToMeters(value[0]) : value[0]);
+                  }}
+                  className="py-4"
+                />
+                <Input
+                  type="number"
+                  value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                  onChange={(e) => handleNumericInput("width", e.target.value)}
+                  className="hidden"
+                />
+                <div className="grid grid-cols-4 gap-2 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => handlePresetWidth(40)}
+                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                  >
+                    40"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePresetWidth(38)}
+                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                  >
+                    38"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePresetWidth(36)}
+                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                  >
+                    36"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePresetWidth(60)}
+                    className="px-3 py-1.5 text-sm bg-slate-800 text-slate-300 rounded hover:bg-slate-700 transition-colors"
+                  >
+                    60"
+                  </button>
+                </div>
+              </div>
+            </FormItem>
           )}
-        </div>
-        <Slider
-          value={sliderWidth}
-          max={useInches ? 71.65 : 1.82}
-          step={0.01}
-          onValueChange={(value) => {
-            setSliderWidth(value);
-            form.setValue("width", useInches ? value[0] / 39.37 : value[0]);
-          }}
-          className="py-4"
-        />
-        <PresetDimensions 
-          category={form.getValues("category")} 
-          onSelectWidth={handlePresetWidth}
         />
       </div>
     </TabsContent>
