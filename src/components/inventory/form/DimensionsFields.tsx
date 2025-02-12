@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -27,8 +26,11 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     const currentLength = form.getValues("length") || 0;
     const currentWidth = form.getValues("width") || 0;
     
-    setSliderLength([useInches ? convertToInches(currentLength) : currentLength]);
-    setSliderWidth([useInches ? convertToInches(currentWidth) : currentWidth]);
+    const lengthValue = useInches ? convertToInches(currentLength) : currentLength;
+    const widthValue = useInches ? convertToInches(currentWidth) : currentWidth;
+    
+    setSliderLength([lengthValue]);
+    setSliderWidth([widthValue]);
   }, [useInches, form]);
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
@@ -49,17 +51,18 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       
       if (inMeters <= maxValue) {
         form.setValue(field, inMeters);
+        // Atualizar o slider com o valor correto na unidade atual
+        const sliderValue = useInches ? numValue : inMeters;
         if (field === "length") {
-          setSliderLength([useInches ? numValue : convertToInches(numValue)]);
+          setSliderLength([sliderValue]);
         } else {
-          setSliderWidth([useInches ? numValue : convertToInches(numValue)]);
+          setSliderWidth([sliderValue]);
         }
       }
     }
   };
 
   const handlePresetWidth = (value: number) => {
-    // O valor já está na unidade correta (metros ou polegadas)
     const meters = useInches ? convertToMeters(value) : value;
     form.setValue("width", meters);
     setSliderWidth([value]); // Usar o valor na unidade atual do display
@@ -77,8 +80,21 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
     const currentLength = form.getValues("length") || 0;
     const currentWidth = form.getValues("width") || 0;
     
-    setSliderLength([checked ? convertToInches(currentLength) : currentLength]);
-    setSliderWidth([checked ? convertToInches(currentWidth) : currentWidth]);
+    const lengthValue = checked ? convertToInches(currentLength) : currentLength;
+    const widthValue = checked ? convertToInches(currentWidth) : currentWidth;
+    
+    setSliderLength([lengthValue]);
+    setSliderWidth([widthValue]);
+  };
+
+  const handleSliderChange = (field: "length" | "width", value: number[]) => {
+    const inMeters = useInches ? convertToMeters(value[0]) : value[0];
+    form.setValue(field, inMeters);
+    if (field === "length") {
+      setSliderLength(value);
+    } else {
+      setSliderWidth(value);
+    }
   };
 
   const presetLengths = useInches 
@@ -141,7 +157,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
                       type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
+                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
                       onChange={(e) => handleNumericInput("length", e.target.value)}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
@@ -150,12 +166,9 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                 </div>
                 <Slider
                   value={sliderLength}
-                  max={useInches ? 2362.2 : 60}
+                  max={useInches ? convertToInches(maxLength) : maxLength}
                   step={useInches ? 1 : 0.01}
-                  onValueChange={(value) => {
-                    setSliderLength(value);
-                    form.setValue("length", useInches ? convertToMeters(value[0]) : value[0]);
-                  }}
+                  onValueChange={(value) => handleSliderChange("length", value)}
                   className="py-4"
                 />
                 <div className="grid grid-cols-3 gap-2 mt-4">
@@ -193,7 +206,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
                       type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(0) : field.value?.toFixed(2)}
+                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
                       onChange={(e) => handleNumericInput("width", e.target.value)}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
@@ -202,12 +215,9 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
                 </div>
                 <Slider
                   value={sliderWidth}
-                  max={useInches ? 71.65 : 1.82}
+                  max={useInches ? convertToInches(maxWidth) : maxWidth}
                   step={useInches ? 1 : 0.01}
-                  onValueChange={(value) => {
-                    setSliderWidth(value);
-                    form.setValue("width", useInches ? convertToMeters(value[0]) : value[0]);
-                  }}
+                  onValueChange={(value) => handleSliderChange("width", value)}
                   className="py-4"
                 />
                 <div className="grid grid-cols-4 gap-2 mt-4">
