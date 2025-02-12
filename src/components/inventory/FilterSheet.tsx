@@ -7,7 +7,7 @@ import { Filter, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface FilterSheetProps {
   open: boolean;
@@ -29,8 +29,32 @@ export function FilterSheet({
   itemCount,
 }: FilterSheetProps) {
   const [useInches, setUseInches] = useState(true);
+  const [sliderLength, setSliderLength] = useState([0, useInches ? 2362.2 : 60]);
+  const [sliderWidth, setSliderWidth] = useState([0, useInches ? 71.65 : 1.82]);
+  
   const maxLength = useInches ? 2362.2 : 60; // 60m = ~2362.2"
   const maxWidth = useInches ? 71.65 : 1.82; // 1.82m = ~71.65"
+
+  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
+  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(4));
+
+  // Efeito para atualizar os sliders quando mudar a unidade de medida
+  useEffect(() => {
+    const minLength = Number(filters.minLength) || 0;
+    const maxLength = Number(filters.maxLength) || (useInches ? 2362.2 : 60);
+    const minWidth = Number(filters.minWidth) || 0;
+    const maxWidth = Number(filters.maxWidth) || (useInches ? 71.65 : 1.82);
+
+    const lengthValues = [minLength, maxLength].map(value => 
+      useInches ? convertToInches(value) : value
+    );
+    const widthValues = [minWidth, maxWidth].map(value => 
+      useInches ? convertToInches(value) : value
+    );
+
+    setSliderLength(lengthValues);
+    setSliderWidth(widthValues);
+  }, [useInches, filters.minLength, filters.maxLength, filters.minWidth, filters.maxWidth]);
 
   const handleApplyFilters = () => {
     onApplyFilters();
@@ -49,6 +73,32 @@ export function FilterSheet({
         ? `${(numValue * 39.37).toFixed(2)}"`
         : `${numValue.toFixed(2)}m`
       : "0";
+  };
+
+  const handleLengthChange = (values: number[]) => {
+    const [min, max] = values;
+    const minMeters = useInches ? convertToMeters(min) : min;
+    const maxMeters = useInches ? convertToMeters(max) : max;
+    
+    setSliderLength(values);
+    onFilterChange({
+      ...filters,
+      minLength: minMeters.toString(),
+      maxLength: maxMeters.toString(),
+    });
+  };
+
+  const handleWidthChange = (values: number[]) => {
+    const [min, max] = values;
+    const minMeters = useInches ? convertToMeters(min) : min;
+    const maxMeters = useInches ? convertToMeters(max) : max;
+    
+    setSliderWidth(values);
+    onFilterChange({
+      ...filters,
+      minWidth: minMeters.toString(),
+      maxWidth: maxMeters.toString(),
+    });
   };
 
   return (
@@ -114,16 +164,10 @@ export function FilterSheet({
                 <span>{formatValue(filters.maxLength || maxLength.toString())}</span>
               </div>
               <Slider
-                defaultValue={[0, maxLength]}
+                value={sliderLength}
                 max={maxLength}
                 step={0.01}
-                onValueChange={(values) => {
-                  onFilterChange({
-                    ...filters,
-                    minLength: values[0].toString(),
-                    maxLength: values[1].toString(),
-                  });
-                }}
+                onValueChange={handleLengthChange}
                 className="py-2"
               />
             </div>
@@ -141,16 +185,10 @@ export function FilterSheet({
                 <span>{formatValue(filters.maxWidth || maxWidth.toString())}</span>
               </div>
               <Slider
-                defaultValue={[0, maxWidth]}
+                value={sliderWidth}
                 max={maxWidth}
                 step={0.01}
-                onValueChange={(values) => {
-                  onFilterChange({
-                    ...filters,
-                    minWidth: values[0].toString(),
-                    maxWidth: values[1].toString(),
-                  });
-                }}
+                onValueChange={handleWidthChange}
                 className="py-2"
               />
             </div>
