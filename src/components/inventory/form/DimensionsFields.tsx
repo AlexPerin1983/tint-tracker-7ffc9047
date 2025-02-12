@@ -9,7 +9,7 @@ interface DimensionsFieldsProps {
   form: any;
 }
 
-const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
+export function DimensionsFields({ form }: DimensionsFieldsProps) {
   const [useInches, setUseInches] = useState(true);
   const [sliderLength, setSliderLength] = useState([0]);
   const [sliderWidth, setSliderWidth] = useState([0]);
@@ -235,6 +235,6 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       </div>
     </TabsContent>
   );
-};
+}
 
 export default DimensionsFields;

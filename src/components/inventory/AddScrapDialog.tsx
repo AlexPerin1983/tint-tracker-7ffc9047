@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,7 +17,7 @@ import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Scissors } from "lucide-react";
-import { DimensionsFields } from "./form/DimensionsFields";
+import DimensionsFields from "./form/DimensionsFields";
 import { Textarea } from "@/components/ui/textarea";
 
 interface AddScrapDialogProps {
