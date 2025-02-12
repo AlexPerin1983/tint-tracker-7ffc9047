@@ -80,83 +80,81 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
         <span className="text-sm text-[#8E9196] font-medium">Inches</span>
       </div>
 
-      <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-8">
-        <div className="space-y-8">
-          {/* Length Field */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-              <span className="text-xs text-slate-400">
-                Max: {useInches ? "2362.2\"" : "60m"}
-              </span>
-            </div>
-            <FormField
-              control={form.control}
-              name="length"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                      <div className="text-3xl font-bold text-white flex-1">
-                        <Input
-                          type="number"
-                          value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
-                          onChange={(e) => handleNumericInput("length", e.target.value)}
-                          className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </div>
-                      <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
-                    </div>
-                    <Slider
-                      value={sliderLength}
-                      max={useInches ? convertToInches(maxLength) : maxLength}
-                      step={useInches ? 1 : 0.01}
-                      onValueChange={(value) => handleSliderChange("length", value)}
-                      className="py-4"
-                    />
-                  </div>
-                </FormItem>
-              )}
-            />
+      <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700">
+        {/* Length Field */}
+        <div className="space-y-4 mb-8">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "2362.2\"" : "60m"}
+            </span>
           </div>
+          <FormField
+            control={form.control}
+            name="length"
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="text-3xl font-bold text-white flex-1">
+                      <Input
+                        type="number"
+                        value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                        onChange={(e) => handleNumericInput("length", e.target.value)}
+                        className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
+                  </div>
+                  <Slider
+                    value={sliderLength}
+                    max={useInches ? convertToInches(maxLength) : maxLength}
+                    step={useInches ? 1 : 0.01}
+                    onValueChange={(value) => handleSliderChange("length", value)}
+                    className="py-4"
+                  />
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
 
-          {/* Width Field */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-              <span className="text-xs text-slate-400">
-                Max: {useInches ? "71.65\"" : "1.82m"}
-              </span>
-            </div>
-            <FormField
-              control={form.control}
-              name="width"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                      <div className="text-3xl font-bold text-white flex-1">
-                        <Input
-                          type="number"
-                          value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
-                          onChange={(e) => handleNumericInput("width", e.target.value)}
-                          className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </div>
-                      <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
-                    </div>
-                    <Slider
-                      value={sliderWidth}
-                      max={useInches ? convertToInches(maxWidth) : maxWidth}
-                      step={useInches ? 1 : 0.01}
-                      onValueChange={(value) => handleSliderChange("width", value)}
-                      className="py-4"
-                    />
-                  </div>
-                </FormItem>
-              )}
-            />
+        {/* Width Field */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
+            <span className="text-xs text-slate-400">
+              Max: {useInches ? "71.65\"" : "1.82m"}
+            </span>
           </div>
+          <FormField
+            control={form.control}
+            name="width"
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="text-3xl font-bold text-white flex-1">
+                      <Input
+                        type="number"
+                        value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                        onChange={(e) => handleNumericInput("width", e.target.value)}
+                        className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
+                  </div>
+                  <Slider
+                    value={sliderWidth}
+                    max={useInches ? convertToInches(maxWidth) : maxWidth}
+                    step={useInches ? 1 : 0.01}
+                    onValueChange={(value) => handleSliderChange("width", value)}
+                    className="py-4"
+                  />
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
       </div>
     </div>
