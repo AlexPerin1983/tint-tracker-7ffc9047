@@ -33,27 +33,31 @@ export function DimensionsFields({
   const handleNumericInput = (name: string, value: string) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      // Se estiver em polegadas, converte para metros antes de salvar
+      // Converte o valor para metros antes de salvar
       const convertedValue = useInches ? convertToMeters(numValue) : numValue;
-      form.setValue(name as any, convertedValue);
+      const maxAllowed = name.includes('width') ? maxWidth : maxLength;
+      const finalValue = Math.min(convertedValue, maxAllowed);
+      form.setValue(name as any, finalValue);
     }
   };
 
   const formatDisplayValue = (value: number | undefined) => {
     if (value === undefined || isNaN(value)) return "0.00";
-    // Converte o valor armazenado (em metros) para polegadas se necessário
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
-  const getSliderValue = (value: number) => {
-    // O valor está sempre armazenado em metros
-    return useInches ? convertToInches(value) : value;
-  };
-
-  const getSliderMax = (isWidth: boolean) => {
-    // Converte o máximo para polegadas se necessário
+  const getSliderConfig = (isWidth: boolean) => {
     const max = isWidth ? maxWidth : maxLength;
-    return useInches ? convertToInches(max) : max;
+    const maxDisplayValue = useInches ? convertToInches(max) : max;
+    const currentValue = isWidth ? form.getValues(widthName) : form.getValues(lengthName);
+    const displayValue = useInches ? convertToInches(currentValue || 0) : (currentValue || 0);
+
+    return {
+      min: 0,
+      max: maxDisplayValue,
+      value: Math.min(displayValue, maxDisplayValue),
+      convert: (value: number) => useInches ? convertToMeters(value) : value
+    };
   };
 
   return (
@@ -73,83 +77,87 @@ export function DimensionsFields({
       <FormField
         control={form.control}
         name={widthName}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Width ({useInches ? "inches" : "meters"})</FormLabel>
-            <div className="space-y-2">
-              <Slider
-                min={0}
-                max={getSliderMax(true)}
-                step={0.01}
-                value={[getSliderValue(field.value || 0)]}
-                onValueChange={(value) => {
-                  // Converte de volta para metros antes de salvar
-                  const convertedValue = useInches ? convertToMeters(value[0]) : value[0];
-                  field.onChange(convertedValue);
-                }}
-                className="w-full"
-              />
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                <FormControl>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
-                    value={formatDisplayValue(field.value)}
-                    onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                    className="w-24 text-right"
-                  />
-                </FormControl>
-                <span className="text-sm text-muted-foreground">
-                  {formatDisplayValue(maxWidth) + (useInches ? '"' : 'm')}
-                </span>
+        render={({ field }) => {
+          const config = getSliderConfig(true);
+          return (
+            <FormItem>
+              <FormLabel>Width ({useInches ? "inches" : "meters"})</FormLabel>
+              <div className="space-y-2">
+                <Slider
+                  min={config.min}
+                  max={config.max}
+                  step={0.01}
+                  value={[config.value]}
+                  onValueChange={(value) => {
+                    const convertedValue = config.convert(value[0]);
+                    field.onChange(convertedValue);
+                  }}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
+                      value={formatDisplayValue(field.value)}
+                      onChange={(e) => handleNumericInput(widthName, e.target.value)}
+                      className="w-24 text-right"
+                    />
+                  </FormControl>
+                  <span className="text-sm text-muted-foreground">
+                    {useInches ? convertToInches(maxWidth).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}
+                  </span>
+                </div>
               </div>
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
+              <FormMessage />
+            </FormItem>
+          );
+        }}
       />
 
       <FormField
         control={form.control}
         name={lengthName}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Length ({useInches ? "inches" : "meters"})</FormLabel>
-            <div className="space-y-2">
-              <Slider
-                min={0}
-                max={getSliderMax(false)}
-                step={0.01}
-                value={[getSliderValue(field.value || 0)]}
-                onValueChange={(value) => {
-                  // Converte de volta para metros antes de salvar
-                  const convertedValue = useInches ? convertToMeters(value[0]) : value[0];
-                  field.onChange(convertedValue);
-                }}
-                className="w-full"
-              />
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                <FormControl>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
-                    value={formatDisplayValue(field.value)}
-                    onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                    className="w-24 text-right"
-                  />
-                </FormControl>
-                <span className="text-sm text-muted-foreground">
-                  {formatDisplayValue(maxLength) + (useInches ? '"' : 'm')}
-                </span>
+        render={({ field }) => {
+          const config = getSliderConfig(false);
+          return (
+            <FormItem>
+              <FormLabel>Length ({useInches ? "inches" : "meters"})</FormLabel>
+              <div className="space-y-2">
+                <Slider
+                  min={config.min}
+                  max={config.max}
+                  step={0.01}
+                  value={[config.value]}
+                  onValueChange={(value) => {
+                    const convertedValue = config.convert(value[0]);
+                    field.onChange(convertedValue);
+                  }}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
+                      value={formatDisplayValue(field.value)}
+                      onChange={(e) => handleNumericInput(lengthName, e.target.value)}
+                      className="w-24 text-right"
+                    />
+                  </FormControl>
+                  <span className="text-sm text-muted-foreground">
+                    {useInches ? convertToInches(maxLength).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}
+                  </span>
+                </div>
               </div>
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
+              <FormMessage />
+            </FormItem>
+          );
+        }}
       />
     </div>
   );
