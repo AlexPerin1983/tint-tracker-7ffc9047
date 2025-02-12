@@ -127,7 +127,7 @@ export function ConsumptionDialog({ open, onOpenChange, item }: ConsumptionDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[100vh] sm:h-auto sm:max-h-[100vh]">
+      <DialogContent className="w-full sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col max-h-[90vh]">
         <DialogHeader className="p-4 border-b border-slate-800/50 shrink-0">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-full bg-blue-500/10">
