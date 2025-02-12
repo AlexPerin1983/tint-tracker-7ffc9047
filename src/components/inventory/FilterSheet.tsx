@@ -53,9 +53,8 @@ export function FilterSheet({
           <div className="space-y-6">
             <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50">
               <Select
-                value={filters.category || "all"}
-                onValueChange={(value: "Window Tinting" | "PPF" | "Wrap" | "all") => 
-                  onFilterChange({ ...filters, category: value })}
+                value={filters.category}
+                onValueChange={(value) => onFilterChange({ ...filters, category: value })}
               >
                 <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
                   <SelectValue placeholder="Category">
