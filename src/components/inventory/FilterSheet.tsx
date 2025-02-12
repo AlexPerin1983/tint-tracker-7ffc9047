@@ -2,7 +2,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { FilterFields } from "./FilterFields";
 import { Button } from "@/components/ui/button";
-import { Filters } from "@/types/inventory";
+import { Category, Filters } from "@/types/inventory";
 import { Filter, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -37,6 +37,12 @@ export function FilterSheet({
     onOpenChange(false);
   };
 
+  const handleCategoryChange = (value: string) => {
+    // Garantir que o valor é um dos tipos permitidos
+    const categoryValue = value as Category | "all";
+    onFilterChange({ ...filters, category: categoryValue });
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md bg-[#111318] border-none p-0 flex flex-col h-[100dvh]">
@@ -54,7 +60,7 @@ export function FilterSheet({
             <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50">
               <Select
                 value={filters.category}
-                onValueChange={(value) => onFilterChange({ ...filters, category: value })}
+                onValueChange={handleCategoryChange}
               >
                 <SelectTrigger className="bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors">
                   <SelectValue placeholder="Category">
