@@ -33,7 +33,6 @@ export function DimensionsFields({
   const handleNumericInput = (name: string, value: string) => {
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
-      // Converte o valor para metros antes de salvar
       const convertedValue = useInches ? convertToMeters(numValue) : numValue;
       const maxAllowed = name.includes('width') ? maxWidth : maxLength;
       const finalValue = Math.min(convertedValue, maxAllowed);
@@ -65,12 +64,12 @@ export function DimensionsFields({
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium">{label}</span>
         <div className="flex items-center space-x-2">
-          <span className="text-sm">Meters</span>
+          <span className="text-sm text-[#8E9196]">Meters</span>
           <Switch
             checked={useInches}
             onCheckedChange={onUnitChange}
           />
-          <span className="text-sm">Inches</span>
+          <span className="text-sm text-[#8E9196]">Inches</span>
         </div>
       </div>
 
@@ -81,8 +80,21 @@ export function DimensionsFields({
           const config = getSliderConfig(true);
           return (
             <FormItem>
-              <FormLabel>Width ({useInches ? "inches" : "meters"})</FormLabel>
+              <FormLabel className="text-[#8E9196] text-sm">Width ({useInches ? "inches" : "meters"})</FormLabel>
               <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="text-3xl font-bold text-white flex-1">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
+                      value={formatDisplayValue(field.value)}
+                      onChange={(e) => handleNumericInput(widthName, e.target.value)}
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  </div>
+                  <span className="text-lg text-[#8E9196]">{useInches ? '"' : 'm'}</span>
+                </div>
                 <Slider
                   min={config.min}
                   max={config.max}
@@ -92,21 +104,11 @@ export function DimensionsFields({
                     const convertedValue = config.convert(value[0]);
                     field.onChange(convertedValue);
                   }}
-                  className="w-full"
+                  className="py-4"
                 />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
-                      value={formatDisplayValue(field.value)}
-                      onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                      className="w-24 text-right"
-                    />
-                  </FormControl>
-                  <span className="text-sm text-muted-foreground">
+                <div className="flex items-center justify-between text-xs text-[#8E9196]">
+                  <span>0{useInches ? '"' : 'm'}</span>
+                  <span>
                     {useInches ? convertToInches(maxWidth).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}
                   </span>
                 </div>
@@ -124,8 +126,21 @@ export function DimensionsFields({
           const config = getSliderConfig(false);
           return (
             <FormItem>
-              <FormLabel>Length ({useInches ? "inches" : "meters"})</FormLabel>
+              <FormLabel className="text-[#8E9196] text-sm">Length ({useInches ? "inches" : "meters"})</FormLabel>
               <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="text-3xl font-bold text-white flex-1">
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
+                      value={formatDisplayValue(field.value)}
+                      onChange={(e) => handleNumericInput(lengthName, e.target.value)}
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  </div>
+                  <span className="text-lg text-[#8E9196]">{useInches ? '"' : 'm'}</span>
+                </div>
                 <Slider
                   min={config.min}
                   max={config.max}
@@ -135,21 +150,11 @@ export function DimensionsFields({
                     const convertedValue = config.convert(value[0]);
                     field.onChange(convertedValue);
                   }}
-                  className="w-full"
+                  className="py-4"
                 />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">0{useInches ? '"' : 'm'}</span>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
-                      value={formatDisplayValue(field.value)}
-                      onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                      className="w-24 text-right"
-                    />
-                  </FormControl>
-                  <span className="text-sm text-muted-foreground">
+                <div className="flex items-center justify-between text-xs text-[#8E9196]">
+                  <span>0{useInches ? '"' : 'm'}</span>
+                  <span>
                     {useInches ? convertToInches(maxLength).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}
                   </span>
                 </div>
