@@ -17,7 +17,7 @@ export function ScrapFields({ form, maxWidth, maxLength, useInches, onUnitChange
   const createScrap = form.watch("createScrap");
 
   return (
-    <div className="space-y-4">
+    <>
       <FormField
         control={form.control}
         name="createScrap"
@@ -27,11 +27,10 @@ export function ScrapFields({ form, maxWidth, maxLength, useInches, onUnitChange
               <Checkbox
                 checked={field.value}
                 onCheckedChange={field.onChange}
-                className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
               />
             </FormControl>
             <div className="space-y-1 leading-none">
-              <FormLabel className="text-sm font-medium text-slate-200">Create Scrap</FormLabel>
+              <FormLabel>Create Scrap</FormLabel>
             </div>
           </FormItem>
         )}
@@ -49,6 +48,6 @@ export function ScrapFields({ form, maxWidth, maxLength, useInches, onUnitChange
           onUnitChange={onUnitChange}
         />
       )}
-    </div>
+    </>
   );
 }
