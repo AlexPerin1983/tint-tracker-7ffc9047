@@ -147,6 +147,7 @@ export function FilterSheet({
               <Switch
                 checked={useInches}
                 onCheckedChange={setUseInches}
+                className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-slate-700"
               />
               <span className="text-sm text-slate-400">Inches</span>
             </div>
