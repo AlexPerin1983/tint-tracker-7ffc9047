@@ -25,7 +25,7 @@ const ItemForm = memo(({
               <Package2 className="w-4 h-4" />
               <span className="hidden sm:inline">Basic</span>
             </TabsTrigger>
-            <TabsTrigger value="dimensions" className="flex items-center gap-2 text-blue-500 bg-zinc-950 hover:bg-zinc-800">
+            <TabsTrigger value="dimensions" className="flex items-center gap-2 text-blue-500 bg-transparent">
               <Ruler className="w-4 h-4" />
               <span className="hidden sm:inline">Dimensions</span>
             </TabsTrigger>
