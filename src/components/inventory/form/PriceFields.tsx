@@ -21,7 +21,7 @@ const PriceFields = ({
 
       <FormField control={form.control} name="observation" render={({
       field
-    }) => <FormItem className="py-[51px]">
+    }) => <FormItem className="py-[30px] my-[30px]">
             <FormLabel>Additional Notes</FormLabel>
             <FormControl>
               <Textarea placeholder="Item is located on shelf..." className="min-h-[100px] px-[10px] py-[80px] mx-0 my-15 my-[10px]" />
