@@ -29,7 +29,7 @@ const ItemForm = memo(({
               <Ruler className="w-4 h-4" />
               <span className="hidden sm:inline">Dimensions</span>
             </TabsTrigger>
-            <TabsTrigger value="price" className="flex items-center gap-2">
+            <TabsTrigger value="price" className="flex items-center gap-2 text-blue-500">
               <DollarSign className="w-4 h-4" />
               <span className="hidden sm:inline">Price</span>
             </TabsTrigger>
