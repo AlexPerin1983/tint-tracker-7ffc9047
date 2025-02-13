@@ -24,7 +24,7 @@ const PriceFields = ({
     }) => <FormItem className="py-[51px]">
             <FormLabel>Additional Notes</FormLabel>
             <FormControl>
-              <Textarea placeholder="Item is located on shelf..." className="min-h-[100px] px-[10px] py-[79px] mx-0 my-0" />
+              <Textarea placeholder="Item is located on shelf..." className="min-h-[100px] px-[10px] py-[80px] mx-0 my-15 my-[10px]" />
             </FormControl>
             <FormMessage />
           </FormItem>} />
