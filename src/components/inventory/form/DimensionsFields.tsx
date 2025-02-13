@@ -71,7 +71,7 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-end space-x-2 mb-4">
+      <div className="flex items-center justify-end space-x-2 mb-6">
         <span className="text-sm text-[#8E9196] font-medium">Meters</span>
         <Switch
           checked={useInches}
@@ -81,10 +81,10 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       </div>
 
       {/* Length Field */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4 mb-8 p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors">
         <div className="flex items-center justify-between">
           <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Length</span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-400 bg-slate-700/50 px-3 py-1 rounded-full">
             Max: {useInches ? "2362.2\"" : "60m"}
           </span>
         </div>
@@ -119,10 +119,10 @@ const DimensionsFields = ({ form }: DimensionsFieldsProps) => {
       </div>
 
       {/* Width Field */}
-      <div className="space-y-4">
+      <div className="space-y-4 p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors">
         <div className="flex items-center justify-between">
           <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Roll Width</span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-400 bg-slate-700/50 px-3 py-1 rounded-full">
             Max: {useInches ? "71.65\"" : "1.82m"}
           </span>
         </div>
