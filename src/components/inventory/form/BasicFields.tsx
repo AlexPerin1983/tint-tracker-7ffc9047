@@ -40,7 +40,7 @@ const BasicFields = ({
           </FormItem>} />
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#1A1F2C] aspect-square p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+        <div className="bg-[#1A1F2C] aspect-square p-4 border border-slate-700 hover:border-blue-500/50 transition-colors rounded-3xl">
           <div className="flex items-center justify-between h-full">
             <FormField control={form.control} name="quantity" render={({
             field
