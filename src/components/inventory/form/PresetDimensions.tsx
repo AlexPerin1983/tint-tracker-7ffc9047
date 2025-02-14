@@ -4,16 +4,23 @@ import { Button } from "@/components/ui/button";
 interface PresetDimensionsProps {
   category: string;
   onSelectWidth: (width: number) => void;
+  useInches?: boolean;
 }
 
-export function PresetDimensions({ category, onSelectWidth }: PresetDimensionsProps) {
+export function PresetDimensions({ category, onSelectWidth, useInches = true }: PresetDimensionsProps) {
   if (category !== "Window Tinting") return null;
 
-  const windowFilmWidths = [
+  const windowFilmWidths = useInches ? [
     { label: "40\"", value: 40 },
     { label: "38\"", value: 38 },
     { label: "36\"", value: 36 },
     { label: "60\"", value: 60 },
+  ] : [
+    { label: "0.50m", value: 0.50 },
+    { label: "1.00m", value: 1.00 },
+    { label: "1.22m", value: 1.22 },
+    { label: "1.52m", value: 1.52 },
+    { label: "1.82m", value: 1.82 },
   ];
 
   return (

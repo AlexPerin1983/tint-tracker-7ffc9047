@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -69,10 +68,10 @@ const DimensionsFields = ({
     }
   };
 
-  const handlePresetWidth = (widthInInches: number) => {
-    const widthInMeters = convertToMeters(widthInInches);
+  const handlePresetWidth = (width: number) => {
+    const widthInMeters = useInches ? convertToMeters(width) : width;
     form.setValue("width", widthInMeters);
-    setSliderWidth([widthInInches]);
+    setSliderWidth([useInches ? width : widthInMeters]);
   };
 
   return <div className="space-y-6">
@@ -154,7 +153,8 @@ const DimensionsFields = ({
                 />
                 <PresetDimensions 
                   category="Window Tinting"
-                  onSelectWidth={(width) => handlePresetWidth(width)}
+                  onSelectWidth={handlePresetWidth}
+                  useInches={useInches}
                 />
               </div>
             </FormItem>
