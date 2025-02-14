@@ -1,13 +1,10 @@
-
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
-
 interface PriceFieldsProps {
   form: any;
 }
-
 const PriceFields = ({
   form
 }: PriceFieldsProps) => {
@@ -27,11 +24,10 @@ const PriceFields = ({
     }) => <FormItem className="py-[30px] my-[30px]">
             <FormLabel>Additional Notes</FormLabel>
             <FormControl>
-              <Textarea placeholder="Item is located on shelf..." className="min-h-[200px] my-[10px] py-[10px]" {...field} />
+              <Textarea placeholder="Item is located on shelf..." className="min-h-[200px] my-[10px] py-[10px]" />
             </FormControl>
             <FormMessage />
           </FormItem>} />
     </TabsContent>;
 };
-
 export default PriceFields;
