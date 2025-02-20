@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -162,7 +161,6 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
                 }}
                 bgColor="#FFFFFF"
                 fgColor="#000000"
-                renderAs="canvas"
               />
             </div>
 
