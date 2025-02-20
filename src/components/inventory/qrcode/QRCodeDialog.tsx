@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from "react";
-import { QRCode } from "qrcode.react"; // Corrigido: usando importação nomeada
+import QRCodeReact from "qrcode.react"; // Corrigido: usando importação default
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
@@ -113,7 +113,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         
         <div className="flex flex-col items-center space-y-6 py-4">
           <div className="p-6 bg-white rounded-xl">
-            <QRCode
+            <QRCodeReact
               id="qr-code"
               value={itemUrl}
               size={256}
