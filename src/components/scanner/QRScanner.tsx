@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
@@ -18,12 +19,15 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const handleScan = (result: any) => {
     if (result) {
       try {
-        const url = new URL(result?.text);
-        const path = url.pathname;
+        const scannedId = result?.text;
         
-        if (path.startsWith('/item/') || path.startsWith('/scrap/')) {
+        // Verifica se o ID começa com BOB ou RET para determinar o tipo
+        if (scannedId.startsWith('BOB')) {
           onOpenChange(false);
-          navigate(path);
+          navigate(`/item/${scannedId}`);
+        } else if (scannedId.startsWith('RET')) {
+          onOpenChange(false);
+          navigate(`/scrap/${scannedId}`);
         } else {
           setError('Invalid QR Code');
           toast({
