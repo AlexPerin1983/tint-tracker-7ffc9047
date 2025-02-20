@@ -16,44 +16,36 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
 
-  const handleScan = (result: any) => {
-    console.log("QR Code resultado:", result); // Debug log
-    
-    if (result) {
-      try {
-        const scannedId = result?.text;
-        console.log("ID escaneado:", scannedId); // Debug log
-        
-        if (!scannedId) {
-          console.log("ID não encontrado"); // Debug log
-          return;
-        }
+  const handleError = (err: any) => {
+    console.error("Erro na câmera:", err);
+    setError('Camera error');
+    toast({
+      variant: "destructive",
+      title: "Camera Error",
+      description: "Unable to access camera. Please check permissions.",
+    });
+  };
 
-        // Verifica se o ID começa com BOB ou RET para determinar o tipo
-        if (scannedId.includes('BOB')) {
-          console.log("Navegando para bobina:", scannedId); // Debug log
-          onOpenChange(false);
-          navigate(`/item/${scannedId}`);
-        } else if (scannedId.includes('RET')) {
-          console.log("Navegando para retalho:", scannedId); // Debug log
-          onOpenChange(false);
-          navigate(`/scrap/${scannedId}`);
-        } else {
-          console.log("QR Code inválido:", scannedId); // Debug log
-          setError('Invalid QR Code');
-          toast({
-            variant: "destructive",
-            title: "QR Code Error",
-            description: "This QR code doesn't match any item in the system.",
-          });
-        }
-      } catch (err) {
-        console.error("Erro ao processar QR Code:", err); // Debug log
+  const handleScan = (result: any) => {
+    console.log("Tentando ler QR Code...");
+    
+    if (result?.text) {
+      const scannedId = result.text;
+      console.log("QR Code lido:", scannedId);
+
+      if (scannedId.includes('BOB')) {
+        onOpenChange(false);
+        navigate(`/item/${scannedId}`);
+      } else if (scannedId.includes('RET')) {
+        onOpenChange(false);
+        navigate(`/scrap/${scannedId}`);
+      } else {
+        console.log("QR Code inválido:", scannedId);
         setError('Invalid QR Code');
         toast({
           variant: "destructive",
-          title: "QR Code Error",
-          description: "Unable to read QR code. Please try again.",
+          title: "Invalid QR Code",
+          description: "This QR code is not valid for this system.",
         });
       }
     }
@@ -70,38 +62,31 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         </DialogHeader>
         
         <div className="w-full space-y-4">
-          {error ? (
+          {error && (
             <div className="text-center p-2 bg-destructive/10 text-destructive rounded-md">
               {error}
             </div>
-          ) : null}
+          )}
           
-          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg border-2 border-primary/20">
+          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg">
             <QrReader
-              constraints={{ 
-                facingMode: "environment",
-                aspectRatio: 1,
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-              }}
               onResult={handleScan}
-              className="w-full h-full"
-              videoStyle={{ 
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
+              onError={handleError}
+              constraints={{
+                facingMode: "environment"
               }}
-              scanDelay={500}
+              className="w-full h-full"
+              scanDelay={300}
               ViewFinder={() => (
-                <div className="absolute inset-0 border-[3rem] sm:border-[4rem] border-black/50">
-                  <div className="absolute inset-0 border-2 border-white/50"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-48 h-48 border-2 border-white/50" />
                 </div>
               )}
             />
           </div>
           
           <p className="text-sm text-muted-foreground text-center px-6">
-            Position the inventory QR code within the marked area for automatic scanning
+            Posicione o QR Code dentro da área marcada
           </p>
         </div>
       </DialogContent>
