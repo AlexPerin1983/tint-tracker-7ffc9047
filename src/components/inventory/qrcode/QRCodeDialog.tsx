@@ -1,5 +1,6 @@
 
-import { QRCodeSVG } from "qrcode.react";
+import { useEffect, useRef } from "react";
+import QRCode from "easyqrcodejs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
@@ -12,6 +13,9 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
+  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const qrCodeInstance = useRef<any>(null);
+  
   const baseUrl = window.location.origin;
   const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
   
@@ -19,96 +23,99 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
 
-  const qrCodeData = {
-    id: item.id,
-    code: item.code,
-    name: item.name,
-    category: item.category,
-    dimensions: dimensions,
-    url: itemUrl
-  };
+  useEffect(() => {
+    if (open && qrCodeRef.current) {
+      if (qrCodeInstance.current) {
+        qrCodeInstance.current.clear();
+      }
+
+      qrCodeInstance.current = new QRCode(qrCodeRef.current, {
+        text: itemUrl,
+        width: 256,
+        height: 256,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+        quietZone: 15,
+        quietZoneColor: "#ffffff",
+        title: item.name,
+        titleFont: "normal normal bold 16px Arial",
+        titleColor: "#000000",
+        titleBackgroundColor: "#ffffff",
+        titleHeight: 40,
+        titleTop: 20,
+        logo: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
+        logoWidth: 80,
+        logoHeight: 80,
+        logoBackgroundColor: '#ffffff',
+        logoBackgroundTransparent: false
+      });
+    }
+
+    return () => {
+      if (qrCodeInstance.current) {
+        qrCodeInstance.current.clear();
+      }
+    };
+  }, [open, itemUrl, item.name]);
 
   const handleDownload = () => {
-    const svg = document.querySelector("#qr-code-svg");
-    if (svg) {
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
-      
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.fillStyle = '#FFFFFF';
-        ctx?.fillRect(0, 0, canvas.width, canvas.height);
-        ctx?.drawImage(img, 0, 0);
-        
-        const pngUrl = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `${item.code}-qrcode.png`;
-        link.href = pngUrl;
-        link.click();
-      };
-      
-      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+    if (qrCodeInstance.current) {
+      qrCodeInstance.current.download(`${item.code}-qrcode`);
     }
   };
 
   const handlePrint = () => {
     const printWindow = window.open("", "", "width=800,height=600");
-    if (printWindow) {
-      const svg = document.querySelector("#qr-code-svg");
-      if (svg) {
-        const svgData = new XMLSerializer().serializeToString(svg);
-        const imgData = 'data:image/svg+xml;base64,' + btoa(svgData);
-        
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>QR Code - ${item.name}</title>
-              <style>
-                body {
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  justify-content: center;
-                  height: 100vh;
-                  margin: 0;
-                  font-family: system-ui, sans-serif;
-                  background: white;
-                }
-                img {
-                  max-width: 300px;
-                  margin-bottom: 1rem;
-                }
-                h2 {
-                  margin: 0;
-                  color: #333;
-                  font-size: 1.2rem;
-                }
-                .details {
-                  margin-top: 1rem;
-                  font-size: 0.9rem;
-                  color: #666;
-                }
-              </style>
-            </head>
-            <body>
-              <img src="${imgData}" alt="QR Code" />
-              <h2>${item.name}</h2>
-              <div class="details">
-                <div>SKU: ${item.code}</div>
-                <div>Material: ${item.category}</div>
-                <div>Size: ${dimensions}</div>
-              </div>
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
-      }
+    if (printWindow && qrCodeRef.current) {
+      const qrCodeImage = qrCodeRef.current.querySelector('canvas')?.toDataURL("image/png");
+      
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>QR Code - ${item.name}</title>
+            <style>
+              body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                font-family: system-ui, sans-serif;
+                background: white;
+              }
+              img {
+                max-width: 300px;
+                margin-bottom: 1rem;
+              }
+              h2 {
+                margin: 0;
+                color: #333;
+                font-size: 1.2rem;
+              }
+              .details {
+                margin-top: 1rem;
+                font-size: 0.9rem;
+                color: #666;
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${qrCodeImage}" alt="QR Code" />
+            <h2>${item.name}</h2>
+            <div class="details">
+              <div>SKU: ${item.code}</div>
+              <div>Material: ${item.category}</div>
+              <div>Size: ${dimensions}</div>
+            </div>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
     }
   };
 
@@ -135,16 +142,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         
         <div className="flex flex-col items-center space-y-6 py-4">
           <div className="p-3 bg-white rounded-xl">
-            <QRCodeSVG
-              id="qr-code-svg"
-              value={itemUrl}
-              size={256}
-              level="H"
-              includeMargin={true}
-              bgColor="#FFFFFF"
-              fgColor="#000000"
-              style={{ width: '100%', height: 'auto' }}
-            />
+            <div ref={qrCodeRef} className="flex justify-center" />
           </div>
 
           <div className="w-full space-y-2 text-sm">
