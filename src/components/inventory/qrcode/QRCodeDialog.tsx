@@ -1,6 +1,6 @@
 
-import { QRCodeCanvas } from "qrcode.react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { QRCodeSVG } from "qrcode.react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Item } from "@/types/inventory";
@@ -29,22 +29,39 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   };
 
   const handleDownload = () => {
-    const canvas = document.querySelector("canvas");
-    if (canvas) {
-      const url = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = `${item.code}-qrcode.png`;
-      link.href = url;
-      link.click();
+    const svg = document.querySelector("#qr-code-svg");
+    if (svg) {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.fillStyle = '#FFFFFF';
+        ctx?.fillRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(img, 0, 0);
+        
+        const pngUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `${item.code}-qrcode.png`;
+        link.href = pngUrl;
+        link.click();
+      };
+      
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
     }
   };
 
   const handlePrint = () => {
     const printWindow = window.open("", "", "width=800,height=600");
     if (printWindow) {
-      const canvas = document.querySelector("canvas");
-      if (canvas) {
-        const url = canvas.toDataURL("image/png");
+      const svg = document.querySelector("#qr-code-svg");
+      if (svg) {
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const imgData = 'data:image/svg+xml;base64,' + btoa(svgData);
+        
         printWindow.document.write(`
           <html>
             <head>
@@ -58,19 +75,32 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
                   height: 100vh;
                   margin: 0;
                   font-family: system-ui, sans-serif;
+                  background: white;
                 }
                 img {
                   max-width: 300px;
+                  margin-bottom: 1rem;
                 }
                 h2 {
-                  margin-top: 1rem;
+                  margin: 0;
                   color: #333;
+                  font-size: 1.2rem;
+                }
+                .details {
+                  margin-top: 1rem;
+                  font-size: 0.9rem;
+                  color: #666;
                 }
               </style>
             </head>
             <body>
-              <img src="${url}" alt="QR Code" />
+              <img src="${imgData}" alt="QR Code" />
               <h2>${item.name}</h2>
+              <div class="details">
+                <div>SKU: ${item.code}</div>
+                <div>Material: ${item.category}</div>
+                <div>Size: ${dimensions}</div>
+              </div>
             </body>
           </html>
         `);
@@ -98,19 +128,24 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{item.type === 'scrap' ? 'Scrap from ' : ''}{item.name}</DialogTitle>
+          <DialogDescription>
+            Scan this QR Code to directly access the product details page in the system.
+          </DialogDescription>
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
-          <QRCodeCanvas
-            value={itemUrl}
-            size={256}
-            level="H"
-            includeMargin
-          />
-
-          <p className="text-sm text-muted-foreground text-center">
-            Scan this QR Code to directly access the product details page in the system.
-          </p>
+          <div className="p-3 bg-white rounded-xl">
+            <QRCodeSVG
+              id="qr-code-svg"
+              value={itemUrl}
+              size={256}
+              level="H"
+              includeMargin={true}
+              bgColor="#FFFFFF"
+              fgColor="#000000"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
 
           <div className="w-full space-y-2 text-sm">
             <div className="flex justify-between py-1 border-b">
@@ -152,4 +187,3 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     </Dialog>
   );
 }
-
