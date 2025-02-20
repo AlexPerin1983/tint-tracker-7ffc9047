@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from "react";
-import { QRCodeCanvas } from "qrcode.react"; // Corrigido: usando importação correta do componente
+import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
@@ -112,18 +112,24 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
-          <div className="p-6 bg-white rounded-xl">
+          <div className="p-8 bg-white rounded-xl"> {/* Aumentado padding para mais espaço branco */}
             <QRCodeCanvas
               id="qr-code"
               value={itemUrl}
-              size={256}
-              level="H"
+              size={320} // Aumentado o tamanho
+              level="H" // Maior nível de correção de erro
               includeMargin={true}
-              style={{ width: '100%', height: 'auto' }}
+              style={{ 
+                width: '100%', 
+                height: 'auto',
+                imageRendering: 'pixelated', // Melhora a nitidez
+              }}
+              bgColor="#FFFFFF" // Garante fundo branco
+              fgColor="#000000" // Garante preto puro
               imageSettings={{
                 src: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
-                width: 40,
-                height: 40,
+                width: 48, // Aumentado proporcionalmente
+                height: 48, // Aumentado proporcionalmente
                 excavate: true,
               }}
             />
