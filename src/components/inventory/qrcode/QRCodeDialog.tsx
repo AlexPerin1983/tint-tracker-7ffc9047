@@ -32,7 +32,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{item.code}</DialogTitle>
             <DialogDescription>
@@ -40,10 +40,10 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex flex-col items-center space-y-6 py-4">
+          <div className="flex flex-col items-center space-y-4 py-4">
             <QRCodeDisplay item={item} qrValue={qrValue} />
 
-            <div className="text-center text-sm font-medium text-muted-foreground">
+            <div className="text-center text-sm font-medium text-muted-foreground w-full break-words">
               {item.name}
             </div>
 
