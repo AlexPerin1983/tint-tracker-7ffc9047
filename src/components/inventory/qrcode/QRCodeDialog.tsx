@@ -1,10 +1,11 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Share2 } from "lucide-react";
+import { Download, Printer, Share2, Scan } from "lucide-react";
 import { Item } from "@/types/inventory";
+import { QRScanner } from "@/components/scanner/QRScanner";
 
 interface QRCodeDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
+  const [scannerOpen, setScannerOpen] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const qrValue = item.id;
   
@@ -136,61 +138,72 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{item.code}</DialogTitle>
-          <DialogDescription>
-            Escaneie para identificar este item
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="flex flex-col items-center space-y-6 py-4">
-          <div className="p-4 bg-white rounded-xl">
-            <QRCodeCanvas
-              id="qr-code"
-              value={qrValue}
-              size={200}
-              level="H"
-              includeMargin={true}
-              style={{ 
-                width: '200px', 
-                height: '200px',
-              }}
-            />
-          </div>
-
-          <div className="text-center text-sm font-medium text-muted-foreground">
-            {item.name}
-          </div>
-
-          <div className="w-full space-y-2 text-sm">
-            <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">SKU:</span>
-              <span>{item.code}</span>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{item.code}</DialogTitle>
+            <DialogDescription>
+              Escaneie para identificar este item
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col items-center space-y-6 py-4">
+            <div className="p-4 bg-white rounded-xl">
+              <QRCodeCanvas
+                id="qr-code"
+                value={qrValue}
+                size={100}
+                level="H"
+                includeMargin={true}
+                style={{ 
+                  width: '100px', 
+                  height: '100px',
+                }}
+              />
             </div>
-            <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Produto:</span>
-              <span>{item.name}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Dimensões:</span>
-              <span>{dimensions}</span>
-            </div>
-          </div>
 
-          <div className="flex gap-4">
-            <Button onClick={handleDownload} variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </Button>
-            <Button onClick={handlePrint} variant="outline">
-              <Printer className="w-4 h-4 mr-2" />
-              Imprimir
-            </Button>
+            <div className="text-center text-sm font-medium text-muted-foreground">
+              {item.name}
+            </div>
+
+            <div className="w-full space-y-2 text-sm">
+              <div className="flex justify-between py-1 border-b">
+                <span className="font-medium">SKU:</span>
+                <span>{item.code}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b">
+                <span className="font-medium">Produto:</span>
+                <span>{item.name}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b">
+                <span className="font-medium">Dimensões:</span>
+                <span>{dimensions}</span>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button onClick={handleDownload} variant="outline">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+              <Button onClick={handlePrint} variant="outline">
+                <Printer className="w-4 h-4 mr-2" />
+                Imprimir
+              </Button>
+              <Button onClick={() => setScannerOpen(true)} variant="outline">
+                <Scan className="w-4 h-4 mr-2" />
+                Escanear
+              </Button>
+            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <QRScanner 
+        open={scannerOpen} 
+        onOpenChange={setScannerOpen}
+      />
+    </>
   );
 }
