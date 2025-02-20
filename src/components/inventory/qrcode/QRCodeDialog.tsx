@@ -23,16 +23,37 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
 
   const handleDownload = () => {
-    const canvas = document.querySelector("#qr-code") as HTMLCanvasElement;
-    if (canvas) {
-      const pngUrl = canvas.toDataURL("image/png");
-      const downloadLink = document.createElement("a");
-      downloadLink.href = pngUrl;
-      downloadLink.download = `${item.code}-qrcode.png`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    }
+    // Criar um canvas temporário para combinar QR code e texto
+    const tempCanvas = document.createElement('canvas');
+    const ctx = tempCanvas.getContext('2d');
+    if (!ctx) return;
+
+    // Obter o canvas do QR code
+    const qrCanvas = document.querySelector("#qr-code") as HTMLCanvasElement;
+    if (!qrCanvas) return;
+
+    // Configurar o canvas temporário
+    tempCanvas.width = qrCanvas.width;
+    tempCanvas.height = qrCanvas.height + 30; // Altura extra para o texto
+
+    // Desenhar o QR code
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    ctx.drawImage(qrCanvas, 0, 0);
+
+    // Adicionar o texto
+    ctx.fillStyle = '#000000';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(item.name, tempCanvas.width / 2, qrCanvas.height + 20);
+
+    // Criar o link de download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = tempCanvas.toDataURL("image/png");
+    downloadLink.download = `${item.code}-qrcode.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   const handlePrint = () => {
