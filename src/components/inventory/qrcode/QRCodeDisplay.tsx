@@ -9,7 +9,7 @@ interface QRCodeDisplayProps {
 
 export function QRCodeDisplay({ item, qrValue }: QRCodeDisplayProps) {
   return (
-    <div className="p-6 bg-white rounded-xl">
+    <div className="p-6 bg-white rounded-xl shadow-sm">
       <QRCodeCanvas
         id="qr-code"
         value={qrValue}
