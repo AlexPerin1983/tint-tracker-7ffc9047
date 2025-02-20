@@ -50,22 +50,40 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
         <head>
           <title>QR Code - ${itemDetails.name}</title>
           <style>
+            @media print {
+              body {
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                page-break-inside: avoid;
+              }
+            }
             body {
               display: flex;
               flex-direction: column;
               align-items: center;
               justify-content: center;
-              height: 100vh;
+              min-height: 100vh;
               margin: 0;
+              padding: 20px;
               font-family: system-ui, sans-serif;
               background: white;
+              box-sizing: border-box;
+            }
+            .container {
+              width: 100%;
+              max-width: 400px;
+              text-align: center;
             }
             img {
-              max-width: 200px;
+              width: 200px;
+              height: 200px;
               margin-bottom: 1rem;
+              object-fit: contain;
             }
             h2 {
-              margin: 0;
+              margin: 0 0 0.5rem;
               color: #333;
               font-size: 1.2rem;
             }
@@ -74,14 +92,37 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
               font-size: 0.9rem;
               color: #666;
             }
+            .material-name {
+              font-weight: bold;
+              color: #000;
+              font-size: 1.1rem;
+              margin: 0.5rem 0;
+            }
+            @media (max-width: 480px) {
+              .container {
+                padding: 10px;
+              }
+              img {
+                width: 150px;
+                height: 150px;
+              }
+              h2 {
+                font-size: 1rem;
+              }
+              .details {
+                font-size: 0.8rem;
+              }
+            }
           </style>
         </head>
         <body>
-          <img src="${imageUrl}" alt="QR Code" />
-          <h2>${itemDetails.code}</h2>
-          <div class="details">
-            <div>${itemDetails.name}</div>
-            <div>${itemDetails.dimensions}</div>
+          <div class="container">
+            <img src="${imageUrl}" alt="QR Code" />
+            <div class="material-name">${itemDetails.name}</div>
+            <h2>${itemDetails.code}</h2>
+            <div class="details">
+              <div>Dimensões: ${itemDetails.dimensions}</div>
+            </div>
           </div>
         </body>
       </html>
