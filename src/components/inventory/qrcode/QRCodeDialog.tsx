@@ -31,9 +31,9 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     if (!ctx) return;
 
     // Definir dimensões para acomodar QR code e texto
-    const qrSize = 200; // Tamanho do QR code
-    const padding = 20; // Espaço extra ao redor
-    const textHeight = 30; // Espaço para o texto
+    const qrSize = 100; // Tamanho do QR code (50% do original)
+    const padding = 10; // Espaço extra ao redor (50% do original)
+    const textHeight = 20; // Espaço para o texto (ajustado proporcionalmente)
 
     canvas.width = qrSize + (padding * 2);
     canvas.height = qrSize + (padding * 2) + textHeight;
@@ -53,7 +53,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
 
     // Adicionar texto abaixo do QR Code
     ctx.fillStyle = '#000000';
-    ctx.font = '16px Arial';
+    ctx.font = '12px Arial'; // Fonte menor para acompanhar a escala
     ctx.textAlign = 'center';
     ctx.fillText(
       item.name,
@@ -92,17 +92,17 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
                 background: white;
               }
               img {
-                max-width: 200px;
+                max-width: 100px;
                 margin-bottom: 1rem;
               }
               h2 {
                 margin: 0;
                 color: #333;
-                font-size: 1.2rem;
+                font-size: 1rem;
               }
               .details {
-                margin-top: 1rem;
-                font-size: 0.9rem;
+                margin-top: 0.5rem;
+                font-size: 0.8rem;
                 color: #666;
               }
             </style>
@@ -150,12 +150,12 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             <QRCodeCanvas
               id="qr-code"
               value={qrValue}
-              size={200}
+              size={100}
               level="H"
               includeMargin={true}
               style={{ 
-                width: '200px', 
-                height: '200px',
+                width: '100px', 
+                height: '100px',
               }}
             />
           </div>
