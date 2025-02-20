@@ -21,31 +21,45 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
 
   const handleDownload = () => {
+    // Obter o QR Code original
+    const qrCanvas = document.querySelector("#qr-code") as HTMLCanvasElement;
+    if (!qrCanvas) return;
+
+    // Criar novo canvas com dimensões apropriadas
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Configurar tamanho do canvas para acomodar QR code e texto
-    canvas.width = 200;
-    canvas.height = 240;
+    // Definir dimensões para acomodar QR code e texto
+    const qrSize = 200; // Tamanho do QR code
+    const padding = 20; // Espaço extra ao redor
+    const textHeight = 30; // Espaço para o texto
+
+    canvas.width = qrSize + (padding * 2);
+    canvas.height = qrSize + (padding * 2) + textHeight;
 
     // Fundo branco
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Desenhar QR Code
-    const qrCanvas = document.querySelector("#qr-code") as HTMLCanvasElement;
-    if (!qrCanvas) return;
-
-    // Centralizar QR Code
-    const qrX = (canvas.width - qrCanvas.width) / 2;
-    ctx.drawImage(qrCanvas, qrX, 10);
+    // Desenhar QR Code centralizado
+    ctx.drawImage(
+      qrCanvas,
+      padding,
+      padding,
+      qrSize,
+      qrSize
+    );
 
     // Adicionar texto abaixo do QR Code
     ctx.fillStyle = '#000000';
     ctx.font = '16px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(item.name, canvas.width / 2, qrCanvas.height + 30);
+    ctx.fillText(
+      item.name,
+      canvas.width / 2,
+      qrSize + padding + (textHeight / 2)
+    );
 
     // Download
     const downloadLink = document.createElement("a");
@@ -140,8 +154,8 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
               level="H"
               includeMargin={true}
               style={{ 
-                width: '100%', 
-                height: 'auto',
+                width: '200px', 
+                height: '200px',
               }}
             />
           </div>
