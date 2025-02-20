@@ -33,9 +33,9 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     if (!ctx) return;
 
     // Definir dimensões para acomodar QR code e texto
-    const qrSize = 150; // Aumentado para melhor leitura
-    const padding = 20;
-    const textHeight = 30;
+    const qrSize = 200; // Aumentado para melhor leitura
+    const padding = 30; // Aumentado o padding
+    const textHeight = 40;
 
     canvas.width = qrSize + (padding * 2);
     canvas.height = qrSize + (padding * 2) + textHeight;
@@ -55,10 +55,10 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
 
     // Adicionar texto abaixo do QR Code
     ctx.fillStyle = '#000000';
-    ctx.font = '14px Arial';
+    ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(
-      item.name,
+      item.code,
       canvas.width / 2,
       qrSize + padding + (textHeight / 2)
     );
@@ -149,19 +149,20 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
           </DialogHeader>
           
           <div className="flex flex-col items-center space-y-6 py-4">
-            <div className="p-4 bg-white rounded-xl">
+            <div className="p-6 bg-white rounded-xl">
               <QRCodeCanvas
                 id="qr-code"
                 value={qrValue}
-                size={150}
-                level="M"
+                size={200}
+                level="L"
                 includeMargin={true}
                 style={{ 
-                  width: '150px', 
-                  height: '150px',
+                  width: '200px', 
+                  height: '200px',
                 }}
                 bgColor="#FFFFFF"
                 fgColor="#000000"
+                renderAs="canvas"
               />
             </div>
 
