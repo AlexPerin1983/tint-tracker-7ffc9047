@@ -15,8 +15,8 @@ interface QRCodeDialogProps {
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   
-  const baseUrl = window.location.origin;
-  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
+  // Usando apenas o ID como valor do QR Code
+  const qrValue = item.id;
   
   const dimensions = item.type === 'bobina' 
     ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
@@ -57,7 +57,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
                 background: white;
               }
               img {
-                max-width: 300px;
+                max-width: 200px;
                 margin-bottom: 1rem;
               }
               h2 {
@@ -74,11 +74,10 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
           </head>
           <body>
             <img src="${imageUrl}" alt="QR Code" />
-            <h2>${item.name}</h2>
+            <h2>${item.code}</h2>
             <div class="details">
-              <div>SKU: ${item.code}</div>
-              <div>Material: ${item.category}</div>
-              <div>Size: ${dimensions}</div>
+              <div>${item.name}</div>
+              <div>${dimensions}</div>
             </div>
           </body>
         </html>
@@ -94,10 +93,10 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     try {
       await navigator.share({
         title: `QR Code - ${item.name}`,
-        url: itemUrl
+        text: item.id
       });
     } catch (error) {
-      navigator.clipboard.writeText(itemUrl);
+      navigator.clipboard.writeText(item.id);
     }
   };
 
@@ -105,32 +104,23 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{item.type === 'scrap' ? 'Scrap from ' : ''}{item.name}</DialogTitle>
+          <DialogTitle>{item.code}</DialogTitle>
           <DialogDescription>
-            Scan this QR Code to directly access the product details page in the system.
+            Scan to quickly identify this item
           </DialogDescription>
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
-          <div className="p-8 bg-white rounded-xl"> {/* Aumentado padding para mais espaço branco */}
+          <div className="p-4 bg-white rounded-xl">
             <QRCodeCanvas
               id="qr-code"
-              value={itemUrl}
-              size={320} // Aumentado o tamanho
-              level="H" // Maior nível de correção de erro
+              value={qrValue}
+              size={150}
+              level="L"
               includeMargin={true}
               style={{ 
                 width: '100%', 
                 height: 'auto',
-                imageRendering: 'pixelated', // Melhora a nitidez
-              }}
-              bgColor="#FFFFFF" // Garante fundo branco
-              fgColor="#000000" // Garante preto puro
-              imageSettings={{
-                src: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
-                width: 48, // Aumentado proporcionalmente
-                height: 48, // Aumentado proporcionalmente
-                excavate: true,
               }}
             />
           </div>
@@ -145,18 +135,8 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
               <span>{item.name}</span>
             </div>
             <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Material:</span>
-              <span>{item.category}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Roll Size:</span>
+              <span className="font-medium">Size:</span>
               <span>{dimensions}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b">
-              <span className="font-medium">Link:</span>
-              <Button variant="ghost" size="icon" className="h-6 w-6 p-0" onClick={handleShare}>
-                <Share2 className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
