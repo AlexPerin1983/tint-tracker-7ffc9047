@@ -16,19 +16,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
 
-  const handleError = (err: any) => {
-    console.error("Erro na câmera:", err);
-    setError('Camera error');
-    toast({
-      variant: "destructive",
-      title: "Camera Error",
-      description: "Unable to access camera. Please check permissions.",
-    });
-  };
-
-  const handleScan = (result: any) => {
-    console.log("Tentando ler QR Code...");
-    
+  const handleResult = (result: any) => {
     if (result?.text) {
       const scannedId = result.text;
       console.log("QR Code lido:", scannedId);
@@ -40,12 +28,11 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         onOpenChange(false);
         navigate(`/scrap/${scannedId}`);
       } else {
-        console.log("QR Code inválido:", scannedId);
-        setError('Invalid QR Code');
+        setError('QR Code inválido');
         toast({
           variant: "destructive",
-          title: "Invalid QR Code",
-          description: "This QR code is not valid for this system.",
+          title: "QR Code Inválido",
+          description: "Este QR code não é válido para o sistema.",
         });
       }
     }
@@ -57,7 +44,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2 text-xl">
             <QrCode className="h-6 w-6 text-primary" />
-            QR Code Scanner
+            Leitor QR Code
           </DialogTitle>
         </DialogHeader>
         
@@ -70,16 +57,15 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           
           <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg">
             <QrReader
-              onResult={handleScan}
-              onError={handleError}
+              onResult={handleResult}
               constraints={{
                 facingMode: "environment"
               }}
               className="w-full h-full"
-              scanDelay={300}
+              scanDelay={100}
               ViewFinder={() => (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-48 h-48 border-2 border-white/50" />
+                  <div className="w-64 h-64 border-2 border-primary animate-pulse" />
                 </div>
               )}
             />
