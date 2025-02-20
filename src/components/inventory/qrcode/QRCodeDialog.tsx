@@ -1,10 +1,10 @@
 
 import { useEffect, useRef } from "react";
+import { QRCode } from "qrcode.react"; // Corrigido: usando importação nomeada
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Item } from "@/types/inventory";
-import QRCode from "qrcode.react";
 
 interface QRCodeDialogProps {
   open: boolean;
