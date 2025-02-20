@@ -19,20 +19,35 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const handleResult = (result: any) => {
     if (result?.text) {
       const scannedId = result.text;
-      console.log("Tentando ler QR Code:", scannedId);
+      console.log("QR Code lido:", scannedId);
+      
+      try {
+        // Remove espaços em branco e quebras de linha
+        const cleanId = scannedId.trim();
+        console.log("ID limpo:", cleanId);
 
-      if (scannedId.includes('BOB')) {
-        onOpenChange(false);
-        navigate(`/item/${scannedId}`);
-      } else if (scannedId.includes('RET')) {
-        onOpenChange(false);
-        navigate(`/scrap/${scannedId}`);
-      } else {
-        setError('QR Code inválido');
+        if (cleanId.includes('BOB')) {
+          console.log("Navegando para item:", cleanId);
+          onOpenChange(false);
+          navigate(`/item/${cleanId}`);
+        } else if (cleanId.includes('RET')) {
+          console.log("Navegando para scrap:", cleanId);
+          onOpenChange(false);
+          navigate(`/scrap/${cleanId}`);
+        } else {
+          setError('QR Code inválido');
+          toast({
+            variant: "destructive",
+            title: "QR Code Inválido",
+            description: "Este QR code não é válido para o sistema.",
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao processar QR Code:", error);
         toast({
           variant: "destructive",
-          title: "QR Code Inválido",
-          description: "Este QR code não é válido para o sistema.",
+          title: "Erro",
+          description: "Erro ao processar o QR Code.",
         });
       }
     }
