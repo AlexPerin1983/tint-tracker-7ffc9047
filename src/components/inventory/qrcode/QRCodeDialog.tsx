@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -16,8 +15,8 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   
   const baseUrl = window.location.origin;
-  const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
-  
+  const itemUrl = `${baseUrl}/i/${item.id}`;
+
   const dimensions = item.type === 'bobina' 
     ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
@@ -112,26 +111,20 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
-          <div className="p-8 bg-white rounded-xl"> {/* Aumentado padding para mais espaço branco */}
+          <div className="p-12 bg-white rounded-xl">
             <QRCodeCanvas
               id="qr-code"
               value={itemUrl}
-              size={320} // Aumentado o tamanho
-              level="H" // Maior nível de correção de erro
+              size={200}
+              level="M"
               includeMargin={true}
               style={{ 
                 width: '100%', 
                 height: 'auto',
-                imageRendering: 'pixelated', // Melhora a nitidez
+                imageRendering: 'pixelated',
               }}
-              bgColor="#FFFFFF" // Garante fundo branco
-              fgColor="#000000" // Garante preto puro
-              imageSettings={{
-                src: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
-                width: 48, // Aumentado proporcionalmente
-                height: 48, // Aumentado proporcionalmente
-                excavate: true,
-              }}
+              bgColor="#FFFFFF"
+              fgColor="#000000"
             />
           </div>
 
