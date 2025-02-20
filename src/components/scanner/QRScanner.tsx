@@ -19,7 +19,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const handleResult = (result: any) => {
     if (result?.text) {
       const scannedId = result.text;
-      console.log("QR Code lido:", scannedId);
+      console.log("Tentando ler QR Code:", scannedId);
 
       if (scannedId.includes('BOB')) {
         onOpenChange(false);
@@ -55,17 +55,20 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
             </div>
           )}
           
-          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg">
+          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-black">
             <QrReader
               onResult={handleResult}
               constraints={{
-                facingMode: "environment"
+                facingMode: "environment",
+                aspectRatio: 1,
+                width: { min: 640, ideal: 1280, max: 1920 },
+                height: { min: 640, ideal: 1280, max: 1920 }
               }}
               className="w-full h-full"
-              scanDelay={100}
+              scanDelay={500}
               ViewFinder={() => (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-primary animate-pulse" />
+                  <div className="w-48 h-48 border-2 border-white animate-pulse opacity-75" />
                 </div>
               )}
             />
