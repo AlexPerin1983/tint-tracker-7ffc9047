@@ -1,10 +1,10 @@
 
 import { useEffect, useRef } from "react";
-import QRCode from "easyqrcodejs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Item } from "@/types/inventory";
+import QRCode from "qrcode.react";
 
 interface QRCodeDialogProps {
   open: boolean;
@@ -14,7 +14,6 @@ interface QRCodeDialogProps {
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
-  const qrCodeInstance = useRef<any>(null);
   
   const baseUrl = window.location.origin;
   const itemUrl = `${baseUrl}/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`;
@@ -23,52 +22,24 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
     ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
 
-  useEffect(() => {
-    if (open && qrCodeRef.current) {
-      if (qrCodeInstance.current) {
-        qrCodeInstance.current.clear();
-      }
-
-      qrCodeInstance.current = new QRCode(qrCodeRef.current, {
-        text: itemUrl,
-        width: 256,
-        height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-        quietZone: 15,
-        quietZoneColor: "#ffffff",
-        title: item.name,
-        titleFont: "normal normal bold 16px Arial",
-        titleColor: "#000000",
-        titleBackgroundColor: "#ffffff",
-        titleHeight: 40,
-        titleTop: 20,
-        logo: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
-        logoWidth: 80,
-        logoHeight: 80,
-        logoBackgroundColor: '#ffffff',
-        logoBackgroundTransparent: false
-      });
-    }
-
-    return () => {
-      if (qrCodeInstance.current) {
-        qrCodeInstance.current.clear();
-      }
-    };
-  }, [open, itemUrl, item.name]);
-
   const handleDownload = () => {
-    if (qrCodeInstance.current) {
-      qrCodeInstance.current.download(`${item.code}-qrcode`);
+    const canvas = document.querySelector("#qr-code") as HTMLCanvasElement;
+    if (canvas) {
+      const pngUrl = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.href = pngUrl;
+      downloadLink.download = `${item.code}-qrcode.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
     }
   };
 
   const handlePrint = () => {
     const printWindow = window.open("", "", "width=800,height=600");
-    if (printWindow && qrCodeRef.current) {
-      const qrCodeImage = qrCodeRef.current.querySelector('canvas')?.toDataURL("image/png");
+    if (printWindow) {
+      const canvas = document.querySelector("#qr-code") as HTMLCanvasElement;
+      const imageUrl = canvas?.toDataURL("image/png");
       
       printWindow.document.write(`
         <html>
@@ -102,7 +73,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             </style>
           </head>
           <body>
-            <img src="${qrCodeImage}" alt="QR Code" />
+            <img src="${imageUrl}" alt="QR Code" />
             <h2>${item.name}</h2>
             <div class="details">
               <div>SKU: ${item.code}</div>
@@ -141,8 +112,21 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
         </DialogHeader>
         
         <div className="flex flex-col items-center space-y-6 py-4">
-          <div className="p-3 bg-white rounded-xl">
-            <div ref={qrCodeRef} className="flex justify-center" />
+          <div className="p-6 bg-white rounded-xl">
+            <QRCode
+              id="qr-code"
+              value={itemUrl}
+              size={256}
+              level="H"
+              includeMargin={true}
+              style={{ width: '100%', height: 'auto' }}
+              imageSettings={{
+                src: "/lovable-uploads/37a8dd46-bd6a-4cda-8907-7614c70add31.png",
+                width: 40,
+                height: 40,
+                excavate: true,
+              }}
+            />
           </div>
 
           <div className="w-full space-y-2 text-sm">
