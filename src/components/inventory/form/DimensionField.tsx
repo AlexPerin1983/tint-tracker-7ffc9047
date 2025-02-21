@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { convertToInches, convertToMeters, formatDisplayValue } from './utils/dimensionsUtils';
 import { PresetDimensions } from "./PresetDimensions";
 import { PresetLengths } from "./PresetLengths";
+import { Category } from "@/types/inventory";
 
 interface DimensionFieldProps {
   form: any;
@@ -30,6 +31,29 @@ export const DimensionField = ({
 }: DimensionFieldProps) => {
   const isLength = fieldName === "length";
   const title = isLength ? "Roll Length" : "Roll Width";
+
+  // Render PresetLengths or PresetDimensions component based on fieldName
+  const renderPresetComponent = () => {
+    if (isLength) {
+      return (
+        <PresetLengths 
+          category="Window Tinting"
+          onSelectLength={onPresetSelect}
+          useInches={useInches}
+          maxDimension={maxValue}
+        />
+      );
+    } else {
+      return (
+        <PresetDimensions 
+          category="Window Tinting"
+          onSelectWidth={onPresetSelect}
+          useInches={useInches}
+          maxDimension={maxValue}
+        />
+      );
+    }
+  };
 
   return (
     <div className={`space-y-4 ${isLength ? 'mb-8' : ''} p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors`}>
@@ -64,21 +88,7 @@ export const DimensionField = ({
                 onValueChange={onSliderChange}
                 className="py-4"
               />
-              {isLength ? (
-                <PresetLengths 
-                  category="Window Tinting"
-                  onSelectLength={onPresetSelect}
-                  useInches={useInches}
-                  maxDimension={maxValue}
-                />
-              ) : (
-                <PresetDimensions 
-                  category="Window Tinting"
-                  onSelectWidth={onPresetSelect}
-                  useInches={useInches}
-                  maxDimension={maxValue}
-                />
-              )}
+              {renderPresetComponent()}
             </div>
           </FormItem>
         )}
