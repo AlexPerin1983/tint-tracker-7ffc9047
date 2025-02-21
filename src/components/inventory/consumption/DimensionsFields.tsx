@@ -27,8 +27,15 @@ export function DimensionsFields({
   useInches,
   onUnitChange
 }: DimensionsFieldsProps) {
-  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
-  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
+  const convertToInches = (meters: number) => {
+    if (typeof meters !== 'number') return 0;
+    return Number((meters * 39.37).toFixed(2));
+  };
+
+  const convertToMeters = (inches: number) => {
+    if (typeof inches !== 'number') return 0;
+    return Number((inches / 39.37).toFixed(2));
+  };
 
   const handleNumericInput = (name: string, value: string) => {
     if (value === "") {
@@ -40,19 +47,21 @@ export function DimensionsFields({
     if (isNaN(numValue)) return;
 
     const convertedValue = useInches ? convertToMeters(numValue) : numValue;
-    form.setValue(name as any, convertedValue);
+    form.setValue(name as any, Number(convertedValue) || 0);
   };
 
   const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || value === 0) return "";
-    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
+    if (value === undefined || value === null || value === 0) return "";
+    const numValue = Number(value);
+    if (isNaN(numValue)) return "";
+    return useInches ? convertToInches(numValue).toFixed(2) : numValue.toFixed(2);
   };
 
   const getSliderConfig = (isWidth: boolean) => {
     const max = isWidth ? maxWidth : maxLength;
     const maxDisplayValue = useInches ? convertToInches(max) : max;
     const currentValue = isWidth ? form.getValues(widthName) : form.getValues(lengthName);
-    const displayValue = useInches ? convertToInches(currentValue || 0) : (currentValue || 0);
+    const displayValue = useInches ? convertToInches(Number(currentValue) || 0) : (Number(currentValue) || 0);
 
     return {
       min: 0,
