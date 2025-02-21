@@ -32,28 +32,30 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="space-y-1">
             <DialogTitle>{item.code}</DialogTitle>
             <DialogDescription>
               Escaneie para identificar este item
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex flex-col items-center space-y-4 py-4">
+          <div className="flex flex-col items-center space-y-3 py-2">
             <QRCodeDisplay item={item} qrValue={qrValue} />
 
-            <div className="text-center text-sm font-medium text-muted-foreground w-full break-words">
+            <div className="text-center text-sm font-medium text-muted-foreground w-full break-words px-4">
               {item.name}
             </div>
 
             <ItemDetails item={item} dimensions={dimensions} />
 
-            <QRCodeActions
-              onDownload={() => handleQRDownload(item.code)}
-              onPrint={handlePrint}
-              onScan={() => setScannerOpen(true)}
-            />
+            <div className="w-full pt-2">
+              <QRCodeActions
+                onDownload={() => handleQRDownload(item.code)}
+                onPrint={handlePrint}
+                onScan={() => setScannerOpen(true)}
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
