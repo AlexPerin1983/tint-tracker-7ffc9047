@@ -28,12 +28,12 @@ export function DimensionsFields({
   onUnitChange
 }: DimensionsFieldsProps) {
   const convertToInches = (meters: number) => {
-    if (typeof meters !== 'number') return 0;
+    if (typeof meters !== 'number' || isNaN(meters)) return 0;
     return Number((meters * 39.37).toFixed(2));
   };
 
   const convertToMeters = (inches: number) => {
-    if (typeof inches !== 'number') return 0;
+    if (typeof inches !== 'number' || isNaN(inches)) return 0;
     return Number((inches / 39.37).toFixed(2));
   };
 
@@ -50,18 +50,28 @@ export function DimensionsFields({
     form.setValue(name as any, Number(convertedValue) || 0);
   };
 
-  const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || value === null || value === 0) return "";
+  const formatDisplayValue = (value: unknown): string => {
+    if (value === undefined || value === null || value === "") return "";
+    
     const numValue = Number(value);
-    if (isNaN(numValue)) return "";
-    return useInches ? convertToInches(numValue).toFixed(2) : numValue.toFixed(2);
+    if (isNaN(numValue) || numValue === 0) return "";
+    
+    try {
+      return useInches ? 
+        convertToInches(numValue).toFixed(2) : 
+        numValue.toFixed(2);
+    } catch (error) {
+      console.error('Error formatting value:', value);
+      return "";
+    }
   };
 
   const getSliderConfig = (isWidth: boolean) => {
     const max = isWidth ? maxWidth : maxLength;
     const maxDisplayValue = useInches ? convertToInches(max) : max;
     const currentValue = isWidth ? form.getValues(widthName) : form.getValues(lengthName);
-    const displayValue = useInches ? convertToInches(Number(currentValue) || 0) : (Number(currentValue) || 0);
+    const numericValue = Number(currentValue) || 0;
+    const displayValue = useInches ? convertToInches(numericValue) : numericValue;
 
     return {
       min: 0,
@@ -102,9 +112,9 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                      onClick={(e) => {
+                      onFocus={(e) => {
                         form.setValue(widthName, 0);
-                        (e.target as HTMLInputElement).value = "";
+                        e.target.value = "";
                       }}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
@@ -152,9 +162,9 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                      onClick={(e) => {
+                      onFocus={(e) => {
                         form.setValue(lengthName, 0);
-                        (e.target as HTMLInputElement).value = "";
+                        e.target.value = "";
                       }}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
