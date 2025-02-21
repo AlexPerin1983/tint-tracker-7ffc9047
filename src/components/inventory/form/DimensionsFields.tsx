@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -32,15 +33,7 @@ const DimensionsFields = ({
   }, [useInches, form]);
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    if (value === "") {
-      if (field === "length") {
-        setSliderLength([0]);
-      } else {
-        setSliderWidth([0]);
-      }
-      form.setValue(field, 0);
-      return;
-    }
+    if (value === "") return; // Não limpa o valor se estiver vazio
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
@@ -74,6 +67,11 @@ const DimensionsFields = ({
     setSliderWidth([useInches ? width : widthInMeters]);
   };
 
+  const formatDisplayValue = (value: number | undefined) => {
+    if (value === undefined || isNaN(value)) return "";
+    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
+  };
+
   return <div className="space-y-6">
       <div className="flex items-center justify-end space-x-2 mb-6">
         <span className="text-sm text-[#8E9196] font-medium">Meters</span>
@@ -99,8 +97,9 @@ const DimensionsFields = ({
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
                       type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                      value={formatDisplayValue(field.value)}
                       onChange={e => handleNumericInput("length", e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
@@ -137,8 +136,9 @@ const DimensionsFields = ({
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
                       type="number"
-                      value={useInches ? convertToInches(field.value || 0).toFixed(2) : field.value?.toFixed(2)}
+                      value={formatDisplayValue(field.value)}
                       onChange={e => handleNumericInput("width", e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>

@@ -31,6 +31,8 @@ export function DimensionsFields({
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
+    if (value === "") return; // Não limpa o valor se estiver vazio
+
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
       const convertedValue = useInches ? convertToMeters(numValue) : numValue;
@@ -41,7 +43,7 @@ export function DimensionsFields({
   };
 
   const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || isNaN(value)) return "0.00";
+    if (value === undefined || isNaN(value)) return "";
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
@@ -90,6 +92,7 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
@@ -136,6 +139,7 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
+                      onFocus={(e) => e.target.select()}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
