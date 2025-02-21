@@ -1,71 +1,49 @@
 
-import { Button } from "@/components/ui/button";
-import { Edit, Plus, Scissors } from "lucide-react";
 import { useState } from "react";
-import AddItemDialog from "@/components/inventory/AddItemDialog";
 import { ConsumptionDialog } from "../consumption/ConsumptionDialog";
+import { QRCodeDialog } from "../qrcode/QRCodeDialog";
+import { Button } from "@/components/ui/button";
 import { Item } from "@/types/inventory";
+import { QrCode, Ruler } from "lucide-react";
 
 interface ActionButtonsProps {
   item: Item;
-  onAddScrap: () => void;
 }
 
-export function ActionButtons({ item, onAddScrap }: ActionButtonsProps) {
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [consumptionDialogOpen, setConsumptionDialogOpen] = useState(false);
-
-  const handleConsumptionClick = () => {
-    console.log("Opening consumption dialog");
-    setConsumptionDialogOpen(true);
-  };
-
-  const handleAddScrapClick = () => {
-    console.log("Opening scrap dialog");
-    onAddScrap();
-  };
+export function ActionButtons({ item }: ActionButtonsProps) {
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [showConsumption, setShowConsumption] = useState(false);
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row justify-end gap-4 mt-6">
-        <Button 
-          variant="outline" 
-          onClick={() => setEditDialogOpen(true)}
-          className="hover:bg-muted/50"
-        >
-          <Edit className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Edit
-        </Button>
-        <Button 
-          variant="default"
-          onClick={handleConsumptionClick}
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Record Usage
-        </Button>
-        <Button 
-          variant="outline"
-          onClick={handleAddScrapClick}
-          className="hover:bg-muted/50"
-        >
-          <Plus className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-          Add Scrap
-        </Button>
-      </div>
+    <div className="space-x-2">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setShowQRCode(true)}
+        className="hover:bg-slate-800 hover:text-blue-400"
+      >
+        <QrCode className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setShowConsumption(true)}
+        className="hover:bg-slate-800 hover:text-blue-400"
+      >
+        <Ruler className="w-5 h-5" />
+      </Button>
 
-      <AddItemDialog
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        mode="edit"
-        itemToEdit={item}
+      <QRCodeDialog 
+        open={showQRCode} 
+        onOpenChange={setShowQRCode} 
+        item={item} 
       />
 
-      <ConsumptionDialog
-        open={consumptionDialogOpen}
-        onOpenChange={setConsumptionDialogOpen}
-        item={item}
+      <ConsumptionDialog 
+        open={showConsumption} 
+        onClose={() => setShowConsumption(false)} 
+        item={item} 
       />
-    </>
+    </div>
   );
 }

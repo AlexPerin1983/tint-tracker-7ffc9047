@@ -1,10 +1,10 @@
-import { UseFormReturn } from "react-hook-form";
+
+import { useForm } from "react-hook-form";
 import { ConsumptionFormData } from "@/types/inventory";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { DimensionsFields } from "./DimensionsFields";
 import { ScrapFields } from "./ScrapFields";
-import { useState } from "react";
 import { X, Check } from "lucide-react";
 import { Item } from "@/types/inventory";
 
@@ -16,13 +16,18 @@ interface ConsumptionFormProps {
 }
 
 export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: ConsumptionFormProps) {
-  const [form, setForm] = useState<UseFormReturn<ConsumptionFormData> | null>(null);
+  const form = useForm<ConsumptionFormData>({
+    defaultValues: {
+      width: 0,
+      length: 0,
+      createScrap: false,
+      scrapWidth: 0,
+      scrapLength: 0,
+    }
+  });
+
   const onSubmit = (data: ConsumptionFormData) => {
     console.log("Consumption data:", data);
-    onClose();
-  };
-
-  const onCancel = () => {
     onClose();
   };
 
@@ -30,7 +35,7 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
   const maxLength = item.length;
 
   return (
-    <form onSubmit={form?.handleSubmit(onSubmit)} className="flex flex-col h-full">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-[#111318] max-h-[calc(100vh-12rem)] sm:max-h-[460px]">
         <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
           <div className="flex items-center justify-between">
