@@ -38,10 +38,7 @@ export function PresetLengths({
     { label: "192\"", value: 192, description: "Full Panels & Sections" },
   ];
 
-  // Converter o maxDimension para polegadas se necessário
   const maxDimensionInCurrentUnit = useInches ? maxDimension * 39.37 : maxDimension;
-
-  // Filtrar apenas os valores que são menores ou iguais ao máximo permitido
   const lengths = useInches ? inchesLengths : metersLengths;
   const validLengths = lengths.filter(length => length.value <= maxDimensionInCurrentUnit);
 
