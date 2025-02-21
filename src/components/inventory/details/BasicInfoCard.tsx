@@ -34,7 +34,11 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
         </div>
         <div>
           <label className="text-sm text-muted-foreground font-medium">Product Name</label>
-          <p className="text-sm md:text-base font-semibold">{item.name}</p>
+          <p className="text-sm md:text-base font-bold text-blue-500">{item.name}</p>
+        </div>
+        <div>
+          <label className="text-sm text-muted-foreground font-medium">Brand</label>
+          <p className="text-sm md:text-base font-semibold">{item.brand}</p>
         </div>
         <div>
           <label className="text-sm text-muted-foreground font-medium">Material Type</label>
@@ -62,4 +66,3 @@ export function BasicInfoCard({ item }: BasicInfoCardProps) {
     </Card>
   );
 }
-
