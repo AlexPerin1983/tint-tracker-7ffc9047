@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useItems } from "@/hooks/use-items";
@@ -62,7 +63,7 @@ const ItemDetails = () => {
 
       <ConsumptionDialog 
         open={showConsumption} 
-        onOpenChange={setShowConsumption} 
+        onClose={() => setShowConsumption(false)}
         item={item}
       />
 
