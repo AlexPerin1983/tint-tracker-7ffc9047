@@ -1,4 +1,3 @@
-
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -31,19 +30,7 @@ export function DimensionsFields({
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
-    // Se o valor estiver vazio, permitimos que fique vazio
-    if (value === "") {
-      form.setValue(name as any, 0);
-      return;
-    }
-
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue)) {
-      const convertedValue = useInches ? convertToMeters(numValue) : numValue;
-      const maxAllowed = name.includes('width') ? maxWidth : maxLength;
-      const finalValue = Math.min(convertedValue, maxAllowed);
-      form.setValue(name as any, finalValue);
-    }
+    form.setValue(name as any, value === "" ? "" : parseFloat(value) || 0);
   };
 
   const formatDisplayValue = (value: number | undefined) => {

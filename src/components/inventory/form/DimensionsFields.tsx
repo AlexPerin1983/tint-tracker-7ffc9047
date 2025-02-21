@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -33,30 +32,12 @@ const DimensionsFields = ({
   }, [useInches, form]);
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    // Se o valor estiver vazio, permitimos que fique vazio e atualizamos o slider
-    if (value === "") {
-      if (field === "length") {
-        setSliderLength([0]);
-      } else {
-        setSliderWidth([0]);
-      }
-      form.setValue(field, 0);
-      return;
-    }
-
-    const numValue = parseFloat(value);
-    if (!isNaN(numValue)) {
-      const inMeters = useInches ? convertToMeters(numValue) : numValue;
-      const maxValue = field === "width" ? maxWidth : maxLength;
-      if (inMeters <= maxValue) {
-        form.setValue(field, inMeters);
-        const sliderValue = useInches ? numValue : inMeters;
-        if (field === "length") {
-          setSliderLength([sliderValue]);
-        } else {
-          setSliderWidth([sliderValue]);
-        }
-      }
+    form.setValue(field, value === "" ? "" : parseFloat(value) || 0);
+    
+    if (field === "length") {
+      setSliderLength([parseFloat(value) || 0]);
+    } else {
+      setSliderWidth([parseFloat(value) || 0]);
     }
   };
 
