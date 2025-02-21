@@ -30,10 +30,6 @@ export const DimensionField = ({
 }: DimensionFieldProps) => {
   const isLength = fieldName === "length";
   const title = isLength ? "Roll Length" : "Roll Width";
-  const PresetComponent = isLength ? PresetLengths : PresetDimensions;
-  const presetProps = isLength 
-    ? { onSelectLength: onPresetSelect }
-    : { onSelectWidth: onPresetSelect };
 
   return (
     <div className={`space-y-4 ${isLength ? 'mb-8' : ''} p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors`}>
@@ -68,12 +64,21 @@ export const DimensionField = ({
                 onValueChange={onSliderChange}
                 className="py-4"
               />
-              <PresetComponent 
-                category="Window Tinting"
-                {...presetProps}
-                useInches={useInches}
-                maxDimension={maxValue}
-              />
+              {isLength ? (
+                <PresetLengths 
+                  category="Window Tinting"
+                  onSelectLength={onPresetSelect}
+                  useInches={useInches}
+                  maxDimension={maxValue}
+                />
+              ) : (
+                <PresetDimensions 
+                  category="Window Tinting"
+                  onSelectWidth={onPresetSelect}
+                  useInches={useInches}
+                  maxDimension={maxValue}
+                />
+              )}
             </div>
           </FormItem>
         )}
