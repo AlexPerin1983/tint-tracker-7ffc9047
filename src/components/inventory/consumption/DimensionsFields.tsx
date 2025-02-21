@@ -81,6 +81,14 @@ export function DimensionsFields({
     };
   };
 
+  const handleInputClick = (name: "width" | "scrapWidth" | "length" | "scrapLength", event: React.MouseEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const input = event.currentTarget;
+    form.setValue(name, 0);
+    input.value = "";
+    input.focus();
+  };
+
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="flex items-center justify-between mb-2">
@@ -112,10 +120,8 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                      onFocus={(e) => {
-                        form.setValue(widthName, 0);
-                        e.target.value = "";
-                      }}
+                      onClick={(e) => handleInputClick(widthName, e)}
+                      onFocus={(e) => handleInputClick(widthName, e as any)}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -162,10 +168,8 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                      onFocus={(e) => {
-                        form.setValue(lengthName, 0);
-                        e.target.value = "";
-                      }}
+                      onClick={(e) => handleInputClick(lengthName, e)}
+                      onFocus={(e) => handleInputClick(lengthName, e as any)}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
