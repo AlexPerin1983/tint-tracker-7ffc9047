@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -30,11 +31,13 @@ export function DimensionsFields({
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
-    form.setValue(name as any, value === "" ? "" : parseFloat(value) || 0);
+    const numValue = value === "" ? "" : parseFloat(value);
+    const convertedValue = typeof numValue === "number" && useInches ? convertToMeters(numValue) : numValue;
+    form.setValue(name as any, convertedValue);
   };
 
   const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || isNaN(value)) return "";
+    if (value === undefined || value === "") return "";
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
@@ -78,13 +81,13 @@ export function DimensionsFields({
                 <div className="flex items-center gap-2">
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
-                      type="number"
-                      step="0.01"
+                      type="text"
+                      inputMode="decimal"
                       placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
                       onFocus={(e) => e.target.select()}
-                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
                   <span className="text-lg text-[#8E9196]">{useInches ? '"' : 'm'}</span>
@@ -125,13 +128,13 @@ export function DimensionsFields({
                 <div className="flex items-center gap-2">
                   <div className="text-3xl font-bold text-white flex-1">
                     <Input
-                      type="number"
-                      step="0.01"
+                      type="text"
+                      inputMode="decimal"
                       placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
                       onFocus={(e) => e.target.select()}
-                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
                   <span className="text-lg text-[#8E9196]">{useInches ? '"' : 'm'}</span>
