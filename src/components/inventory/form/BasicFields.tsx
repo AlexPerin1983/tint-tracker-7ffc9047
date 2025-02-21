@@ -1,11 +1,14 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
+
 interface BasicFieldsProps {
   form: any;
 }
+
 const BasicFields = ({
   form
 }: BasicFieldsProps) => {
@@ -16,6 +19,16 @@ const BasicFields = ({
             <FormLabel>Product Name</FormLabel>
             <FormControl>
               <Input placeholder="Ex: Window Film Classic" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>} />
+
+      <FormField control={form.control} name="brand" render={({
+      field
+    }) => <FormItem>
+            <FormLabel>Brand</FormLabel>
+            <FormControl>
+              <Input placeholder="Ex: 3M, Llumar, XPEL" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>} />
@@ -76,4 +89,5 @@ const BasicFields = ({
       </div>
     </TabsContent>;
 };
+
 export default BasicFields;

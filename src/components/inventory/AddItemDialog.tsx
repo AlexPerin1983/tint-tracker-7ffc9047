@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  brand: z.string().min(1, "Brand is required"),
   category: z.enum(["Window Tinting", "PPF", "Wrap"] as const),
   width: z.number().min(0.01, "Width must be greater than 0"),
   length: z.number().min(0.01, "Length must be greater than 0"),
@@ -54,6 +55,7 @@ export default function AddItemDialog({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      brand: "",
       category: "Window Tinting",
       width: 0,
       length: 0,
@@ -66,6 +68,7 @@ export default function AddItemDialog({
     if (mode === "edit" && itemToEdit) {
       form.reset({
         name: itemToEdit.name,
+        brand: itemToEdit.brand || "",
         category: itemToEdit.category,
         width: itemToEdit.width,
         length: itemToEdit.length,
@@ -77,6 +80,7 @@ export default function AddItemDialog({
     } else {
       form.reset({
         name: "",
+        brand: "",
         category: "Window Tinting",
         width: 0,
         length: 0,
