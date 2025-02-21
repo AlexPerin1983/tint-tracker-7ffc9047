@@ -29,7 +29,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader className="space-y-1">
           <DialogTitle>{item.code}</DialogTitle>
           <DialogDescription>
