@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { PresetDimensions } from "../form/PresetDimensions";
+import { PresetLengths } from "../form/PresetLengths";
 
 interface DimensionsFieldsProps {
   form: any;
@@ -66,6 +67,12 @@ const DimensionsFields = ({
     setSliderWidth([useInches ? width : widthInMeters]);
   };
 
+  const handlePresetLength = (length: number) => {
+    const lengthInMeters = useInches ? convertToMeters(length) : length;
+    form.setValue("length", lengthInMeters);
+    setSliderLength([useInches ? length : lengthInMeters]);
+  };
+
   const formatDisplayValue = (value: unknown): string => {
     if (value === undefined || value === null) return "";
     const numValue = Number(value);
@@ -115,6 +122,11 @@ const DimensionsFields = ({
                   step={useInches ? 1 : 0.01}
                   onValueChange={value => handleSliderChange("length", value)}
                   className="py-4"
+                />
+                <PresetLengths 
+                  category="Window Tinting"
+                  onSelectLength={handlePresetLength}
+                  useInches={useInches}
                 />
               </div>
             </FormItem>
