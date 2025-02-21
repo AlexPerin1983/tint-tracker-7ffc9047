@@ -1,28 +1,30 @@
 
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Scan } from "lucide-react";
-import { Item } from "@/types/inventory";
+import { Download, Printer } from "lucide-react";
 
 interface QRCodeActionsProps {
   onDownload: () => void;
   onPrint: () => void;
-  onScan: () => void;
 }
 
-export function QRCodeActions({ onDownload, onPrint, onScan }: QRCodeActionsProps) {
+export function QRCodeActions({ onDownload, onPrint }: QRCodeActionsProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2 w-full px-4">
-      <Button onClick={onDownload} variant="outline" size="sm" className="flex-1 min-w-[100px]">
+    <div className="flex flex-col gap-3 w-full">
+      <Button 
+        onClick={onDownload} 
+        variant="outline" 
+        className="w-full bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20 hover:border-blue-500/30 text-blue-400"
+      >
         <Download className="w-4 h-4 mr-2" />
-        Download
+        Download QR Code
       </Button>
-      <Button onClick={onPrint} variant="outline" size="sm" className="flex-1 min-w-[100px]">
+      <Button 
+        onClick={onPrint} 
+        variant="outline"
+        className="w-full bg-slate-500/10 hover:bg-slate-500/20 border-slate-500/20 hover:border-slate-500/30 text-slate-400"
+      >
         <Printer className="w-4 h-4 mr-2" />
-        Imprimir
-      </Button>
-      <Button onClick={onScan} variant="outline" size="sm" className="flex-1 min-w-[100px]">
-        <Scan className="w-4 h-4 mr-2" />
-        Escanear
+        Imprimir Detalhes
       </Button>
     </div>
   );
