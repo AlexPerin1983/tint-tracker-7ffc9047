@@ -29,7 +29,7 @@ export function handleQRDownload(code: string) {
   ctx.font = 'bold 16px Arial';
   ctx.textAlign = 'center';
   ctx.fillText(
-    code,
+    itemDetails.name,
     canvas.width / 2,
     qrSize + padding + (textHeight / 2)
   );
