@@ -1,3 +1,4 @@
+
 export type Category = "Window Tinting" | "PPF" | "Wrap";
 export type ItemType = "bobina" | "scrap";
 export type TransactionType = "entrada" | "saida" | "corte";
@@ -15,6 +16,7 @@ export interface Item {
   id: string;
   code: string;
   name: string;
+  brand: string;
   category: Category;
   type: ItemType;
   width: number;
@@ -35,6 +37,7 @@ export interface Item {
 
 export interface ItemFormData {
   name: string;
+  brand: string;
   category: Category;
   width: number;
   length: number;
