@@ -82,21 +82,16 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
               margin-bottom: 1rem;
               object-fit: contain;
             }
-            h2 {
-              margin: 0 0 0.5rem;
-              color: #333;
-              font-size: 1.2rem;
+            .material-name {
+              font-weight: bold;
+              color: #000;
+              font-size: 1.4rem;
+              margin: 1rem 0;
             }
             .details {
               margin-top: 1rem;
               font-size: 0.9rem;
               color: #666;
-            }
-            .material-name {
-              font-weight: bold;
-              color: #000;
-              font-size: 1.1rem;
-              margin: 0.5rem 0;
             }
             @media (max-width: 480px) {
               .container {
@@ -106,8 +101,8 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
                 width: 150px;
                 height: 150px;
               }
-              h2 {
-                font-size: 1rem;
+              .material-name {
+                font-size: 1.2rem;
               }
               .details {
                 font-size: 0.8rem;
@@ -119,7 +114,6 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
           <div class="container">
             <img src="${imageUrl}" alt="QR Code" />
             <div class="material-name">${itemDetails.name}</div>
-            <h2>${itemDetails.code}</h2>
             <div class="details">
               <div>Dimensões: ${itemDetails.dimensions}</div>
             </div>
