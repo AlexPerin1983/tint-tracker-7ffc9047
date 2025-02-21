@@ -8,8 +8,14 @@ interface PresetLengthsProps {
   useInches?: boolean;
 }
 
+interface LengthOption {
+  label: string;
+  value: number;
+  description?: string; // Made optional with ?
+}
+
 export function PresetLengths({ category, onSelectLength, useInches = true }: PresetLengthsProps) {
-  const metersLengths = [
+  const metersLengths: LengthOption[] = [
     { label: "1m", value: 1 },
     { label: "2m", value: 2 },
     { label: "5m", value: 5 },
@@ -19,7 +25,7 @@ export function PresetLengths({ category, onSelectLength, useInches = true }: Pr
     { label: "30m", value: 30 },
   ];
 
-  const inchesLengths = [
+  const inchesLengths: LengthOption[] = [
     { label: "39\"", value: 39, description: "Wraps menores" },
     { label: "54\"", value: 54, description: "PPF áreas menores" },
     { label: "118\"", value: 118, description: "Wraps intermediários" },
