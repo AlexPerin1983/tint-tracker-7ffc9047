@@ -1,3 +1,4 @@
+
 import { Item } from "@/types/inventory";
 
 export const mockItems: Item[] = [
@@ -5,6 +6,7 @@ export const mockItems: Item[] = [
     id: "1",
     code: "BOB001",
     name: "Window Film Classic",
+    brand: "3M",
     category: "Window Tinting",
     type: "bobina",
     width: 1.52,
@@ -22,6 +24,7 @@ export const mockItems: Item[] = [
     id: "2",
     code: "BOB002",
     name: "PPF Pro",
+    brand: "XPEL",
     category: "PPF",
     type: "bobina",
     width: 1.22,
@@ -39,6 +42,7 @@ export const mockItems: Item[] = [
     id: "3",
     code: "RET001",
     name: "Scrap of Window Film",
+    brand: "3M",
     category: "Window Tinting",
     type: "scrap",
     width: 0.5,

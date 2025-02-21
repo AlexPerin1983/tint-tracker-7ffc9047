@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { itemsDB } from '@/services/db';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +17,7 @@ export function useScraps() {
 
       const newScrap = await itemsDB.add({
         name: `Scrap of ${parentItem.name}`,
+        brand: parentItem.brand,
         category: parentItem.category,
         type: "scrap",
         code: generateCode('scrap', items),
