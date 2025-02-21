@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -16,11 +17,15 @@ const DimensionsFields = ({
   const [sliderLength, setSliderLength] = useState([0]);
   const [sliderWidth, setSliderWidth] = useState([0]);
 
-  const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
-  const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(4));
+  const convertToInches = (meters: number): number => {
+    if (typeof meters !== 'number' || isNaN(meters)) return 0;
+    return Number((meters * 39.37).toFixed(2));
+  };
 
-  const maxLength = 60; // 60m = ~2362.2"
-  const maxWidth = 1.82; // 1.82m = ~71.65"
+  const convertToMeters = (inches: number): number => {
+    if (typeof inches !== 'number' || isNaN(inches)) return 0;
+    return Number((inches / 39.37).toFixed(4));
+  };
 
   useEffect(() => {
     const currentLength = form.getValues("length") || 0;
@@ -32,12 +37,16 @@ const DimensionsFields = ({
   }, [useInches, form]);
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    form.setValue(field, value === "" ? "" : parseFloat(value) || 0);
+    const numValue = value === "" ? 0 : parseFloat(value);
+    if (isNaN(numValue)) return;
+    
+    const convertedValue = useInches ? convertToMeters(numValue) : numValue;
+    form.setValue(field, convertedValue);
     
     if (field === "length") {
-      setSliderLength([parseFloat(value) || 0]);
+      setSliderLength([numValue]);
     } else {
-      setSliderWidth([parseFloat(value) || 0]);
+      setSliderWidth([numValue]);
     }
   };
 
@@ -57,10 +66,15 @@ const DimensionsFields = ({
     setSliderWidth([useInches ? width : widthInMeters]);
   };
 
-  const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || isNaN(value)) return "";
-    return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
+  const formatDisplayValue = (value: unknown): string => {
+    if (value === undefined || value === null) return "";
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue === 0) return "";
+    return useInches ? convertToInches(numValue).toFixed(2) : numValue.toFixed(2);
   };
+
+  const maxLength = 60; // 60m = ~2362.2"
+  const maxWidth = 1.82; // 1.82m = ~71.65"
 
   return <div className="space-y-6">
       <div className="flex items-center justify-end space-x-2 mb-6">
