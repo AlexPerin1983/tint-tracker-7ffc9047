@@ -6,15 +6,15 @@ interface PresetLengthsProps {
   category: Category;
   onSelectLength: (length: number) => void;
   useInches?: boolean;
+  maxDimension?: number;
 }
 
-interface LengthOption {
-  label: string;
-  value: number;
-  description?: string;
-}
-
-export function PresetLengths({ category, onSelectLength, useInches = true }: PresetLengthsProps) {
+export function PresetLengths({ 
+  category, 
+  onSelectLength, 
+  useInches = true,
+  maxDimension = 0 
+}: PresetLengthsProps) {
   const metersLengths: LengthOption[] = [
     { label: "1m", value: 1 },
     { label: "2m", value: 2 },
@@ -26,25 +26,28 @@ export function PresetLengths({ category, onSelectLength, useInches = true }: Pr
   ];
 
   const inchesLengths: LengthOption[] = [
-    // Common roll sizes in feet, converted to inches for consistency
     { label: "12'", value: 144, description: "Standard Length (12 feet)" },
     { label: "24'", value: 288, description: "Quarter Roll (24 feet)" },
     { label: "36'", value: 432, description: "Third Roll (36 feet)" },
     { label: "48'", value: 576, description: "Half Roll (48 feet)" },
     { label: "60'", value: 720, description: "Extended Roll (60 feet)" },
     { label: "72'", value: 864, description: "Full Roll (72 feet)" },
-    // Traditional sizes in inches for specific applications
     { label: "39\"", value: 39, description: "Small Panels & Accents" },
     { label: "54\"", value: 54, description: "Medium Panels & PPF" },
     { label: "118\"", value: 118, description: "Large Panels & Wraps" },
     { label: "192\"", value: 192, description: "Full Panels & Sections" },
   ];
 
+  // Converter o maxDimension para polegadas se necessário
+  const maxDimensionInCurrentUnit = useInches ? maxDimension * 39.37 : maxDimension;
+
+  // Filtrar apenas os valores que são menores ou iguais ao máximo permitido
   const lengths = useInches ? inchesLengths : metersLengths;
+  const validLengths = lengths.filter(length => length.value <= maxDimensionInCurrentUnit);
 
   return (
     <div className="flex flex-wrap gap-2 mt-2">
-      {lengths.map((length: LengthOption) => (
+      {validLengths.map((length: LengthOption) => (
         <Button
           key={length.value}
           variant="outline"
@@ -62,4 +65,10 @@ export function PresetLengths({ category, onSelectLength, useInches = true }: Pr
       ))}
     </div>
   );
+}
+
+interface LengthOption {
+  label: string;
+  value: number;
+  description?: string;
 }

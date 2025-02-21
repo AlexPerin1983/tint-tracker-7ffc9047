@@ -1,10 +1,11 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormControl, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { UseFormReturn } from "react-hook-form";
 import { ConsumptionFormData } from "@/types/inventory";
-import { Switch } from "@/components/ui/switch";
+import { PresetDimensions } from "../form/PresetDimensions";
+import { PresetLengths } from "../form/PresetLengths";
 
 interface DimensionsFieldsProps {
   form: UseFormReturn<ConsumptionFormData>;
@@ -47,7 +48,11 @@ export function DimensionsFields({
     if (isNaN(numValue)) return;
 
     const convertedValue = useInches ? convertToMeters(numValue) : numValue;
-    form.setValue(name as any, Number(convertedValue) || 0);
+    const maxValue = name.includes('width') ? maxWidth : maxLength;
+
+    // Limitar o valor ao máximo permitido
+    const limitedValue = Math.min(convertedValue, maxValue);
+    form.setValue(name as any, limitedValue || 0);
   };
 
   const formatDisplayValue = (value: unknown): string => {
@@ -90,19 +95,7 @@ export function DimensionsFields({
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium">{label}</span>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-[#8E9196]">Meters</span>
-          <Switch
-            checked={useInches}
-            onCheckedChange={onUnitChange}
-          />
-          <span className="text-sm text-[#8E9196]">Inches</span>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <FormField
         control={form.control}
         name={widthName}
@@ -117,7 +110,7 @@ export function DimensionsFields({
                     <Input
                       type="text"
                       inputMode="decimal"
-                      placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
+                      placeholder={`Max: ${useInches ? convertToInches(maxWidth).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
                       onClick={(e) => handleInputClick(widthName, e)}
@@ -144,8 +137,17 @@ export function DimensionsFields({
                     {useInches ? convertToInches(maxWidth).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}
                   </span>
                 </div>
+                <PresetDimensions 
+                  category="Window Tinting"
+                  onSelectWidth={(width) => {
+                    const convertedWidth = useInches ? convertToMeters(width) : width;
+                    const limitedWidth = Math.min(convertedWidth, maxWidth);
+                    field.onChange(limitedWidth);
+                  }}
+                  useInches={useInches}
+                  maxDimension={maxWidth}
+                />
               </div>
-              <FormMessage />
             </FormItem>
           );
         }}
@@ -165,7 +167,7 @@ export function DimensionsFields({
                     <Input
                       type="text"
                       inputMode="decimal"
-                      placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
+                      placeholder={`Max: ${useInches ? convertToInches(maxLength).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
                       onClick={(e) => handleInputClick(lengthName, e)}
@@ -192,8 +194,17 @@ export function DimensionsFields({
                     {useInches ? convertToInches(maxLength).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}
                   </span>
                 </div>
+                <PresetLengths 
+                  category="Window Tinting"
+                  onSelectLength={(length) => {
+                    const convertedLength = useInches ? convertToMeters(length) : length;
+                    const limitedLength = Math.min(convertedLength, maxLength);
+                    field.onChange(limitedLength);
+                  }}
+                  useInches={useInches}
+                  maxDimension={maxLength}
+                />
               </div>
-              <FormMessage />
             </FormItem>
           );
         }}

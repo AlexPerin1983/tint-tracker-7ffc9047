@@ -5,9 +5,15 @@ interface PresetDimensionsProps {
   category: string;
   onSelectWidth: (width: number) => void;
   useInches?: boolean;
+  maxDimension?: number;
 }
 
-export function PresetDimensions({ category, onSelectWidth, useInches = true }: PresetDimensionsProps) {
+export function PresetDimensions({ 
+  category, 
+  onSelectWidth, 
+  useInches = true,
+  maxDimension = 0
+}: PresetDimensionsProps) {
   if (category !== "Window Tinting") return null;
 
   const windowFilmWidths = useInches ? [
@@ -23,9 +29,15 @@ export function PresetDimensions({ category, onSelectWidth, useInches = true }: 
     { label: "1.82m", value: 1.82 },
   ];
 
+  // Converter o maxDimension para polegadas se necessário
+  const maxDimensionInCurrentUnit = useInches ? maxDimension * 39.37 : maxDimension;
+
+  // Filtrar apenas os valores que são menores ou iguais ao máximo permitido
+  const validWidths = windowFilmWidths.filter(width => width.value <= maxDimensionInCurrentUnit);
+
   return (
     <div className="flex flex-wrap gap-2 mt-2">
-      {windowFilmWidths.map((width) => (
+      {validWidths.map((width) => (
         <Button
           key={width.value}
           variant="outline"
