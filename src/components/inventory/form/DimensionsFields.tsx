@@ -4,8 +4,8 @@ import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { PresetDimensions } from "../form/PresetDimensions";
-import { PresetLengths } from "../form/PresetLengths";
+import { PresetDimensions } from "./PresetDimensions";
+import { PresetLengths } from "./PresetLengths";
 
 interface DimensionsFieldsProps {
   form: any;
