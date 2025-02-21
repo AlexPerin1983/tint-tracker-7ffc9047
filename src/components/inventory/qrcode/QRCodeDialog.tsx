@@ -51,7 +51,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
 
             <div className="w-full pt-2">
               <QRCodeActions
-                onDownload={() => handleQRDownload(item.code)}
+                onDownload={() => handleQRDownload(item.code, item.name)}
                 onPrint={handlePrint}
                 onScan={() => setScannerOpen(true)}
               />

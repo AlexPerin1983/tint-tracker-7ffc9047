@@ -1,5 +1,5 @@
 
-export function handleQRDownload(code: string) {
+export function handleQRDownload(code: string, name: string) {
   const qrCanvas = document.querySelector("#qr-code") as HTMLCanvasElement;
   if (!qrCanvas) return;
 
@@ -29,7 +29,7 @@ export function handleQRDownload(code: string) {
   ctx.font = 'bold 16px Arial';
   ctx.textAlign = 'center';
   ctx.fillText(
-    itemDetails.name,
+    name,
     canvas.width / 2,
     qrSize + padding + (textHeight / 2)
   );
