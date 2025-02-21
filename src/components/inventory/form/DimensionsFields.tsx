@@ -33,7 +33,16 @@ const DimensionsFields = ({
   }, [useInches, form]);
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    if (value === "") return; // Não limpa o valor se estiver vazio
+    // Se o valor estiver vazio, permitimos que fique vazio e atualizamos o slider
+    if (value === "") {
+      if (field === "length") {
+        setSliderLength([0]);
+      } else {
+        setSliderWidth([0]);
+      }
+      form.setValue(field, 0);
+      return;
+    }
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {

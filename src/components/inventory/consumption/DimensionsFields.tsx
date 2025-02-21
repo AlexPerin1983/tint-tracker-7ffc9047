@@ -31,7 +31,11 @@ export function DimensionsFields({
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
-    if (value === "") return; // Não limpa o valor se estiver vazio
+    // Se o valor estiver vazio, permitimos que fique vazio
+    if (value === "") {
+      form.setValue(name as any, 0);
+      return;
+    }
 
     const numValue = parseFloat(value);
     if (!isNaN(numValue)) {
