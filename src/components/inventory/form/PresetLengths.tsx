@@ -38,7 +38,7 @@ export function PresetLengths({ category, onSelectLength, useInches = true }: Pr
 
   return (
     <div className="flex flex-wrap gap-2 mt-2">
-      {lengths.map((length) => (
+      {lengths.map((length: LengthOption) => (
         <Button
           key={length.value}
           variant="outline"
