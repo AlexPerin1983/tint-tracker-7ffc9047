@@ -31,13 +31,13 @@ export function DimensionsFields({
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(2));
 
   const handleNumericInput = (name: string, value: string) => {
-    const numValue = value === "" ? "" : parseFloat(value);
+    const numValue = value === "" ? undefined : parseFloat(value);
     const convertedValue = typeof numValue === "number" && useInches ? convertToMeters(numValue) : numValue;
-    form.setValue(name as any, convertedValue);
+    form.setValue(name as any, convertedValue === undefined ? 0 : convertedValue);
   };
 
   const formatDisplayValue = (value: number | undefined) => {
-    if (value === undefined || value === "") return "";
+    if (value === undefined || isNaN(value)) return "";
     return useInches ? convertToInches(value).toFixed(2) : value.toFixed(2);
   };
 
