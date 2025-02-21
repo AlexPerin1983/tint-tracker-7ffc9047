@@ -102,7 +102,10 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '20' : '0.5'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                      onFocus={(e) => e.target.select()}
+                      onClick={(e) => {
+                        form.setValue(widthName, 0);
+                        (e.target as HTMLInputElement).value = "";
+                      }}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -149,7 +152,10 @@ export function DimensionsFields({
                       placeholder={`Ex: ${useInches ? '48' : '1.2'}`}
                       value={formatDisplayValue(field.value)}
                       onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                      onFocus={(e) => e.target.select()}
+                      onClick={(e) => {
+                        form.setValue(lengthName, 0);
+                        (e.target as HTMLInputElement).value = "";
+                      }}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
