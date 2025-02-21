@@ -11,7 +11,7 @@ interface PresetLengthsProps {
 interface LengthOption {
   label: string;
   value: number;
-  description?: string; // Made optional with ?
+  description?: string;
 }
 
 export function PresetLengths({ category, onSelectLength, useInches = true }: PresetLengthsProps) {
@@ -26,12 +26,18 @@ export function PresetLengths({ category, onSelectLength, useInches = true }: Pr
   ];
 
   const inchesLengths: LengthOption[] = [
-    { label: "39\"", value: 39, description: "Wraps menores" },
-    { label: "54\"", value: 54, description: "PPF áreas menores" },
-    { label: "118\"", value: 118, description: "Wraps intermediários" },
-    { label: "192\"", value: 192, description: "Wraps maiores" },
-    { label: "600\"", value: 600, description: "Window film/PPF (50 pés)" },
-    { label: "1200\"", value: 1200, description: "Window film/PPF (100 pés)" },
+    // Common roll sizes in feet, converted to inches for consistency
+    { label: "12'", value: 144, description: "Standard Length (12 feet)" },
+    { label: "24'", value: 288, description: "Quarter Roll (24 feet)" },
+    { label: "36'", value: 432, description: "Third Roll (36 feet)" },
+    { label: "48'", value: 576, description: "Half Roll (48 feet)" },
+    { label: "60'", value: 720, description: "Extended Roll (60 feet)" },
+    { label: "72'", value: 864, description: "Full Roll (72 feet)" },
+    // Traditional sizes in inches for specific applications
+    { label: "39\"", value: 39, description: "Small Panels & Accents" },
+    { label: "54\"", value: 54, description: "Medium Panels & PPF" },
+    { label: "118\"", value: 118, description: "Large Panels & Wraps" },
+    { label: "192\"", value: 192, description: "Full Panels & Sections" },
   ];
 
   const lengths = useInches ? inchesLengths : metersLengths;
