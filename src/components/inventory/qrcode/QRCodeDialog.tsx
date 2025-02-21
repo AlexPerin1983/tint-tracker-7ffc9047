@@ -1,8 +1,7 @@
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Item } from "@/types/inventory";
-import { QRScanner } from "@/components/scanner/QRScanner";
 import { QRCodeDisplay } from "./QRCodeDisplay";
 import { QRCodeActions } from "./QRCodeActions";
 import { ItemDetails } from "./ItemDetails";
@@ -15,7 +14,6 @@ interface QRCodeDialogProps {
 }
 
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
-  const [scannerOpen, setScannerOpen] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const qrValue = item.id;
   
@@ -30,40 +28,32 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   };
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="space-y-1">
-            <DialogTitle>{item.code}</DialogTitle>
-            <DialogDescription>
-              Escaneie para identificar este item
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="flex flex-col items-center space-y-3 py-2">
-            <QRCodeDisplay item={item} qrValue={qrValue} />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="space-y-1">
+          <DialogTitle>{item.code}</DialogTitle>
+          <DialogDescription>
+            Escaneie para identificar este item
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="flex flex-col items-center space-y-3 py-2">
+          <QRCodeDisplay item={item} qrValue={qrValue} />
 
-            <div className="text-center text-sm font-medium text-muted-foreground w-full break-words px-4">
-              {item.name}
-            </div>
-
-            <ItemDetails item={item} dimensions={dimensions} />
-
-            <div className="w-full pt-2">
-              <QRCodeActions
-                onDownload={() => handleQRDownload(item.code, item.name)}
-                onPrint={handlePrint}
-                onScan={() => setScannerOpen(true)}
-              />
-            </div>
+          <div className="text-center text-sm font-medium text-muted-foreground w-full break-words px-4">
+            {item.name}
           </div>
-        </DialogContent>
-      </Dialog>
 
-      <QRScanner 
-        open={scannerOpen} 
-        onOpenChange={setScannerOpen}
-      />
-    </>
+          <ItemDetails item={item} dimensions={dimensions} />
+
+          <div className="w-full">
+            <QRCodeActions
+              onDownload={() => handleQRDownload(item.code, item.name)}
+              onPrint={handlePrint}
+            />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

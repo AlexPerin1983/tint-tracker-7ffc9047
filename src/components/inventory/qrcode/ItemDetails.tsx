@@ -11,8 +11,8 @@ interface ItemDetailsProps {
 
 export function ItemDetails({ item, dimensions }: ItemDetailsProps) {
   return (
-    <Card className="w-full bg-[#1A1F2C]/50 backdrop-blur-sm border-slate-700/50 hover:border-blue-500/30 transition-colors">
-      <CardHeader className="p-4 flex flex-row items-center gap-2">
+    <Card className="w-full h-[80%] bg-[#1A1F2C]/50 backdrop-blur-sm border-slate-700/50 hover:border-blue-500/30 transition-colors overflow-y-auto">
+      <CardHeader className="p-4 flex flex-row items-center gap-2 sticky top-0 bg-[#1A1F2C]/95 backdrop-blur-sm z-10">
         <Info className="w-4 h-4 text-blue-500" />
         <h3 className="font-semibold text-sm text-slate-300">Detalhes do Material</h3>
       </CardHeader>
