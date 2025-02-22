@@ -1,9 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { Category } from "@/types/inventory";
 
 interface PresetDimensionsProps {
-  category: Category;
+  category: string;
   onSelectWidth: (width: number) => void;
   useInches?: boolean;
   maxDimension?: number;
@@ -30,7 +29,10 @@ export function PresetDimensions({
     { label: "1.82m", value: 1.82 },
   ];
 
+  // Converter o maxDimension para polegadas se necessário
   const maxDimensionInCurrentUnit = useInches ? maxDimension * 39.37 : maxDimension;
+
+  // Filtrar apenas os valores que são menores ou iguais ao máximo permitido
   const validWidths = windowFilmWidths.filter(width => width.value <= maxDimensionInCurrentUnit);
 
   return (
