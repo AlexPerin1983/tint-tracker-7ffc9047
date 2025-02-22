@@ -26,7 +26,15 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const handlePrint = () => {
     const canvas = document.querySelector("#qr-code") as HTMLCanvasElement;
     const imageUrl = canvas?.toDataURL("image/png");
-    handleQRPrint(imageUrl, { name: item.name, code: item.code, dimensions });
+    handleQRPrint(imageUrl, { 
+      name: item.name, 
+      code: item.code, 
+      dimensions,
+      brand: item.brand,
+      category: item.category,
+      price: item.price,
+      observation: item.observation
+    });
   };
 
   return (
