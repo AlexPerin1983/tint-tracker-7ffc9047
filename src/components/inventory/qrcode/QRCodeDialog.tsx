@@ -31,20 +31,20 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${isMobile ? 'w-[95%] p-4' : 'sm:max-w-md p-6'} max-h-[95vh] overflow-y-auto mx-auto`}>
-        <DialogHeader className="space-y-1">
-          <DialogTitle className="text-lg sm:text-xl">{item.code}</DialogTitle>
-          <DialogDescription className="text-sm">
+      <DialogContent className={`${isMobile ? 'w-[95%] p-3' : 'sm:max-w-md p-6'}`}>
+        <DialogHeader className="space-y-0.5">
+          <DialogTitle className="text-base sm:text-lg">{item.code}</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Escaneie para identificar este item
           </DialogDescription>
         </DialogHeader>
         
-        <div className="flex flex-col items-center space-y-4 py-2">
-          <div className="w-full max-w-[250px] mx-auto">
+        <div className="flex flex-col items-center space-y-2 sm:space-y-4">
+          <div className="w-full max-w-[180px] sm:max-w-[250px] mx-auto">
             <QRCodeDisplay item={item} qrValue={qrValue} />
           </div>
 
-          <div className="text-center text-sm font-medium text-muted-foreground w-full break-words px-2 sm:px-4">
+          <div className="text-center text-xs sm:text-sm font-medium text-muted-foreground w-full break-words px-2">
             {item.name}
           </div>
 
@@ -52,7 +52,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             <ItemDetails item={item} dimensions={dimensions} />
           </div>
 
-          <div className="w-full mt-4">
+          <div className="w-full">
             <QRCodeActions
               onDownload={() => handleQRDownload(item.code, item.name)}
               onPrint={handlePrint}
