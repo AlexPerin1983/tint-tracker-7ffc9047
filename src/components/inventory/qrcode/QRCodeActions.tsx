@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Download, Printer } from "lucide-react";
 
-interface QRCodeActionsProps {
+export interface QRCodeActionsProps {
   onDownload: () => void;
   onPrint: () => void;
 }
