@@ -52,9 +52,15 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             <QRCodeDisplay item={item} qrValue={qrValue} />
           </div>
 
-          <div className="text-center text-xs sm:text-sm font-medium text-muted-foreground w-full break-words px-2">
+          <div className="text-center text-sm sm:text-base font-medium text-muted-foreground w-full break-words px-2">
             {item.name}
           </div>
+
+          {item.brand && (
+            <div className="text-center text-xs sm:text-sm font-medium text-muted-foreground w-full break-words px-2 -mt-1">
+              {item.brand}
+            </div>
+          )}
 
           <div className="w-full">
             <ItemDetails item={item} dimensions={dimensions} />

@@ -9,7 +9,7 @@ export function handleQRDownload(code: string, name: string) {
 
   const qrSize = 200;
   const padding = 30;
-  const textHeight = 40;
+  const textHeight = 60; // Increased height for additional text
 
   canvas.width = qrSize + (padding * 2);
   canvas.height = qrSize + (padding * 2) + textHeight;
@@ -25,13 +25,22 @@ export function handleQRDownload(code: string, name: string) {
     qrSize
   );
 
+  // Increased font size by 30% for material name
   ctx.fillStyle = '#000000';
-  ctx.font = 'bold 16px Arial';
+  ctx.font = 'bold 21px Arial'; // Increased from 16px to 21px (30% larger)
   ctx.textAlign = 'center';
   ctx.fillText(
     name,
     canvas.width / 2,
-    qrSize + padding + (textHeight / 2)
+    qrSize + padding + 25
+  );
+
+  // Adding code below the name
+  ctx.font = '16px Arial';
+  ctx.fillText(
+    code,
+    canvas.width / 2,
+    qrSize + padding + 50
   );
 
   const downloadLink = document.createElement("a");
@@ -100,7 +109,13 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
             .material-name {
               font-weight: bold;
               color: #000;
-              font-size: 1.4rem;
+              font-size: 1.82rem; /* Increased by 30% from 1.4rem */
+              margin: 0 0 0.5rem;
+            }
+            .brand-name {
+              font-weight: 600;
+              color: #333;
+              font-size: 1.55rem; /* Slightly smaller than material name */
               margin: 0 0 1.5rem;
             }
             .details-grid {
@@ -144,13 +159,8 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
             </div>
             <div class="details-section">
               <h1 class="material-name">${itemDetails.name}</h1>
+              ${itemDetails.brand ? `<div class="brand-name">${itemDetails.brand}</div>` : ''}
               <div class="details-grid">
-                ${itemDetails.brand ? `
-                  <div class="detail-row">
-                    <span class="detail-label">Marca:</span>
-                    <span class="detail-value">${itemDetails.brand}</span>
-                  </div>
-                ` : ''}
                 ${itemDetails.category ? `
                   <div class="detail-row">
                     <span class="detail-label">Categoria:</span>
