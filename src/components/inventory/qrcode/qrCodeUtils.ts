@@ -35,10 +35,11 @@ export function handleQRDownload(code: string, name: string) {
     qrSize + padding + 25
   );
 
-  // Adding code below the name
+  // Adding brand below the name (or "Desconhecida" if empty)
   ctx.font = '16px Arial';
+  const brand = window.currentItemBrand || "Desconhecida";
   ctx.fillText(
-    code,
+    brand,
     canvas.width / 2,
     qrSize + padding + 50
   );
@@ -52,6 +53,9 @@ export function handleQRDownload(code: string, name: string) {
 }
 
 export function handleQRPrint(imageUrl: string, itemDetails: { name: string; code: string; dimensions: string; brand?: string; category?: string; price?: number; observation?: string }) {
+  // Set brand to "Desconhecida" if not provided
+  const brand = itemDetails.brand || "Desconhecida";
+  
   const printWindow = window.open("", "", "width=800,height=600");
   if (printWindow) {
     printWindow.document.write(`
@@ -159,7 +163,7 @@ export function handleQRPrint(imageUrl: string, itemDetails: { name: string; cod
             </div>
             <div class="details-section">
               <h1 class="material-name">${itemDetails.name}</h1>
-              ${itemDetails.brand ? `<div class="brand-name">${itemDetails.brand}</div>` : ''}
+              <div class="brand-name">${brand}</div>
               <div class="details-grid">
                 ${itemDetails.category ? `
                   <div class="detail-row">

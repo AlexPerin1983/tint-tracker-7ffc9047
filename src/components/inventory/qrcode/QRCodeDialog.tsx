@@ -1,5 +1,5 @@
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Item } from "@/types/inventory";
 import { QRCodeDisplay } from "./QRCodeDisplay";
@@ -7,6 +7,13 @@ import { QRCodeActions } from "./QRCodeActions";
 import { ItemDetails } from "./ItemDetails";
 import { handleQRDownload, handleQRPrint } from "./qrCodeUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+// Add a global variable to store the current item's brand
+declare global {
+  interface Window {
+    currentItemBrand?: string;
+  }
+}
 
 interface QRCodeDialogProps {
   open: boolean;
@@ -19,6 +26,13 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const isMobile = useIsMobile();
   const qrValue = item.id;
   
+  // Store brand in window object for download function to access
+  useEffect(() => {
+    if (open) {
+      window.currentItemBrand = item.brand || "Desconhecida";
+    }
+  }, [open, item.brand]);
+  
   const dimensions = item.type === 'bobina' 
     ? `${(item.remainingWidth * 39.37).toFixed(2)}" x ${(item.remainingLength * 39.37).toFixed(2)}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`
     : `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
@@ -30,7 +44,7 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
       name: item.name, 
       code: item.code, 
       dimensions,
-      brand: item.brand,
+      brand: item.brand || "Desconhecida",
       category: item.category,
       price: item.price,
       observation: item.observation
@@ -56,11 +70,9 @@ export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
             {item.name}
           </div>
 
-          {item.brand && (
-            <div className="text-center text-xs sm:text-sm font-medium text-muted-foreground w-full break-words px-2 -mt-1">
-              {item.brand}
-            </div>
-          )}
+          <div className="text-center text-xs sm:text-sm font-medium text-muted-foreground w-full break-words px-2 -mt-1">
+            {item.brand || "Desconhecida"}
+          </div>
 
           <div className="w-full">
             <ItemDetails item={item} dimensions={dimensions} />
