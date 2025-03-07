@@ -24,7 +24,10 @@ interface QRCodeDialogProps {
 export function QRCodeDialog({ open, onOpenChange, item }: QRCodeDialogProps) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const qrValue = item.id;
+  
+  // Generate a QR code value that works with any scanner
+  // Format: app:item:ID or app:scrap:ID
+  const qrValue = `tint-tracker:${item.type === 'bobina' ? 'item' : 'scrap'}:${item.id}`;
   
   // Store brand in window object for download function to access
   useEffect(() => {

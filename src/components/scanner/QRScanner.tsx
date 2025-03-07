@@ -18,22 +18,55 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
 
   const handleResult = (result: any) => {
     if (result?.text) {
-      const scannedId = result.text;
-      console.log("QR Code lido:", scannedId);
+      const scannedValue = result.text;
+      console.log("QR Code lido:", scannedValue);
       
       try {
         // Remove espaços em branco e quebras de linha
-        const cleanId = scannedId.trim();
-        console.log("ID limpo:", cleanId);
+        const cleanValue = scannedValue.trim();
+        console.log("Valor limpo:", cleanValue);
 
-        if (cleanId.includes('BOB')) {
-          console.log("Navegando para item:", cleanId);
+        // Processar ambos os formatos: antigo (apenas ID) e novo (prefixo:tipo:id)
+        if (cleanValue.includes('tint-tracker:')) {
+          // Novo formato: tint-tracker:tipo:id
+          const parts = cleanValue.split(':');
+          if (parts.length === 3) {
+            const [_prefix, type, id] = parts;
+            
+            if (type === 'item') {
+              console.log("Navegando para item:", id);
+              onOpenChange(false);
+              navigate(`/item/${id}`);
+            } else if (type === 'scrap') {
+              console.log("Navegando para scrap:", id);
+              onOpenChange(false);
+              navigate(`/scrap/${id}`);
+            } else {
+              setError('QR Code inválido');
+              toast({
+                variant: "destructive",
+                title: "QR Code Inválido",
+                description: "Formato de QR code não reconhecido.",
+              });
+            }
+          } else {
+            setError('QR Code inválido');
+            toast({
+              variant: "destructive",
+              title: "QR Code Inválido",
+              description: "Formato de QR code não reconhecido.",
+            });
+          }
+        } else if (cleanValue.includes('BOB')) {
+          // Formato antigo para bobinas
+          console.log("Navegando para item (formato antigo):", cleanValue);
           onOpenChange(false);
-          navigate(`/item/${cleanId}`);
-        } else if (cleanId.includes('RET')) {
-          console.log("Navegando para scrap:", cleanId);
+          navigate(`/item/${cleanValue}`);
+        } else if (cleanValue.includes('RET')) {
+          // Formato antigo para retalhos
+          console.log("Navegando para scrap (formato antigo):", cleanValue);
           onOpenChange(false);
-          navigate(`/scrap/${cleanId}`);
+          navigate(`/scrap/${cleanValue}`);
         } else {
           setError('QR Code inválido');
           toast({
