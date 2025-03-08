@@ -1,12 +1,13 @@
 
 import { useForm } from "react-hook-form";
-import { ConsumptionFormData } from "@/types/inventory";
+import { ConsumptionFormData, Item } from "@/types/inventory";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { DimensionsFields } from "./DimensionsFields";
 import { ScrapFields } from "./ScrapFields";
 import { X, Check } from "lucide-react";
-import { Item } from "@/types/inventory";
+import { useConsumption } from "@/hooks/use-consumption";
+import { useState } from "react";
 
 interface ConsumptionFormProps {
   item: Item;
@@ -16,6 +17,9 @@ interface ConsumptionFormProps {
 }
 
 export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: ConsumptionFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { registerConsumption } = useConsumption();
+  
   const form = useForm<ConsumptionFormData>({
     defaultValues: {
       width: 0,
@@ -27,12 +31,34 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
   });
 
   const onSubmit = (data: ConsumptionFormData) => {
-    console.log("Consumption data:", data);
-    onClose();
+    setIsSubmitting(true);
+    
+    // Calculate remaining dimensions
+    const newRemainingWidth = Math.max(0, item.remainingWidth - data.width);
+    const newRemainingLength = Math.max(0, item.remainingLength - data.length);
+    
+    // Register consumption using the hook
+    registerConsumption({
+      id: item.id,
+      data,
+      newDimensions: {
+        remainingWidth: newRemainingWidth,
+        remainingLength: newRemainingLength
+      }
+    }, {
+      onSuccess: () => {
+        setIsSubmitting(false);
+        onClose();
+      },
+      onError: (error) => {
+        console.error("Error registering consumption:", error);
+        setIsSubmitting(false);
+      }
+    });
   };
 
-  const maxWidth = item.width;
-  const maxLength = item.length;
+  const maxWidth = item.remainingWidth || item.width;
+  const maxLength = item.remainingLength || item.length;
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -41,7 +67,7 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
           <div className="flex items-center justify-between">
             <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Consumed Material</span>
             <span className="text-xs text-slate-400">
-              Max: {useInches ? `${(item.width * 39.37).toFixed(2)}" x ${(item.length * 39.37).toFixed(2)}"` : `${item.width}m x ${item.length}m`}
+              Max: {useInches ? `${(maxWidth * 39.37).toFixed(2)}" x ${(maxLength * 39.37).toFixed(2)}"` : `${maxWidth.toFixed(2)}m x ${maxLength.toFixed(2)}m`}
             </span>
           </div>
           <DimensionsFields
@@ -49,8 +75,8 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
             label="Dimensions"
             widthName="width"
             lengthName="length"
-            maxWidth={item.width}
-            maxLength={item.length}
+            maxWidth={maxWidth}
+            maxLength={maxLength}
             useInches={useInches}
             onUnitChange={onUnitChange}
           />
@@ -63,8 +89,8 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
           </div>
           <ScrapFields 
             form={form} 
-            maxWidth={item.width}
-            maxLength={item.length}
+            maxWidth={maxWidth}
+            maxLength={maxLength}
             useInches={useInches}
             onUnitChange={onUnitChange}
           />
@@ -78,6 +104,7 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
             variant="outline"
             onClick={onClose}
             className="flex-1 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
+            disabled={isSubmitting}
           >
             <X className="w-4 h-4 mr-2" />
             Cancel
@@ -85,9 +112,10 @@ export function ConsumptionForm({ item, onClose, useInches, onUnitChange }: Cons
           <Button 
             type="submit"
             className="flex-1 bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
+            disabled={isSubmitting}
           >
             <Check className="w-4 h-4 mr-2" />
-            Register
+            {isSubmitting ? "Processing..." : "Register"}
           </Button>
         </div>
       </DialogFooter>

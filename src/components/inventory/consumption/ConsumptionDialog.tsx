@@ -1,7 +1,7 @@
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ConsumptionForm } from "./ConsumptionForm";
 import { Item } from "@/types/inventory";
 
@@ -18,13 +18,19 @@ export function ConsumptionDialog({ item, open, onClose }: ConsumptionDialogProp
     return savedPreference ? savedPreference === 'inches' : true;
   });
 
+  // Update preference in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('dimensionUnit', useInches ? 'inches' : 'meters');
+  }, [useInches]);
+
   const handleUnitChange = (value: boolean) => {
     setUseInches(value);
-    localStorage.setItem('dimensionUnit', value ? 'inches' : 'meters');
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) onClose();
+    }}>
       <DialogContent className="sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[100dvh] sm:h-auto">
         <div className="flex items-center justify-end space-x-2 p-4 border-b border-slate-800">
           <span className="text-sm text-[#8E9196] font-medium">Meters</span>

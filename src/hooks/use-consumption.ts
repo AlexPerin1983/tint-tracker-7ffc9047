@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { itemsDB } from '@/services/db';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +26,7 @@ export function useConsumption() {
       }
     }) => {
       const item = items.find(i => i.id === id);
-      if (!item) throw new Error('Item não encontrado');
+      if (!item) throw new Error('Item not found');
 
       const consumedArea = data.width * data.length;
       const currentConsumedArea = item.consumedArea || 0;
@@ -33,7 +34,7 @@ export function useConsumption() {
       const availableArea = totalArea - currentConsumedArea;
 
       if (consumedArea > availableArea) {
-        throw new Error('A área solicitada excede a área disponível para consumo');
+        throw new Error('The requested area exceeds the available area for consumption');
       }
 
       const newConsumedArea = currentConsumedArea + consumedArea;
@@ -60,7 +61,7 @@ export function useConsumption() {
         const scrapArea = data.scrapWidth * data.scrapLength;
         
         if (scrapArea > consumedArea) {
-          throw new Error('A área da sobra não pode ser maior que a área consumida');
+          throw new Error('The scrap area cannot be larger than the consumed area');
         }
 
         await addScrap({
@@ -77,13 +78,21 @@ export function useConsumption() {
       queryClient.invalidateQueries({ queryKey: ['items'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       toast({
-        title: "Sucesso!",
-        description: "Consumo registrado com sucesso!",
+        title: "Success!",
+        description: "Consumption registered successfully!",
       });
     },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to register consumption",
+        variant: "destructive",
+      });
+    }
   });
 
   return {
     registerConsumption: registerConsumptionMutation.mutate,
+    isConsumptionLoading: registerConsumptionMutation.isPending,
   };
 }
