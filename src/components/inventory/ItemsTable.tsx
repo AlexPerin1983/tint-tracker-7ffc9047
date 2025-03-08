@@ -1,18 +1,30 @@
 
-import { useState, useEffect } from "react";
+import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FilterBar } from "./FilterBar";
+import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
 import AddItemDialog from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
-import { ItemsTable as ItemsDataTable } from "./table/ItemsTable";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ItemsTable() {
   const location = useLocation();
   const { items, deleteItem } = useItems();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const highlightedRowRef = useRef<HTMLTableRowElement>(null);
   const [filters, setFilters] = useState<Filters>({
     category: "all",
     name: "",
@@ -30,9 +42,52 @@ export function ItemsTable() {
     const state = location.state as { highlightedItemId?: string };
     if (state?.highlightedItemId) {
       setSelectedItemId(state.highlightedItemId);
+      
+      setTimeout(() => {
+        highlightedRowRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  const formatDimensions = (item: Item) => {
+    const metersToInches = (meters: number) => (meters * 39.37).toFixed(2);
+    
+    if (item.type === 'bobina') {
+      const widthInches = metersToInches(item.remainingWidth);
+      const lengthInches = metersToInches(item.remainingLength);
+      return `${widthInches}" x ${lengthInches}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`;
+    }
+    const widthInches = metersToInches(item.width);
+    const lengthInches = metersToInches(item.length);
+    return `${widthInches}" x ${lengthInches}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
+  };
+
+  const filterItems = (items: Item[]) => {
+    return items.filter((item) => {
+      const matchCategory = filters.category === "all" || item.category === filters.category;
+      const matchName = !filters.name || 
+        item.name.toLowerCase().includes(filters.name.toLowerCase());
+      
+      const matchWidth = (
+        (!filters.minWidth || item.width >= parseFloat(filters.minWidth)) &&
+        (!filters.maxWidth || item.width <= parseFloat(filters.maxWidth))
+      );
+      
+      const matchLength = (
+        (!filters.minLength || item.length >= parseFloat(filters.minLength)) &&
+        (!filters.maxLength || item.length <= parseFloat(filters.maxLength))
+      );
+
+      return matchCategory && matchName && matchWidth && matchLength;
+    });
+  };
+
+  const filteredItems = filterItems(items);
 
   const handleClearFilters = () => {
     setFilters({
@@ -61,9 +116,33 @@ export function ItemsTable() {
     setQrCodeDialogOpen(true);
   };
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedItemId(id);
-    deleteItem(id);
+  const isLowStock = (item: Item) => {
+    // Se minQuantity não estiver definido, não mostra alerta
+    if (item.minQuantity === undefined || item.minQuantity === null) return false;
+    
+    // Se a quantidade atual for menor ou igual à quantidade mínima, mostra alerta
+    return item.quantity <= item.minQuantity;
+  };
+
+  const renderQuantityCell = (item: Item) => {
+    if (isLowStock(item)) {
+      return (
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-1">
+                <span>{item.quantity}</span>
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Quantidade mínima: {item.minQuantity}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      );
+    }
+    return item.quantity;
   };
 
   return (
@@ -72,17 +151,91 @@ export function ItemsTable() {
         filters={filters}
         onFilterChange={setFilters}
         onClearFilters={handleClearFilters}
-        itemCount={items.length}
+        itemCount={filteredItems.length}
       />
 
-      <ItemsDataTable 
-        items={items}
-        selectedItemId={selectedItemId}
-        filters={filters}
-        onEditClick={handleEditClick}
-        onQRCodeClick={handleQRCodeClick}
-        onDeleteClick={handleDeleteClick}
-      />
+      <div className="rounded-md border border-muted">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Code</TableHead>
+              <TableHead className="hidden md:table-cell">Name</TableHead>
+              <TableHead className="hidden md:table-cell">Category</TableHead>
+              <TableHead className="hidden md:table-cell">Dimensions</TableHead>
+              <TableHead className="hidden md:table-cell">Quantity</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredItems.map((item) => (
+              <TableRow 
+                key={item.id}
+                ref={item.id === selectedItemId ? highlightedRowRef : undefined}
+                className={`${
+                  selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""
+                } ${
+                  isLowStock(item) ? "bg-amber-50/10" : ""
+                }`}
+              >
+                <TableCell className="font-medium">
+                  <div className="flex flex-col">
+                    <span>{item.code}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name.replace('Retalho de ', '')}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDimensions(item)}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', 'Scrap of')}</TableCell>
+                <TableCell className="hidden md:table-cell">{item.category}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {formatDimensions(item)}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {renderQuantityCell(item)}
+                </TableCell>
+                <TableCell className="text-right space-x-2">
+                  <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`} onClick={() => setSelectedItemId(item.id)}>
+                    <Button variant="ghost" size="icon" title="View Details">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="Edit"
+                    onClick={() => handleEditClick(item)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-destructive" 
+                    title="Delete"
+                    onClick={() => {
+                      setSelectedItemId(item.id);
+                      deleteItem(item.id);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    title="QR Code"
+                    onClick={() => handleQRCodeClick(item)}
+                  >
+                    <QrCode className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <AddItemDialog
         open={editDialogOpen}
