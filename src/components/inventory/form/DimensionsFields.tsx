@@ -11,13 +11,21 @@ interface DimensionsFieldsProps {
 const DimensionsFields = ({
   form
 }: DimensionsFieldsProps) => {
-  const [useInches, setUseInches] = useState(true);
+  // Load saved preference, default to false (meters) if not found
+  const [useInches, setUseInches] = useState(() => {
+    const savedPreference = localStorage.getItem('dimensionUnit');
+    return savedPreference ? savedPreference === 'inches' : true;
+  });
+  
   const [sliderLength, setSliderLength] = useState([0]);
   const [sliderWidth, setSliderWidth] = useState([0]);
 
   useEffect(() => {
     // Initialize sliders with current form values
     updateSliderValues();
+    
+    // Save preference whenever it changes
+    localStorage.setItem('dimensionUnit', useInches ? 'inches' : 'meters');
   }, [useInches]);
 
   const updateSliderValues = () => {

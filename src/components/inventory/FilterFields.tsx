@@ -18,7 +18,13 @@ interface FilterFieldsProps {
 
 export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
   const [localName, setLocalName] = useState(filters.name);
-  const [useInches, setUseInches] = useState(true);
+  
+  // Load saved preference, default to true (inches) if not found
+  const [useInches, setUseInches] = useState(() => {
+    const savedPreference = localStorage.getItem('dimensionUnit');
+    return savedPreference ? savedPreference === 'inches' : true;
+  });
+  
   const [showLengthInput, setShowLengthInput] = useState(false);
   const [showWidthInput, setShowWidthInput] = useState(false);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
@@ -52,6 +58,11 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
   useEffect(() => {
     onFilterChange({ ...filters, name: debouncedName });
   }, [debouncedName]);
+
+  const handleUnitChange = (value: boolean) => {
+    setUseInches(value);
+    localStorage.setItem('dimensionUnit', value ? 'inches' : 'meters');
+  };
 
   const handleInputChange = (field: keyof Filters, value: string | number) => {
     if (field === "name") {
@@ -188,7 +199,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
             <span className="text-sm text-slate-400">Meters</span>
             <Switch
               checked={useInches}
-              onCheckedChange={setUseInches}
+              onCheckedChange={handleUnitChange}
             />
             <span className="text-sm text-slate-400">Inches</span>
           </div>

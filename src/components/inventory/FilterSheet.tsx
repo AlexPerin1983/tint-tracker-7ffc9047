@@ -1,4 +1,3 @@
-
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { FilterFields } from "./FilterFields";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,12 @@ export function FilterSheet({
   onApplyFilters,
   itemCount,
 }: FilterSheetProps) {
-  const [useInches, setUseInches] = useState(true);
+  // Load saved preference, default to true (inches) if not found
+  const [useInches, setUseInches] = useState(() => {
+    const savedPreference = localStorage.getItem('dimensionUnit');
+    return savedPreference ? savedPreference === 'inches' : true;
+  });
+  
   const [sliderLength, setSliderLength] = useState([0, useInches ? 2362.2 : 60]);
   const [sliderWidth, setSliderWidth] = useState([0, useInches ? 71.65 : 1.82]);
   
@@ -55,6 +59,11 @@ export function FilterSheet({
     setSliderLength(lengthValues);
     setSliderWidth(widthValues);
   }, [useInches, filters.minLength, filters.maxLength, filters.minWidth, filters.maxWidth]);
+
+  const handleUnitChange = (value: boolean) => {
+    setUseInches(value);
+    localStorage.setItem('dimensionUnit', value ? 'inches' : 'meters');
+  };
 
   const handleApplyFilters = () => {
     onApplyFilters();
@@ -146,7 +155,7 @@ export function FilterSheet({
               <span className="text-sm text-slate-400">Meters</span>
               <Switch
                 checked={useInches}
-                onCheckedChange={setUseInches}
+                onCheckedChange={handleUnitChange}
                 className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-slate-700"
               />
               <span className="text-sm text-slate-400">Inches</span>
