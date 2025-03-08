@@ -16,21 +16,40 @@ const DimensionsFields = ({
   const [sliderWidth, setSliderWidth] = useState([0]);
 
   useEffect(() => {
+    // Initialize sliders with current form values
+    updateSliderValues();
+  }, [useInches]);
+
+  const updateSliderValues = () => {
     const currentLength = form.getValues("length") || 0;
     const currentWidth = form.getValues("width") || 0;
+    
+    // Convert values for display
     const lengthValue = useInches ? convertToInches(currentLength) : currentLength;
     const widthValue = useInches ? convertToInches(currentWidth) : currentWidth;
+    
     setSliderLength([lengthValue]);
     setSliderWidth([widthValue]);
-  }, [useInches, form]);
+  };
 
   const handleNumericInput = (field: "length" | "width", value: string) => {
-    const numValue = value === "" ? 0 : parseFloat(value);
+    // Handle both comma and dot as decimal separators
+    const cleanValue = value.replace(/,/g, '.');
+    const numValue = cleanValue === "" ? 0 : parseFloat(cleanValue);
+    
     if (isNaN(numValue)) return;
     
+    // Convert value if needed
     const convertedValue = useInches ? convertToMeters(numValue) : numValue;
-    form.setValue(field, convertedValue);
+    const maxValue = field === "length" ? DIMENSION_LIMITS.maxLength : DIMENSION_LIMITS.maxWidth;
     
+    // Limit to max value
+    const limitedValue = Math.min(convertedValue, maxValue);
+    
+    // Update form value
+    form.setValue(field, limitedValue);
+    
+    // Update slider
     if (field === "length") {
       setSliderLength([numValue]);
     } else {
@@ -39,8 +58,14 @@ const DimensionsFields = ({
   };
 
   const handleSliderChange = (field: "length" | "width", value: number[]) => {
+    if (value[0] === undefined) return;
+    
     const inMeters = useInches ? convertToMeters(value[0]) : value[0];
+    
+    // Update form value
     form.setValue(field, inMeters);
+    
+    // Update slider
     if (field === "length") {
       setSliderLength(value);
     } else {
@@ -52,8 +77,11 @@ const DimensionsFields = ({
     const valueInMeters = useInches ? convertToMeters(value) : value;
     const maxValue = field === "length" ? DIMENSION_LIMITS.maxLength : DIMENSION_LIMITS.maxWidth;
     const limitedValue = Math.min(valueInMeters, maxValue);
+    
+    // Update form value
     form.setValue(field, limitedValue);
     
+    // Update slider
     if (field === "length") {
       setSliderLength([useInches ? value : limitedValue]);
     } else {
@@ -65,7 +93,12 @@ const DimensionsFields = ({
     <div className="space-y-6">
       <div className="flex items-center justify-end space-x-2 mb-6">
         <span className="text-sm text-[#8E9196] font-medium">Meters</span>
-        <Switch checked={useInches} onCheckedChange={setUseInches} />
+        <Switch 
+          checked={useInches} 
+          onCheckedChange={(value) => {
+            setUseInches(value);
+          }} 
+        />
         <span className="text-sm text-[#8E9196] font-medium">Inches</span>
       </div>
 

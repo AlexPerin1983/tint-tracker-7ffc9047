@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { FormField, FormItem, FormControl, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -28,6 +28,11 @@ export function DimensionsFields({
   useInches,
   onUnitChange
 }: DimensionsFieldsProps) {
+  const [widthInputFocused, setWidthInputFocused] = useState(false);
+  const [lengthInputFocused, setLengthInputFocused] = useState(false);
+  const [widthInputValue, setWidthInputValue] = useState("");
+  const [lengthInputValue, setLengthInputValue] = useState("");
+
   const convertToInches = (meters: number) => {
     if (typeof meters !== 'number' || isNaN(meters)) return 0;
     return Number((meters * 39.37).toFixed(2));
@@ -39,23 +44,26 @@ export function DimensionsFields({
   };
 
   const handleNumericInput = (name: string, value: string) => {
-    if (value === "") {
+    const cleanValue = value.replace(/,/g, '.');
+    
+    if (cleanValue === "") {
       form.setValue(name as any, 0);
       return;
     }
 
-    const numValue = parseFloat(value);
+    const numValue = parseFloat(cleanValue);
     if (isNaN(numValue)) return;
 
     const convertedValue = useInches ? convertToMeters(numValue) : numValue;
     const maxValue = name.includes('width') ? maxWidth : maxLength;
 
-    // Limitar o valor ao máximo permitido
     const limitedValue = Math.min(convertedValue, maxValue);
     form.setValue(name as any, limitedValue || 0);
   };
 
-  const formatDisplayValue = (value: unknown): string => {
+  const formatDisplayValue = (value: unknown, isFocused: boolean, inputValue: string): string => {
+    if (isFocused) return inputValue;
+    
     if (value === undefined || value === null || value === "") return "";
     
     const numValue = Number(value);
@@ -86,12 +94,36 @@ export function DimensionsFields({
     };
   };
 
-  const handleInputClick = (name: "width" | "scrapWidth" | "length" | "scrapLength", event: React.MouseEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const input = event.currentTarget;
-    form.setValue(name, 0);
-    input.value = "";
-    input.focus();
+  const handleWidthFocus = () => {
+    const value = form.getValues(widthName);
+    const displayValue = useInches ? convertToInches(value) : value;
+    setWidthInputValue(displayValue > 0 ? displayValue.toFixed(2) : "");
+    setWidthInputFocused(true);
+  };
+
+  const handleWidthBlur = () => {
+    setWidthInputFocused(false);
+    
+    const parsedValue = parseFloat(widthInputValue.replace(/,/g, '.'));
+    if (!isNaN(parsedValue)) {
+      handleNumericInput(widthName, parsedValue.toString());
+    }
+  };
+
+  const handleLengthFocus = () => {
+    const value = form.getValues(lengthName);
+    const displayValue = useInches ? convertToInches(value) : value;
+    setLengthInputValue(displayValue > 0 ? displayValue.toFixed(2) : "");
+    setLengthInputFocused(true);
+  };
+
+  const handleLengthBlur = () => {
+    setLengthInputFocused(false);
+    
+    const parsedValue = parseFloat(lengthInputValue.replace(/,/g, '.'));
+    if (!isNaN(parsedValue)) {
+      handleNumericInput(lengthName, parsedValue.toString());
+    }
   };
 
   return (
@@ -111,10 +143,15 @@ export function DimensionsFields({
                       type="text"
                       inputMode="decimal"
                       placeholder={`Max: ${useInches ? convertToInches(maxWidth).toFixed(2) + '"' : maxWidth.toFixed(2) + 'm'}`}
-                      value={formatDisplayValue(field.value)}
-                      onChange={(e) => handleNumericInput(widthName, e.target.value)}
-                      onClick={(e) => handleInputClick(widthName, e)}
-                      onFocus={(e) => handleInputClick(widthName, e as any)}
+                      value={formatDisplayValue(field.value, widthInputFocused, widthInputValue)}
+                      onChange={(e) => {
+                        setWidthInputValue(e.target.value);
+                        if (e.target.value !== "" && !isNaN(parseFloat(e.target.value.replace(/,/g, '.')))) {
+                          handleNumericInput(widthName, e.target.value);
+                        }
+                      }}
+                      onFocus={handleWidthFocus}
+                      onBlur={handleWidthBlur}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -123,7 +160,7 @@ export function DimensionsFields({
                 <Slider
                   min={config.min}
                   max={config.max}
-                  step={0.01}
+                  step={useInches ? 0.1 : 0.01}
                   value={[config.value]}
                   onValueChange={(value) => {
                     const convertedValue = config.convert(value[0]);
@@ -168,10 +205,15 @@ export function DimensionsFields({
                       type="text"
                       inputMode="decimal"
                       placeholder={`Max: ${useInches ? convertToInches(maxLength).toFixed(2) + '"' : maxLength.toFixed(2) + 'm'}`}
-                      value={formatDisplayValue(field.value)}
-                      onChange={(e) => handleNumericInput(lengthName, e.target.value)}
-                      onClick={(e) => handleInputClick(lengthName, e)}
-                      onFocus={(e) => handleInputClick(lengthName, e as any)}
+                      value={formatDisplayValue(field.value, lengthInputFocused, lengthInputValue)}
+                      onChange={(e) => {
+                        setLengthInputValue(e.target.value);
+                        if (e.target.value !== "" && !isNaN(parseFloat(e.target.value.replace(/,/g, '.')))) {
+                          handleNumericInput(lengthName, e.target.value);
+                        }
+                      }}
+                      onFocus={handleLengthFocus}
+                      onBlur={handleLengthBlur}
                       className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -180,7 +222,7 @@ export function DimensionsFields({
                 <Slider
                   min={config.min}
                   max={config.max}
-                  step={0.01}
+                  step={useInches ? 0.1 : 0.01}
                   value={[config.value]}
                   onValueChange={(value) => {
                     const convertedValue = config.convert(value[0]);

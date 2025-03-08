@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -30,6 +30,45 @@ export const DimensionField = ({
 }: DimensionFieldProps) => {
   const isLength = fieldName === "length";
   const title = isLength ? "Roll Length" : "Roll Width";
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Get actual value from form
+  const formValue = form.getValues(fieldName) || 0;
+  const displayValue = useInches ? convertToInches(formValue) : formValue;
+  
+  // Format for display when not focused
+  const formattedValue = !isFocused 
+    ? (displayValue > 0 ? displayValue.toFixed(2) : "") 
+    : inputValue;
+
+  const handleInputFocus = () => {
+    setIsFocused(true);
+    setInputValue(displayValue > 0 ? displayValue.toFixed(2) : "");
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value.replace(/,/g, '.');
+    setInputValue(newValue);
+    
+    // Only update form if value is valid
+    if (newValue === "" || isNaN(Number(newValue))) return;
+    onInputChange(newValue);
+  };
+
+  const handleInputBlur = () => {
+    setIsFocused(false);
+    
+    // Try to parse the input value
+    const parsedValue = parseFloat(inputValue.replace(/,/g, '.'));
+    if (!isNaN(parsedValue)) {
+      onInputChange(parsedValue.toString());
+    } else if (inputValue === "") {
+      // Clear input and set value to 0
+      form.setValue(fieldName, 0);
+      onSliderChange([0]);
+    }
+  };
 
   return (
     <div className={`space-y-4 ${isLength ? 'mb-8' : ''} p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors`}>
@@ -48,11 +87,14 @@ export const DimensionField = ({
               <div className="flex items-center gap-2">
                 <div className="text-3xl font-bold text-white flex-1">
                   <Input
-                    type="number"
-                    value={formatDisplayValue(field.value, useInches)}
-                    onChange={e => onInputChange(e.target.value)}
-                    onFocus={(e) => e.target.select()}
-                    className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="text"
+                    inputMode="decimal"
+                    value={formattedValue}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    placeholder="0.00"
+                    className="bg-transparent border-none text-3xl font-bold p-0 h-auto focus-visible:ring-0"
                   />
                 </div>
                 <span className="text-lg text-slate-400">{useInches ? '"' : 'm'}</span>
@@ -60,7 +102,7 @@ export const DimensionField = ({
               <Slider
                 value={sliderValue}
                 max={useInches ? convertToInches(maxValue) : maxValue}
-                step={useInches ? 1 : 0.01}
+                step={useInches ? 0.1 : 0.01}
                 onValueChange={onSliderChange}
                 className="py-4"
               />
