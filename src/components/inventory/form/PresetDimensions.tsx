@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PresetDimensionsProps {
   category: string;
@@ -14,6 +15,8 @@ export function PresetDimensions({
   useInches = true,
   maxDimension = 0
 }: PresetDimensionsProps) {
+  const { t } = useLanguage();
+  
   if (category !== "Window Tinting") return null;
 
   const windowFilmWidths = useInches ? [

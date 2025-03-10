@@ -5,6 +5,7 @@ import AddItemDialog from "@/components/inventory/AddItemDialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { FilterBar } from "@/components/inventory/FilterBar";
 
 const Index = () => {
   const [showAddItem, setShowAddItem] = useState(false);
@@ -19,6 +20,8 @@ const Index = () => {
           {t('item.addItem')}
         </Button>
       </div>
+
+      <FilterBar />
 
       <ItemsTable />
 

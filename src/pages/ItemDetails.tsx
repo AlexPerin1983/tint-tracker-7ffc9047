@@ -12,6 +12,7 @@ import { ScrapsTable } from "@/components/inventory/details/ScrapsTable";
 import { TransactionsTable } from "@/components/inventory/details/TransactionsTable";
 import { ConsumptionDialog } from "@/components/inventory/consumption/ConsumptionDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ItemDetails = () => {
   const { id } = useParams();
@@ -20,12 +21,13 @@ const ItemDetails = () => {
   const [showAddScrap, setShowAddScrap] = useState(false);
   const [showConsumption, setShowConsumption] = useState(false);
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
 
   const item = items.find((item) => item.id === id);
   const scraps = items.filter((i) => i.originId === id);
   const itemTransactions = transactions?.filter((t) => t.itemId === id) ?? [];
 
-  if (!item) return <div>Item not found</div>;
+  if (!item) return <div>{t('item.notFound')}</div>;
 
   const handleBack = () => {
     navigate('/', { state: { highlightedItemId: id } });
@@ -36,9 +38,9 @@ const ItemDetails = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-2 md:gap-4">
           <Button variant="ghost" size={isMobile ? "sm" : "default"} onClick={handleBack}>
-            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> Back
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" /> {t('common.back')}
           </Button>
-          <h1 className="text-lg md:text-2xl font-bold">Item Details</h1>
+          <h1 className="text-lg md:text-2xl font-bold">{t('item.details')}</h1>
         </div>
       </div>
 

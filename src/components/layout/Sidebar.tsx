@@ -1,3 +1,4 @@
+
 import { Home, Box, Scissors, LogOut, ExternalLink, Mail, Code, Globe, Bug } from "lucide-react";
 import {
   Sidebar,
@@ -15,59 +16,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { logoutUser } from "@/services/sheets";
-
-const navigationItems = [
-  { 
-    title: "Dashboard", 
-    icon: Home, 
-    disabled: true,
-    description: "Under Development - Coming Q2 2024"
-  },
-  { 
-    title: "Rolls Management", 
-    icon: Box, 
-    disabled: true,
-    description: "Coming Soon - Release Date TBA"
-  },
-  { 
-    title: "Scraps Management", 
-    icon: Scissors, 
-    disabled: true,
-    description: "Beta Testing - Available Soon"
-  },
-];
-
-const externalLinks = [
-  {
-    title: "Los_Pelikooss Store",
-    url: "https://fumejp.com.br/los-pelikooss/",
-    icon: ExternalLink,
-  },
-];
-
-const contactInfo = {
-  title: "Support",
-  email: "windowfilm.br@gmail.com",
-  icon: Mail,
-};
-
-const whatsappLinks = [
-  {
-    title: "Custom Software",
-    icon: Code,
-    getMessage: (email: string) => `Hello, I'm a user with email "${email}". I need a quote for developing a custom tool to manage my business. Looking forward to hearing from you!`,
-  },
-  {
-    title: "Website Development",
-    icon: Globe,
-    getMessage: (email: string) => `Hello, I'm a user with email ${email}. I need a quote for developing a website. Looking forward to hearing from you!`,
-  },
-  {
-    title: "Report Bug",
-    icon: Bug,
-    getMessage: (email: string) => `Bug Report from user ${email}: I would like to report an issue I encountered while using the application. Here are the details: [Please describe the bug, steps to reproduce, and any relevant information]`,
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AppSidebarProps {
   userEmail?: string;
@@ -76,6 +25,60 @@ interface AppSidebarProps {
 export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
+
+  const navigationItems = [
+    { 
+      title: t("nav.dashboard"), 
+      icon: Home, 
+      disabled: true,
+      description: t("nav.dashboardDescription")
+    },
+    { 
+      title: t("nav.rollsManagement"), 
+      icon: Box, 
+      disabled: true,
+      description: t("nav.rollsDescription")
+    },
+    { 
+      title: t("nav.scrapsManagement"), 
+      icon: Scissors, 
+      disabled: true,
+      description: t("nav.scrapsDescription")
+    },
+  ];
+
+  const externalLinks = [
+    {
+      title: t("links.store"),
+      url: "https://fumejp.com.br/los-pelikooss/",
+      icon: ExternalLink,
+    },
+  ];
+
+  const contactInfo = {
+    title: t("support.title"),
+    email: "windowfilm.br@gmail.com",
+    icon: Mail,
+  };
+
+  const whatsappLinks = [
+    {
+      title: t("support.customSoftware"),
+      icon: Code,
+      getMessage: (email: string) => `${t("support.softwareMessage").replace("{email}", email)}`,
+    },
+    {
+      title: t("support.websiteDev"),
+      icon: Globe,
+      getMessage: (email: string) => `${t("support.websiteMessage").replace("{email}", email)}`,
+    },
+    {
+      title: t("support.reportBug"),
+      icon: Bug,
+      getMessage: (email: string) => `${t("support.bugMessage").replace("{email}", email)}`,
+    },
+  ];
 
   const getWhatsAppLink = (message: string) => {
     const encodedMessage = encodeURIComponent(message);
@@ -88,13 +91,13 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
       localStorage.removeItem("userEmail");
       window.location.reload();
       toast({
-        title: "Logout successful",
-        description: "You have been disconnected from the system",
+        title: t("auth.logoutSuccess"),
+        description: t("auth.disconnected"),
       });
     } catch (error) {
       toast({
-        title: "Error during logout",
-        description: error instanceof Error ? error.message : "Unknown error",
+        title: t("auth.logoutError"),
+        description: error instanceof Error ? error.message : t("common.unknownError"),
         variant: "destructive",
       });
     }
@@ -116,7 +119,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
                 {userEmail}
               </span>
               <span className="text-xs text-slate-400">
-                Active User
+                {t("user.active")}
               </span>
             </div>
           </div>
@@ -124,7 +127,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
 
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
-            Navigation
+            {t("nav.navigation")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="px-2">
@@ -158,7 +161,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
 
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
-            Contact Us
+            {t("contact.title")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="px-2">
@@ -190,7 +193,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
 
         <SidebarGroup className="mt-4">
           <SidebarGroupLabel className="px-4 text-slate-400 font-medium">
-            Quick Links
+            {t("links.quickLinks")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="px-2">
@@ -261,7 +264,7 @@ export const AppSidebar = ({ userEmail = "" }: AppSidebarProps) => {
               )}
             >
               <LogOut className="h-5 w-5 shrink-0 text-slate-400" />
-              <span className="text-sm text-slate-200">Logout</span>
+              <span className="text-sm text-slate-200">{t("auth.logout")}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
