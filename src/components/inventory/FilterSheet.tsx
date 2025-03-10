@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FilterSheetProps {
   open: boolean;
@@ -27,7 +28,80 @@ export function FilterSheet({
   onApplyFilters,
   itemCount,
 }: FilterSheetProps) {
-  // Load saved preference, default to true (inches) if not found
+  const { language } = useLanguage();
+  
+  const getLabels = () => {
+    switch (language) {
+      case 'pt':
+        return {
+          title: "Filtros",
+          meters: "Metros",
+          inches: "Polegadas",
+          lengthRange: "Intervalo de Comprimento",
+          widthRange: "Intervalo de Largura",
+          clear: "Limpar",
+          apply: "Aplicar",
+          to: "até",
+          itemsFound: "itens encontrados",
+          max: "Máx"
+        };
+      case 'es':
+        return {
+          title: "Filtros",
+          meters: "Metros",
+          inches: "Pulgadas",
+          lengthRange: "Rango de Longitud",
+          widthRange: "Rango de Ancho",
+          clear: "Limpiar",
+          apply: "Aplicar",
+          to: "hasta",
+          itemsFound: "elementos encontrados",
+          max: "Máx"
+        };
+      case 'zh':
+        return {
+          title: "筛选",
+          meters: "米",
+          inches: "英寸",
+          lengthRange: "长度范围",
+          widthRange: "宽度范围",
+          clear: "清除",
+          apply: "应用",
+          to: "至",
+          itemsFound: "找到的项目",
+          max: "最大"
+        };
+      case 'fr':
+        return {
+          title: "Filtres",
+          meters: "Mètres",
+          inches: "Pouces",
+          lengthRange: "Plage de Longueur",
+          widthRange: "Plage de Largeur",
+          clear: "Effacer",
+          apply: "Appliquer",
+          to: "à",
+          itemsFound: "éléments trouvés",
+          max: "Max"
+        };
+      default:
+        return {
+          title: "Filters",
+          meters: "Meters",
+          inches: "Inches", 
+          lengthRange: "Length Range",
+          widthRange: "Width Range",
+          clear: "Clear",
+          apply: "Apply",
+          to: "to",
+          itemsFound: "items found",
+          max: "Max"
+        };
+    }
+  };
+
+  const labels = getLabels();
+  
   const [useInches, setUseInches] = useState(() => {
     const savedPreference = localStorage.getItem('dimensionUnit');
     return savedPreference ? savedPreference === 'inches' : true;
@@ -42,7 +116,6 @@ export function FilterSheet({
   const convertToInches = (meters: number) => Number((meters * 39.37).toFixed(2));
   const convertToMeters = (inches: number) => Number((inches / 39.37).toFixed(4));
 
-  // Efeito para atualizar os sliders quando mudar a unidade de medida
   useEffect(() => {
     const minLength = Number(filters.minLength) || 0;
     const maxLength = Number(filters.maxLength) || (useInches ? 2362.2 : 60);
@@ -118,7 +191,7 @@ export function FilterSheet({
             <div className="p-1.5 rounded-full bg-blue-500/10">
               <Filter className="w-4 h-4 text-blue-500" />
             </div>
-            <SheetTitle className="text-white text-base font-medium">Filters</SheetTitle>
+            <SheetTitle className="text-white text-base font-medium">{labels.title}</SheetTitle>
           </div>
         </SheetHeader>
 
@@ -152,25 +225,25 @@ export function FilterSheet({
             </div>
 
             <div className="flex items-center justify-end space-x-2">
-              <span className="text-sm text-slate-400">Meters</span>
+              <span className="text-sm text-slate-400">{labels.meters}</span>
               <Switch
                 checked={useInches}
                 onCheckedChange={handleUnitChange}
                 className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-slate-700"
               />
-              <span className="text-sm text-slate-400">Inches</span>
+              <span className="text-sm text-slate-400">{labels.inches}</span>
             </div>
 
             <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Length Range</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">{labels.lengthRange}</span>
                 <span className="text-xs text-slate-400">
-                  Max: {maxLength}{useInches ? '"' : 'm'}
+                  {labels.max}: {maxLength}{useInches ? '"' : 'm'}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xl font-bold">
                 <span>{formatValue(filters.minLength || "0")}</span>
-                <span className="text-sm text-slate-400">to</span>
+                <span className="text-sm text-slate-400">{labels.to}</span>
                 <span>{formatValue(filters.maxLength || maxLength.toString())}</span>
               </div>
               <Slider
@@ -184,14 +257,14 @@ export function FilterSheet({
 
             <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Width Range</span>
+                <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">{labels.widthRange}</span>
                 <span className="text-xs text-slate-400">
-                  Max: {maxWidth}{useInches ? '"' : 'm'}
+                  {labels.max}: {maxWidth}{useInches ? '"' : 'm'}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xl font-bold">
                 <span>{formatValue(filters.minWidth || "0")}</span>
-                <span className="text-sm text-slate-400">to</span>
+                <span className="text-sm text-slate-400">{labels.to}</span>
                 <span>{formatValue(filters.maxWidth || maxWidth.toString())}</span>
               </div>
               <Slider
@@ -206,7 +279,7 @@ export function FilterSheet({
             <div className="bg-[#1A1F2C] p-4 rounded-xl border border-slate-800/50">
               <div className="flex items-center gap-3">
                 <span className="text-blue-500 text-3xl font-bold">{itemCount || 0}</span>
-                <span className="text-slate-400 text-sm uppercase tracking-wider">items found</span>
+                <span className="text-slate-400 text-sm uppercase tracking-wider">{labels.itemsFound}</span>
               </div>
             </div>
           </div>
@@ -220,14 +293,14 @@ export function FilterSheet({
               className="flex-1 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
             >
               <X className="w-4 h-4 mr-2" />
-              Clear
+              {labels.clear}
             </Button>
             <Button
               onClick={handleApplyFilters}
               className="flex-1 bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
             >
               <Filter className="w-4 h-4 mr-2" />
-              Apply
+              {labels.apply}
             </Button>
           </div>
         </div>
