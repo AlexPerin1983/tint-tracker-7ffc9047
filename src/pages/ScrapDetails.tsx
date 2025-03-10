@@ -31,13 +31,8 @@ const ScrapDetails = () => {
     navigate('/', { state: { highlightedItemId: id } });
   };
 
-  const editingScrapData = {
-    id: scrap.id,
-    width: scrap.width,
-    length: scrap.length,
-    quantity: scrap.quantity,
-    observation: scrap.observation,
-  };
+  // Aqui estamos apenas passando o próprio objeto scrap como editingScrap
+  // Não precisamos criar um objeto parcial, já que o scrap já é do tipo Item
 
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
@@ -149,7 +144,7 @@ const ScrapDetails = () => {
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
           parentItemId={parentItem.id}
-          editingScrap={editingScrapData}
+          editingScrap={scrap}
         />
       )}
     </div>
