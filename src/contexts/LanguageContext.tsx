@@ -674,4 +674,4 @@ export const translations = {
     'support.customSoftware': 'Logiciel personnalisé',
     'support.websiteDev': 'Développement de site web',
     'support.reportBug': 'Signaler un bug',
-    'support.softwareMessage': 'Bonjour, je suis un utilisateur avec l\'email "{email}". J\'ai besoin d\'un devis pour développer un outil personnalisé pour gérer mon entreprise.
+    'support.softwareMessage': 'Bonjour, je suis un utilisateur avec l\'email "{email}". J\'ai besoin d\'un devis pour développer un outil personnalisé pour gérer mon entreprise. J\'att
