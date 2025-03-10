@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useItems } from "@/hooks/use-items";
 import { Item } from "@/types/inventory";
@@ -350,7 +351,7 @@ export function ItemsTable() {
           <AddItemDialog 
             open={editDialogOpen}
             onOpenChange={setEditDialogOpen}
-            editItem={selectedItem}
+            itemToEdit={selectedItem}
             mode="edit"
           />
         </>
