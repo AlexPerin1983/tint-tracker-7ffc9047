@@ -6,10 +6,35 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FilterBar } from "@/components/inventory/FilterBar";
+import { Filters } from "@/types/inventory";
 
 const Index = () => {
   const [showAddItem, setShowAddItem] = useState(false);
   const { t } = useLanguage();
+  
+  const [filters, setFilters] = useState<Filters>({
+    category: "all",
+    name: "",
+    minWidth: "",
+    maxWidth: "",
+    minLength: "",
+    maxLength: "",
+  });
+
+  const handleFilterChange = (newFilters: Filters) => {
+    setFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      category: "all",
+      name: "",
+      minWidth: "",
+      maxWidth: "",
+      minLength: "",
+      maxLength: "",
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
@@ -21,7 +46,11 @@ const Index = () => {
         </Button>
       </div>
 
-      <FilterBar />
+      <FilterBar 
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+      />
 
       <ItemsTable />
 
