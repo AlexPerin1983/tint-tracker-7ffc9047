@@ -18,7 +18,6 @@ import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { FilterBar } from "./FilterBar";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ItemsTableProps {

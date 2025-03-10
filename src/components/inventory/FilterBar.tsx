@@ -8,6 +8,7 @@ import { FilterSheet } from "./FilterSheet";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FilterBarProps {
   filters: Filters;
@@ -21,6 +22,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { t } = useLanguage();
 
   // Efeito para atualizar o filtro de nome quando o termo de busca mudar
   useEffect(() => {
@@ -34,7 +36,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
     onClearFilters();
     setSearchTerm("");
     toast({
-      title: "Filtros limpos!",
+      title: t('filter.filtersCleared'),
       duration: 2000,
     });
   };
@@ -45,7 +47,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
 
   const handleApplyFilters = () => {
     toast({
-      title: "Filtros aplicados com sucesso!",
+      title: t('filter.filtersApplied'),
       duration: 2000,
     });
   };
@@ -64,7 +66,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 pr-9"
-              placeholder="Search..."
+              placeholder={t('common.search')}
             />
             {searchTerm && (
               <button
@@ -113,7 +115,7 @@ export function FilterBar({ filters, onFilterChange, onClearFilters, itemCount }
           className="bg-[#3B82F6] hover:bg-[#2563EB] text-white h-10"
         >
           <X className="h-4 w-4 mr-2" />
-          Clear Filters
+          {t('common.clearFilters')}
         </Button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter, Search, X } from "lucide-react";
 import { Filters } from "@/types/inventory";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { FilterSheet } from "./FilterSheet";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FilterFieldsProps {
   filters: Filters;
@@ -18,6 +20,7 @@ interface FilterFieldsProps {
 
 export function FilterFields({ filters, onFilterChange, variant = "horizontal", itemCount }: FilterFieldsProps) {
   const [localName, setLocalName] = useState(filters.name);
+  const { t } = useLanguage();
   
   // Load saved preference, default to true (inches) if not found
   const [useInches, setUseInches] = useState(() => {
@@ -137,7 +140,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               value={localName}
               onChange={(e) => handleInputChange("name", e.target.value)}
               className="pl-9 pr-9 bg-[#111318] border-slate-700 hover:border-blue-500 transition-colors w-full"
-              placeholder="Search..."
+              placeholder={t('common.search')}
             />
             {localName && (
               <button
@@ -156,7 +159,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               <SelectValue placeholder="Category">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-blue-500" />
-                  {filters.category === "all" ? "All" : filters.category}
+                  {filters.category === "all" ? t('filter.all') : filters.category}
                 </div>
               </SelectValue>
             </SelectTrigger>
@@ -164,7 +167,7 @@ export function FilterFields({ filters, onFilterChange, variant = "horizontal", 
               <SelectItem value="all">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
-                  All
+                  {t('filter.all')}
                 </div>
               </SelectItem>
               <SelectItem value="Window Tinting">Window Tinting</SelectItem>

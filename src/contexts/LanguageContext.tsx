@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'en' | 'pt' | 'es' | 'zh' | 'ar' | 'de' | 'fr' | 'ja' | 'ko';
@@ -96,6 +95,23 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Download QR Code',
     'qrcode.print': 'Print Details',
+    
+    // Common additions
+    'common.actions': 'Actions',
+    'common.clearFilters': 'Clear Filters',
+    'common.search': 'Search...',
+    'common.viewDetails': 'View Details',
+    
+    // Filter
+    'filter.all': 'All',
+    'filter.category': 'Category',
+    'filter.filtersCleared': 'Filters cleared!',
+    'filter.filtersApplied': 'Filters applied successfully!',
+    'filter.itemsFound': 'items found',
+    'filter.lengthRange': 'Length Range',
+    'filter.widthRange': 'Width Range',
+    'filter.max': 'Max',
+    'filter.to': 'to',
   },
   pt: {
     // Header
@@ -177,6 +193,23 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Baixar QR Code',
     'qrcode.print': 'Imprimir Detalhes',
+    
+    // Common additions
+    'common.actions': 'Ações',
+    'common.clearFilters': 'Limpar Filtros',
+    'common.search': 'Pesquisar...',
+    'common.viewDetails': 'Ver Detalhes',
+    
+    // Filter
+    'filter.all': 'Todos',
+    'filter.category': 'Categoria',
+    'filter.filtersCleared': 'Filtros limpos!',
+    'filter.filtersApplied': 'Filtros aplicados com sucesso!',
+    'filter.itemsFound': 'itens encontrados',
+    'filter.lengthRange': 'Intervalo de Comprimento',
+    'filter.widthRange': 'Intervalo de Largura',
+    'filter.max': 'Máx',
+    'filter.to': 'até',
   },
   es: {
     // Header
@@ -258,6 +291,23 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Descargar Código QR',
     'qrcode.print': 'Imprimir Detalles',
+    
+    // Common additions
+    'common.actions': 'Acciones',
+    'common.clearFilters': 'Limpiar Filtros',
+    'common.search': 'Buscar...',
+    'common.viewDetails': 'Ver Detalles',
+    
+    // Filter
+    'filter.all': 'Todos',
+    'filter.category': 'Categoría',
+    'filter.filtersCleared': '¡Filtros limpiados!',
+    'filter.filtersApplied': '¡Filtros aplicados con éxito!',
+    'filter.itemsFound': 'elementos encontrados',
+    'filter.lengthRange': 'Rango de Longitud',
+    'filter.widthRange': 'Rango de Ancho',
+    'filter.max': 'Máx',
+    'filter.to': 'hasta',
   },
   zh: {
     // Header
@@ -339,6 +389,23 @@ export const translations = {
     // QR Code
     'qrcode.download': '下载二维码',
     'qrcode.print': '打印详情',
+    
+    // Common additions
+    'common.actions': '操作',
+    'common.clearFilters': '清除筛选',
+    'common.search': '搜索...',
+    'common.viewDetails': '查看详情',
+    
+    // Filter
+    'filter.all': '全部',
+    'filter.category': '类别',
+    'filter.filtersCleared': '筛选已清除！',
+    'filter.filtersApplied': '筛选成功应用！',
+    'filter.itemsFound': '项目已找到',
+    'filter.lengthRange': '长度范围',
+    'filter.widthRange': '宽度范围',
+    'filter.max': '最大',
+    'filter.to': '至',
   },
   ar: {
     // Header
@@ -420,6 +487,23 @@ export const translations = {
     // QR Code
     'qrcode.download': 'تنزيل رمز QR',
     'qrcode.print': 'طباعة التفاصيل',
+    
+    // Common additions
+    'common.actions': 'إجراءات',
+    'common.clearFilters': 'مسح الفلاتر',
+    'common.search': 'بحث...',
+    'common.viewDetails': 'عرض التفاصيل',
+    
+    // Filter
+    'filter.all': 'الكل',
+    'filter.category': 'الفئة',
+    'filter.filtersCleared': 'تم مسح عوامل التصفية!',
+    'filter.filtersApplied': 'تم تطبيق عوامل التصفية بنجاح!',
+    'filter.itemsFound': 'تم العثور على العناصر',
+    'filter.lengthRange': 'نطاق الطول',
+    'filter.widthRange': 'نطاق العرض',
+    'filter.max': 'الحد الأقصى',
+    'filter.to': 'إلى',
   },
   de: {
     // Header
@@ -501,6 +585,23 @@ export const translations = {
     // QR Code
     'qrcode.download': 'QR-Code herunterladen',
     'qrcode.print': 'Details drucken',
+    
+    // Common additions
+    'common.actions': 'Aktionen',
+    'common.clearFilters': 'Filter löschen',
+    'common.search': 'Suchen...',
+    'common.viewDetails': 'Details anzeigen',
+    
+    // Filter
+    'filter.all': 'Alle',
+    'filter.category': 'Kategorie',
+    'filter.filtersCleared': 'Filter gelöscht!',
+    'filter.filtersApplied': 'Filter erfolgreich angewendet!',
+    'filter.itemsFound': 'Elemente gefunden',
+    'filter.lengthRange': 'Längenbereich',
+    'filter.widthRange': 'Breitenbereich',
+    'filter.max': 'Max',
+    'filter.to': 'bis',
   },
   fr: {
     // Header
@@ -573,211 +674,4 @@ export const translations = {
     'support.customSoftware': 'Logiciel personnalisé',
     'support.websiteDev': 'Développement de site web',
     'support.reportBug': 'Signaler un bug',
-    'support.softwareMessage': 'Bonjour, je suis un utilisateur avec l\'email "{email}". J\'ai besoin d\'un devis pour développer un outil personnalisé pour gérer mon entreprise. J\'attends votre réponse!',
-    'support.websiteMessage': 'Bonjour, je suis un utilisateur avec l\'email {email}. J\'ai besoin d\'un devis pour développer un site web. J\'attends votre réponse!',
-    'support.bugMessage': 'Rapport de bug de l\'utilisateur {email}: Je souhaite signaler un problème rencontré lors de l\'utilisation de l\'application. Voici les détails: [Veuillez décrire le bug, les étapes pour le reproduire et toute information pertinente]',
-    // Links
-    'links.store': 'Boutique Los_Pelikooss',
-    'links.quickLinks': 'Liens rapides',
-    // QR Code
-    'qrcode.download': 'Télécharger le code QR',
-    'qrcode.print': 'Imprimer les détails',
-  },
-  ja: {
-    // Header
-    'app.title': 'QR追跡システム',
-    // Navigation
-    'nav.home': 'ホーム',
-    'nav.scanner': 'スキャナー',
-    'nav.inventory': '在庫',
-    'nav.dashboard': 'ダッシュボード',
-    'nav.rollsManagement': 'ロール管理',
-    'nav.scrapsManagement': '端材管理',
-    'nav.dashboardDescription': '開発中 - 2024年第2四半期リリース予定',
-    'nav.rollsDescription': '近日公開 - 発売日未定',
-    'nav.scrapsDescription': 'ベータテスト中 - 近日公開',
-    'nav.navigation': 'ナビゲーション',
-    // Common
-    'common.back': '戻る',
-    'common.save': '保存',
-    'common.cancel': 'キャンセル',
-    'common.add': '追加',
-    'common.edit': '編集',
-    'common.delete': '削除',
-    'common.search': '検索...',
-    'common.unknownError': '不明なエラー',
-    'common.clearFilters': 'フィルターをクリア',
-    // Auth
-    'auth.login': 'ログイン',
-    'auth.logout': 'ログアウト',
-    'auth.welcome': 'お帰りなさい！',
-    'auth.loginSuccess': 'ログイン成功',
-    'auth.logoutSuccess': 'ログアウト成功',
-    'auth.disconnected': 'システムから切断されました',
-    'auth.logoutError': 'ログアウト中にエラーが発生しました',
-    'auth.accessBlocked': 'アクセスがブロックされました',
-    'auth.accessRevokedMessage': 'アクセス権が取り消されました。再度ログインしてください。',
-    // Items
-    'item.details': '商品詳細',
-    'item.addItem': '商品追加',
-    'item.brand': 'ブランド',
-    'item.category': 'カテゴリー',
-    'item.dimensions': '寸法',
-    'item.price': '1平方メートルあたりの価格',
-    'item.location': '場所',
-    'item.createdAt': '作成日',
-    'item.updatedAt': '最終更新',
-    'item.code': 'コード',
-    'item.actions': 'アクション',
-    'item.name': '製品名',
-    'item.materialType': '材料タイプ',
-    'item.rollSize': 'ロールサイズ',
-    'item.area': '面積（平方メートル）',
-    'item.quantity': '数量',
-    'item.inventoryStatus': '在庫状況',
-    'item.productInfo': '製品情報',
-    'item.parentRoll': '親ロール',
-    'item.viewParentDetails': '親ロールの詳細を表示',
-    'item.remnantDetails': '端材詳細',
-    'item.notFound': '商品が見つかりません',
-    // Units
-    'units.meters': 'メートル',
-    'units.inches': 'インチ',
-    // Consumption
-    'consumption.record': '使用量を記録',
-    // User
-    'user.active': 'アクティブユーザー',
-    // Contact
-    'contact.title': 'お問い合わせ',
-    // Support
-    'support.title': 'サポート',
-    'support.customSoftware': 'カスタムソフトウェア',
-    'support.websiteDev': 'ウェブサイト開発',
-    'support.reportBug': 'バグを報告',
-    'support.softwareMessage': 'こんにちは、メールアドレス「{email}」のユーザーです。ビジネス管理用のカスタムツール開発の見積もりが必要です。ご連絡をお待ちしております！',
-    'support.websiteMessage': 'こんにちは、メールアドレス{email}のユーザーです。ウェブサイト開発の見積もりが必要です。ご連絡をお待ちしております！',
-    'support.bugMessage': 'ユーザー{email}からのバグレポート：アプリケーション使用中に発生した問題を報告します。詳細：[バグの説明、再現手順、関連情報を記入してください]',
-    // Links
-    'links.store': 'Los_Pelikoossストア',
-    'links.quickLinks': 'クイックリンク',
-    // QR Code
-    'qrcode.download': 'QRコードをダウンロード',
-    'qrcode.print': '詳細を印刷',
-  },
-  ko: {
-    // Header
-    'app.title': 'QR 추적 시스템',
-    // Navigation
-    'nav.home': '홈',
-    'nav.scanner': '스캐너',
-    'nav.inventory': '재고',
-    'nav.dashboard': '대시보드',
-    'nav.rollsManagement': '롤 관리',
-    'nav.scrapsManagement': '자투리 관리',
-    'nav.dashboardDescription': '개발 중 - 2024년 2분기 출시 예정',
-    'nav.rollsDescription': '출시 예정 - 날짜 미정',
-    'nav.scrapsDescription': '베타 테스트 중 - 곧 출시',
-    'nav.navigation': '내비게이션',
-    // Common
-    'common.back': '뒤로',
-    'common.save': '저장',
-    'common.cancel': '취소',
-    'common.add': '추가',
-    'common.edit': '수정',
-    'common.delete': '삭제',
-    'common.search': '검색...',
-    'common.unknownError': '알 수 없는 오류',
-    'common.clearFilters': '필터 지우기',
-    // Auth
-    'auth.login': '로그인',
-    'auth.logout': '로그아웃',
-    'auth.welcome': '환영합니다!',
-    'auth.loginSuccess': '로그인 성공',
-    'auth.logoutSuccess': '로그아웃 성공',
-    'auth.disconnected': '시스템에서 연결이 끊겼습니다',
-    'auth.logoutError': '로그아웃 중 오류 발생',
-    'auth.accessBlocked': '접근 차단됨',
-    'auth.accessRevokedMessage': '접근 권한이 취소되었습니다. 다시 로그인해 주세요.',
-    // Items
-    'item.details': '물품 상세',
-    'item.addItem': '물품 추가',
-    'item.brand': '브랜드',
-    'item.category': '카테고리',
-    'item.dimensions': '크기',
-    'item.price': '제곱미터당 가격',
-    'item.location': '위치',
-    'item.createdAt': '생성일',
-    'item.updatedAt': '최종 업데이트',
-    'item.code': '코드',
-    'item.actions': '작업',
-    'item.name': '제품명',
-    'item.materialType': '재질 유형',
-    'item.rollSize': '롤 크기',
-    'item.area': '면적(m²)',
-    'item.quantity': '수량',
-    'item.inventoryStatus': '재고 상태',
-    'item.productInfo': '제품 정보',
-    'item.parentRoll': '상위 롤',
-    'item.viewParentDetails': '상위 롤 상세 보기',
-    'item.remnantDetails': '자투리 상세',
-    'item.notFound': '물품을 찾을 수 없습니다',
-    // Units
-    'units.meters': '미터',
-    'units.inches': '인치',
-    // Consumption
-    'consumption.record': '사용량 기록',
-    // User
-    'user.active': '활성 사용자',
-    // Contact
-    'contact.title': '문의하기',
-    // Support
-    'support.title': '지원',
-    'support.customSoftware': '맞춤형 소프트웨어',
-    'support.websiteDev': '웹사이트 개발',
-    'support.reportBug': '버그 신고',
-    'support.softwareMessage': '안녕하세요, 저는 이메일이 "{email}"인 사용자입니다. 비즈니스 관리를 위한 맞춤형 도구 개발 견적이 필요합니다. 답변 기다리겠습니다!',
-    'support.websiteMessage': '안녕하세요, 저는 이메일이 {email}인 사용자입니다. 웹사이트 개발 견적이 필요합니다. 답변 기다리겠습니다!',
-    'support.bugMessage': '사용자 {email}의 버그 리포트: 애플리케이션 사용 중 발생한 문제를 신고하고 싶습니다. 상세 내용: [버그 설명, 재현 단계 및 관련 정보를 기입해 주세요]',
-    // Links
-    'links.store': 'Los_Pelikooss 스토어',
-    'links.quickLinks': '빠른 링크',
-    // QR Code
-    'qrcode.download': 'QR 코드 다운로드',
-    'qrcode.print': '상세 정보 인쇄',
-  }
-};
-
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return (savedLanguage as Language) || 'en';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
-
-  const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations[typeof language]] || key;
-  };
-
-  const value = {
-    language,
-    setLanguage,
-    t
-  };
-
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
-};
-
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
+    'support.softwareMessage': 'Bonjour, je suis un utilisateur avec l\'email "{email}". J\'ai besoin d\'un devis pour développer un outil personnalisé pour gérer mon entreprise.
