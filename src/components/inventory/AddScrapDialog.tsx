@@ -5,10 +5,10 @@ import * as z from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { ScrapFormData } from "@/types/inventory";
+import { ScrapFormData, Item } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Scissors } from "lucide-react";
 import DimensionsFields from "./form/DimensionsFields";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,13 +17,7 @@ interface AddScrapDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   parentItemId: string;
-  editingScrap?: {
-    id: string;
-    width: number;
-    length: number;
-    quantity: number;
-    observation?: string;
-  };
+  editingScrap?: Item;
 }
 
 export function AddScrapDialog({
@@ -52,6 +46,17 @@ export function AddScrapDialog({
     }
   });
 
+  // Atualiza os valores do formulário quando editingScrap muda
+  useEffect(() => {
+    if (editingScrap) {
+      form.reset({
+        width: editingScrap.width,
+        length: editingScrap.length,
+        observation: editingScrap.observation || ""
+      });
+    }
+  }, [editingScrap, form]);
+
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
       toast({
@@ -79,7 +84,8 @@ export function AddScrapDialog({
       await addScrap({
         ...data,
         quantity: 1,
-        originId: parentItemId
+        originId: parentItemId,
+        id: editingScrap?.id
       });
       await refetchItems();
       toast({
@@ -111,7 +117,7 @@ export function AddScrapDialog({
             </div>
             <div>
               <DialogTitle className="text-lg font-semibold text-white">
-                Add New Scrap
+                {editingScrap ? "Editar Retalho" : "Adicionar Novo Retalho"}
               </DialogTitle>
             </div>
           </div>

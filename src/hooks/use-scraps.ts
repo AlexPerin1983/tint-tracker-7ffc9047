@@ -15,6 +15,20 @@ export function useScraps() {
       const parentItem = items.find(item => item.id === data.originId);
       if (!parentItem) throw new Error('Parent item not found');
 
+      // Se tiver um ID, é uma atualização
+      if (data.id) {
+        const updatedScrap = await itemsDB.update(data.id, {
+          width: data.width,
+          length: data.length,
+          remainingWidth: data.width,
+          remainingLength: data.length,
+          remainingArea: data.width * data.length,
+          observation: data.observation,
+        });
+        return updatedScrap;
+      }
+
+      // Caso contrário, é uma adição
       const newScrap = await itemsDB.add({
         name: `Scrap of ${parentItem.name}`,
         brand: parentItem.brand,

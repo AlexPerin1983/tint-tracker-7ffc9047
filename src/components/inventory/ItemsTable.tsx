@@ -263,7 +263,7 @@ export function ItemsTable({ filters = {
           open={editScrapDialogOpen}
           onOpenChange={setEditScrapDialogOpen}
           parentItemId={selectedItem.originId}
-          scrapToEdit={selectedItem}
+          editingScrap={selectedItem}
         />
       )}
 
