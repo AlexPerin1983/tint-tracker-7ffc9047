@@ -4,7 +4,7 @@ import { Item } from "@/types/inventory";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { EyeIcon, PencilIcon, TrashIcon, SearchIcon, QrCode, ArrowUpDown } from "lucide-react";
+import { EyeIcon, PencilIcon, TrashIcon, SearchIcon, QrCode, ArrowUpDown, Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -27,6 +27,7 @@ export function ItemsTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -121,6 +122,10 @@ export function ItemsTable() {
     setEditDialogOpen(true);
   };
 
+  const handleAddItem = () => {
+    setAddItemDialogOpen(true);
+  };
+
   const getSortIcon = (column: string) => {
     if (sortBy !== column) return <ArrowUpDown className="ml-1 h-4 w-4" />;
     return sortOrder === "asc" ? (
@@ -172,6 +177,37 @@ export function ItemsTable() {
     return `${item.width?.toFixed(2)}m × ${item.length?.toFixed(2)}m`;
   };
 
+  const renderEmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="mb-4 text-slate-400">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="64"
+          height="64"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="mx-auto mb-4 opacity-20"
+        >
+          <path d="M20.91 8.84 8.56 2.23a1.93 1.93 0 0 0-1.81 0L3.1 4.13a2.12 2.12 0 0 0-.05 3.69l12.22 6.93a2 2 0 0 0 1.94 0L21 12.51a2.12 2.12 0 0 0-.09-3.67Z" />
+          <path d="m3.09 8.84 12.35-6.61a1.93 1.93 0 0 1 1.81 0l3.65 1.9a2.12 2.12 0 0 1 .1 3.69L8.73 14.75a2 2 0 0 1-1.94 0L3 12.51a2.12 2.12 0 0 1 .09-3.67Z" />
+          <line x1="12" x2="12" y1="22" y2="13" />
+          <path d="M20 13.5v3.37a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13.5" />
+        </svg>
+      </div>
+      <p className="text-slate-500 mb-6">
+        {t('inventory.noItems')}
+      </p>
+      <Button onClick={handleAddItem} className="gap-2">
+        <Plus className="h-4 w-4" />
+        {t('item.addItem')}
+      </Button>
+    </div>
+  );
+
   return (
     <Card className="border-slate-800/60 bg-slate-900/30 backdrop-blur">
       <div className="p-4">
@@ -183,77 +219,81 @@ export function ItemsTable() {
           <div className="overflow-x-auto">
             {isMobile ? (
               <div className="space-y-2">
-                <div className="grid grid-cols-2 bg-slate-800/70 p-3 rounded-t-md">
-                  <div className="text-xs font-medium uppercase tracking-wider text-slate-400">
-                    {t('item.code')}
-                  </div>
-                  <div className="text-xs font-medium uppercase tracking-wider text-slate-400 text-right">
-                    {t('common.actions')}
-                  </div>
-                </div>
-                
-                {filteredItems.map((item) => (
-                  <div 
-                    key={item.id}
-                    id={`item-${item.id}`}
-                    className={cn(
-                      "p-3 rounded-md bg-slate-800/40 border-t border-slate-700/50",
-                      item.quantity <= item.minQuantity ? "bg-red-900/10 border-red-500/20" : ""
-                    )}
-                  >
-                    <div className="grid grid-cols-2">
-                      <div className="space-y-1">
-                        <div className="font-medium text-white">{item.code}</div>
-                        <div className="text-xs text-slate-400">
-                          {item.category === "Wrap" ? "Roll" : item.category} - {item.name}
-                        </div>
-                        <div className="text-xs text-slate-500">
-                          {formatDimensions(item)}
-                        </div>
+                {filteredItems.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-2 bg-slate-800/70 p-3 rounded-t-md">
+                      <div className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                        {t('item.code')}
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleViewQR(item)}
-                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                          >
-                            <QrCode className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                            asChild
-                          >
-                            <Link to={`/item/${item.id}`}>
-                              <EyeIcon className="h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </div>
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEditItem(item)}
-                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(item.id)}
-                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
+                      <div className="text-xs font-medium uppercase tracking-wider text-slate-400 text-right">
+                        {t('common.actions')}
                       </div>
                     </div>
-                  </div>
-                ))}
+                    
+                    {filteredItems.map((item) => (
+                      <div 
+                        key={item.id}
+                        id={`item-${item.id}`}
+                        className={cn(
+                          "p-3 rounded-md bg-slate-800/40 border-t border-slate-700/50",
+                          item.quantity <= item.minQuantity ? "bg-red-900/10 border-red-500/20" : ""
+                        )}
+                      >
+                        <div className="grid grid-cols-2">
+                          <div className="space-y-1">
+                            <div className="font-medium text-white">{item.code}</div>
+                            <div className="text-xs text-slate-400">
+                              {item.category === "Wrap" ? "Roll" : item.category} - {item.name}
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              {formatDimensions(item)}
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleViewQR(item)}
+                                className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                              >
+                                <QrCode className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                                asChild
+                              >
+                                <Link to={`/item/${item.id}`}>
+                                  <EyeIcon className="h-4 w-4" />
+                                </Link>
+                              </Button>
+                            </div>
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEditItem(item)}
+                                className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDelete(item.id)}
+                                className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : renderEmptyState()}
               </div>
             ) : (
               <Table className="w-full border-collapse">
@@ -310,8 +350,8 @@ export function ItemsTable() {
                 <TableBody>
                   {filteredItems.length === 0 ? (
                     <TableRow className="hover:bg-slate-800/40 border-b border-slate-800/60">
-                      <TableCell colSpan={6} className="px-4 py-10 text-center text-sm text-slate-500">
-                        Nenhum item encontrado. Adicione itens para começar.
+                      <TableCell colSpan={6} className="p-0">
+                        {renderEmptyState()}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -416,6 +456,11 @@ export function ItemsTable() {
           />
         </>
       )}
+
+      <AddItemDialog 
+        open={addItemDialogOpen}
+        onOpenChange={setAddItemDialogOpen}
+      />
     </Card>
   );
 }
