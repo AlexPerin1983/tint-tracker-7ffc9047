@@ -28,12 +28,12 @@ export function LanguageSwitcher() {
           <span className="sr-only">Change language</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" forceMount className="w-[150px]">
+      <DropdownMenuContent align="end" forceMount className="w-[150px] bg-slate-800 border border-slate-700 shadow-lg">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => setLanguage(lang.code as any)}
-            className={language === lang.code ? 'bg-slate-700/50 text-white' : ''}
+            className={language === lang.code ? 'bg-slate-700 text-white' : 'text-white hover:bg-slate-700'}
           >
             {lang.name}
           </DropdownMenuItem>
