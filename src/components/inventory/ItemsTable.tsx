@@ -1,3 +1,4 @@
+
 import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,24 +11,28 @@ import {
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
 import { Link, useLocation } from "react-router-dom";
+import { FilterBar } from "./FilterBar";
 import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
 import AddItemDialog from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
+import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-interface ItemsTableProps {
-  filters: Filters;
-}
-
-export function ItemsTable({ filters }: ItemsTableProps) {
+export function ItemsTable() {
   const location = useLocation();
   const { items, deleteItem } = useItems();
-  const { t } = useLanguage();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const highlightedRowRef = useRef<HTMLTableRowElement>(null);
+  const [filters, setFilters] = useState<Filters>({
+    category: "all",
+    name: "",
+    minWidth: "",
+    maxWidth: "",
+    minLength: "",
+    maxLength: "",
+  });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
@@ -112,7 +117,10 @@ export function ItemsTable({ filters }: ItemsTableProps) {
   };
 
   const isLowStock = (item: Item) => {
+    // Se minQuantity não estiver definido, não mostra alerta
     if (item.minQuantity === undefined || item.minQuantity === null) return false;
+    
+    // Se a quantidade atual for menor ou igual à quantidade mínima, mostra alerta
     return item.quantity <= item.minQuantity;
   };
 
@@ -139,16 +147,23 @@ export function ItemsTable({ filters }: ItemsTableProps) {
 
   return (
     <div className="space-y-4">
+      <FilterBar 
+        filters={filters}
+        onFilterChange={setFilters}
+        onClearFilters={handleClearFilters}
+        itemCount={filteredItems.length}
+      />
+
       <div className="rounded-md border border-muted">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('table.code')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('table.name')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('table.category')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('table.dimensions')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('table.quantity')}</TableHead>
-              <TableHead className="text-right">{t('table.actions')}</TableHead>
+              <TableHead>Code</TableHead>
+              <TableHead className="hidden md:table-cell">Name</TableHead>
+              <TableHead className="hidden md:table-cell">Category</TableHead>
+              <TableHead className="hidden md:table-cell">Dimensions</TableHead>
+              <TableHead className="hidden md:table-cell">Quantity</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
