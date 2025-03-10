@@ -13,15 +13,104 @@ interface BasicFieldsProps {
 const BasicFields = ({
   form
 }: BasicFieldsProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
+  const getCategoryOptions = () => {
+    switch (language) {
+      case 'pt':
+        return [
+          { value: "Window Tinting", label: "Película de Janela" },
+          { value: "PPF", label: "PPF" },
+          { value: "Wrap", label: "Envelopamento" }
+        ];
+      case 'es':
+        return [
+          { value: "Window Tinting", label: "Película para Ventanas" },
+          { value: "PPF", label: "PPF" },
+          { value: "Wrap", label: "Envoltura" }
+        ];
+      case 'fr':
+        return [
+          { value: "Window Tinting", label: "Film pour Vitres" },
+          { value: "PPF", label: "PPF" },
+          { value: "Wrap", label: "Emballage" }
+        ];
+      default:
+        return [
+          { value: "Window Tinting", label: "Window Tinting" },
+          { value: "PPF", label: "PPF" },
+          { value: "Wrap", label: "Wrap" }
+        ];
+    }
+  };
+  
+  const getFieldLabels = () => {
+    switch (language) {
+      case 'pt':
+        return {
+          name: "Nome do Produto",
+          brand: "Marca",
+          category: "Categoria",
+          categoryPlaceholder: "Selecione a categoria",
+          productPlaceholder: "Ex: Película Classic",
+          brandPlaceholder: "Ex: 3M, Llumar, XPEL",
+          quantity: "QTD",
+          stock: "Em Estoque",
+          minQuantity: "QTD",
+          alert: "Alerta"
+        };
+      case 'es':
+        return {
+          name: "Nombre del Producto",
+          brand: "Marca",
+          category: "Categoría",
+          categoryPlaceholder: "Seleccione la categoría",
+          productPlaceholder: "Ej: Película Classic",
+          brandPlaceholder: "Ej: 3M, Llumar, XPEL",
+          quantity: "CANT",
+          stock: "En Stock",
+          minQuantity: "CANT",
+          alert: "Alerta"
+        };
+      case 'fr':
+        return {
+          name: "Nom du Produit",
+          brand: "Marque",
+          category: "Catégorie",
+          categoryPlaceholder: "Sélectionner la catégorie",
+          productPlaceholder: "Ex: Film Classic",
+          brandPlaceholder: "Ex: 3M, Llumar, XPEL",
+          quantity: "QTÉ",
+          stock: "En Stock",
+          minQuantity: "QTÉ",
+          alert: "Alerte"
+        };
+      default:
+        return {
+          name: "Product Name",
+          brand: "Brand",
+          category: "Category",
+          categoryPlaceholder: "Select category",
+          productPlaceholder: "Ex: Classic Film",
+          brandPlaceholder: "Ex: 3M, Llumar, XPEL",
+          quantity: "QTY",
+          stock: "In Stock",
+          minQuantity: "QTY",
+          alert: "Alert"
+        };
+    }
+  };
+  
+  const labels = getFieldLabels();
+  const categoryOptions = getCategoryOptions();
   
   return <TabsContent value="basic" className="space-y-6 mt-4">
       <FormField control={form.control} name="name" render={({
       field
     }) => <FormItem>
-            <FormLabel>Nome do Produto</FormLabel>
+            <FormLabel>{labels.name}</FormLabel>
             <FormControl>
-              <Input placeholder="Ex: Película Classic" {...field} />
+              <Input placeholder={labels.productPlaceholder} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>} />
@@ -29,9 +118,9 @@ const BasicFields = ({
       <FormField control={form.control} name="brand" render={({
       field
     }) => <FormItem>
-            <FormLabel>Marca</FormLabel>
+            <FormLabel>{labels.brand}</FormLabel>
             <FormControl>
-              <Input placeholder="Ex: 3M, Llumar, XPEL" {...field} />
+              <Input placeholder={labels.brandPlaceholder} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>} />
@@ -39,17 +128,19 @@ const BasicFields = ({
       <FormField control={form.control} name="category" render={({
       field
     }) => <FormItem>
-            <FormLabel>Categoria</FormLabel>
+            <FormLabel>{labels.category}</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione a categoria" />
+                  <SelectValue placeholder={labels.categoryPlaceholder} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="Window Tinting">Película de Janela</SelectItem>
-                <SelectItem value="PPF">PPF</SelectItem>
-                <SelectItem value="Wrap">Envelopamento</SelectItem>
+                {categoryOptions.map(option => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />
@@ -67,8 +158,8 @@ const BasicFields = ({
                   <FormMessage />
                 </FormItem>} />
             <div className="flex flex-col items-center gap-1">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Em Estoque</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">{labels.quantity}</span>
+              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">{labels.stock}</span>
             </div>
           </div>
         </div>
@@ -84,8 +175,8 @@ const BasicFields = ({
                   <FormMessage />
                 </FormItem>} />
             <div className="flex flex-col items-center gap-1">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
-              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alerta</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">{labels.minQuantity}</span>
+              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">{labels.alert}</span>
             </div>
           </div>
         </div>

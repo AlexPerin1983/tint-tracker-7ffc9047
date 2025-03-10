@@ -18,11 +18,48 @@ const ItemForm = memo(({
   onSubmit
 }: ItemFormProps) => {
   const [activeTab, setActiveTab] = useState("basic");
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Previne a submissão automática
   };
+  
+  const getTabLabels = () => {
+    switch (language) {
+      case 'pt':
+        return {
+          basic: "Básico",
+          dimensions: "Dimensões",
+          price: "Preço"
+        };
+      case 'es':
+        return {
+          basic: "Básico",
+          dimensions: "Dimensiones",
+          price: "Precio"
+        };
+      case 'zh':
+        return {
+          basic: "基本",
+          dimensions: "尺寸",
+          price: "价格"
+        };
+      case 'fr':
+        return {
+          basic: "Basique",
+          dimensions: "Dimensions",
+          price: "Prix"
+        };
+      default:
+        return {
+          basic: "Basic",
+          dimensions: "Dimensions",
+          price: "Price"
+        };
+    }
+  };
+  
+  const labels = getTabLabels();
   
   return <Form {...form}>
       <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -30,15 +67,15 @@ const ItemForm = memo(({
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="basic" className="flex items-center gap-2 text-blue-500">
               <Package2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Básico</span>
+              <span className="hidden sm:inline">{labels.basic}</span>
             </TabsTrigger>
             <TabsTrigger value="dimensions" className="flex items-center gap-2 text-blue-500 bg-transparent">
               <Ruler className="w-4 h-4" />
-              <span className="hidden sm:inline">Dimensões</span>
+              <span className="hidden sm:inline">{labels.dimensions}</span>
             </TabsTrigger>
             <TabsTrigger value="price" className="flex items-center gap-2 text-blue-500">
               <DollarSign className="w-4 h-4" />
-              <span className="hidden sm:inline">Preço</span>
+              <span className="hidden sm:inline">{labels.price}</span>
             </TabsTrigger>
           </TabsList>
 

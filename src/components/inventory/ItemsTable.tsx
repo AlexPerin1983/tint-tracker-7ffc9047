@@ -1,6 +1,18 @@
 
-import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useItems } from "@/hooks/use-items";
+import { Item } from "@/types/inventory";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { EyeIcon, PencilIcon, TrashIcon, SearchIcon, MoreHorizontal, QrCode, ArrowUpDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -9,260 +21,315 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useItems } from "@/hooks/use-items";
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { Item, Filters } from "@/types/inventory";
-import AddItemDialog from "./AddItemDialog";
-import { QRCodeDialog } from "./qrcode/QRCodeDialog";
-import { AddScrapDialog } from "./AddScrapDialog";
+import { QRCodeDialog } from "@/components/inventory/qrcode/QRCodeDialog";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/components/ui/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-interface ItemsTableProps {
-  filters?: Filters;
-  onFilterChange?: (filters: Filters) => void;
-}
-
-export function ItemsTable({ filters = {
-  category: "all",
-  name: "",
-  minWidth: "",
-  maxWidth: "",
-  minLength: "",
-  maxLength: "",
-}, onFilterChange }: ItemsTableProps) {
-  const location = useLocation();
+export function ItemsTable() {
   const { items, deleteItem } = useItems();
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const highlightedRowRef = useRef<HTMLTableRowElement>(null);
-  const [localFilters, setLocalFilters] = useState<Filters>(filters);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | undefined>();
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [sortBy, setSortBy] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
   const { t } = useLanguage();
-
+  
   useEffect(() => {
-    setLocalFilters(filters);
-  }, [filters]);
-
-  useEffect(() => {
-    const state = location.state as { highlightedItemId?: string };
-    if (state?.highlightedItemId) {
-      setSelectedItemId(state.highlightedItemId);
-      
-      setTimeout(() => {
-        highlightedRowRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }, 100);
-
-      window.history.replaceState({}, document.title);
-    }
-  }, [location]);
-
-  const formatDimensions = (item: Item) => {
-    const metersToInches = (meters: number) => (meters * 39.37).toFixed(2);
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlight = urlParams.get('highlight');
     
-    if (item.type === 'bobina') {
-      const widthInches = metersToInches(item.remainingWidth);
-      const lengthInches = metersToInches(item.remainingLength);
-      return `${widthInches}" x ${lengthInches}" (${item.remainingWidth.toFixed(2)}m x ${item.remainingLength.toFixed(2)}m)`;
+    if (highlight) {
+      const elem = document.getElementById(`item-${highlight}`);
+      if (elem) {
+        elem.classList.add('bg-blue-500/10');
+        elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        setTimeout(() => {
+          elem.classList.remove('bg-blue-500/10');
+          elem.classList.add('bg-transparent');
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }, 3000);
+      }
     }
-    const widthInches = metersToInches(item.width);
-    const lengthInches = metersToInches(item.length);
-    return `${widthInches}" x ${lengthInches}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
-  };
-
-  const handleFilterChange = (newFilters: Filters) => {
-    setLocalFilters(newFilters);
-    if (onFilterChange) {
-      onFilterChange(newFilters);
-    }
-  };
-
-  const handleClearFilters = () => {
-    const clearedFilters: Filters = {
-      category: "all",
-      name: "",
-      minWidth: "",
-      maxWidth: "",
-      minLength: "",
-      maxLength: "",
-    };
-    setLocalFilters(clearedFilters);
-    if (onFilterChange) {
-      onFilterChange(clearedFilters);
+  }, []);
+  
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
     }
   };
-
-  const filterItems = (items: Item[]) => {
-    return items.filter((item) => {
-      const matchCategory = localFilters.category === "all" || item.category === localFilters.category;
-      const matchName = !localFilters.name || 
-        item.name.toLowerCase().includes(localFilters.name.toLowerCase());
-      
-      const matchWidth = (
-        (!localFilters.minWidth || item.width >= parseFloat(localFilters.minWidth)) &&
-        (!localFilters.maxWidth || item.width <= parseFloat(localFilters.maxWidth))
-      );
-      
-      const matchLength = (
-        (!localFilters.minLength || item.length >= parseFloat(localFilters.minLength)) &&
-        (!localFilters.maxLength || item.length <= parseFloat(localFilters.maxLength))
-      );
-
-      return matchCategory && matchName && matchWidth && matchLength;
+  
+  const getSortedItems = () => {
+    let sortedItems = [...items];
+    
+    if (sortBy) {
+      sortedItems.sort((a, b) => {
+        let valueA: any = a[sortBy as keyof Item];
+        let valueB: any = b[sortBy as keyof Item];
+        
+        // Tratamento especial para campos específicos
+        if (sortBy === "category") {
+          return sortOrder === "asc" 
+            ? valueA.localeCompare(valueB) 
+            : valueB.localeCompare(valueA);
+        }
+        
+        if (typeof valueA === "string" && typeof valueB === "string") {
+          return sortOrder === "asc" 
+            ? valueA.localeCompare(valueB) 
+            : valueB.localeCompare(valueA);
+        }
+        
+        if (valueA < valueB) return sortOrder === "asc" ? -1 : 1;
+        if (valueA > valueB) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    return sortedItems;
+  };
+  
+  const sortedItems = getSortedItems();
+  
+  const filteredItems = sortedItems.filter((item) => {
+    const lowerSearchTerm = searchTerm.toLowerCase().trim();
+    return (
+      item.name?.toLowerCase().includes(lowerSearchTerm) ||
+      item.brand?.toLowerCase().includes(lowerSearchTerm) ||
+      item.category?.toLowerCase().includes(lowerSearchTerm) ||
+      item.code?.toLowerCase().includes(lowerSearchTerm)
+    );
+  });
+  
+  const handleDelete = (id: string) => {
+    deleteItem(id);
+    toast({
+      title: "Item excluído",
+      description: "O item foi removido com sucesso.",
     });
   };
 
-  const filteredItems = filterItems(items);
-
-  const handleEditClick = (item: Item) => {
-    setSelectedItemId(item.id);
-    setSelectedItem(item);
-    if (item.type === 'scrap') {
-      setEditScrapDialogOpen(true);
-    } else {
-      setEditDialogOpen(true);
-    }
-  };
-
-  const handleQRCodeClick = (item: Item) => {
-    setSelectedItemId(item.id);
+  const handleViewQR = (item: Item) => {
     setSelectedItem(item);
     setQrCodeDialogOpen(true);
   };
 
-  const isLowStock = (item: Item) => {
-    if (item.minQuantity === undefined || item.minQuantity === null) return false;
-    return item.quantity <= item.minQuantity;
+  const getSortIcon = (column: string) => {
+    if (sortBy !== column) return <ArrowUpDown className="ml-1 h-4 w-4" />;
+    return sortOrder === "asc" ? (
+      <ArrowUpDown className="ml-1 h-4 w-4 text-blue-500" />
+    ) : (
+      <ArrowUpDown className="ml-1 h-4 w-4 text-blue-500 rotate-180" />
+    );
   };
 
-  const renderQuantityCell = (item: Item) => {
-    if (isLowStock(item)) {
-      return (
-        <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-1">
-                <span>{item.quantity}</span>
-                <AlertTriangle className="h-4 w-4 text-amber-500" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{t('item.minQuantityWarning', { minQuantity: item.minQuantity })}</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      );
+  // Determine a categoria para um item
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case "Window Tinting":
+        return "Película de Janela";
+      case "PPF":
+        return "PPF";
+      case "Wrap":
+        return "Envelopamento";
+      default:
+        return category;
     }
-    return item.quantity;
+  };
+
+  // Determinar a cor do badge com base na categoria
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "Window Tinting":
+        return "blue";
+      case "PPF":
+        return "green";
+      case "Wrap":
+        return "orange";
+      default:
+        return "slate";
+    }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border border-muted">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('item.code')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('item.name')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('item.category')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('item.dimensions')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('item.quantity')}</TableHead>
-              <TableHead className="text-right">{t('common.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredItems.map((item) => (
-              <TableRow 
-                key={item.id}
-                ref={item.id === selectedItemId ? highlightedRowRef : undefined}
-                className={`${
-                  selectedItemId === item.id ? "bg-muted/50 transition-colors duration-1000" : ""
-                } ${
-                  isLowStock(item) ? "bg-amber-50/10" : ""
-                }`}
-              >
-                <TableCell className="font-medium">
-                  <div className="flex flex-col">
-                    <span>{item.code}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {item.type === 'bobina' ? t('item.roll') : t('item.scrap')} - {item.name.replace('Retalho de ', '')}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDimensions(item)}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', t('item.scrapOf'))}</TableCell>
-                <TableCell className="hidden md:table-cell">{item.category}</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {formatDimensions(item)}
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {renderQuantityCell(item)}
-                </TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`} onClick={() => setSelectedItemId(item.id)}>
-                    <Button variant="ghost" size="icon" title={t('common.viewDetails')}>
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    title={t('common.edit')}
-                    onClick={() => handleEditClick(item)}
+    <Card className="border-slate-800/60 bg-slate-900/30 backdrop-blur">
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="relative flex-1 max-w-sm">
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 h-4 w-4" />
+            <Input
+              placeholder={t('common.search')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 bg-slate-800/50 border-slate-700 text-slate-300 w-full"
+            />
+          </div>
+          <div className="text-sm font-medium text-slate-500">
+            {filteredItems.length} {t('filter.itemsFound')}
+          </div>
+        </div>
+
+        <div className="rounded-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table className="w-full border-collapse">
+              <TableHeader className="bg-slate-800/70">
+                <TableRow className="hover:bg-slate-800/60 border-b border-slate-700/50">
+                  <TableHead 
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 cursor-pointer"
+                    onClick={() => handleSort("name")}
                   >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="text-destructive" 
-                    title={t('common.delete')}
-                    onClick={() => {
-                      setSelectedItemId(item.id);
-                      deleteItem(item.id);
-                    }}
+                    <div className="flex items-center">
+                      {t('item.name')}
+                      {getSortIcon("name")}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 cursor-pointer"
+                    onClick={() => handleSort("brand")}
                   >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    title="QR Code"
-                    onClick={() => handleQRCodeClick(item)}
+                    <div className="flex items-center">
+                      {t('item.brand')}
+                      {getSortIcon("brand")}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 cursor-pointer"
+                    onClick={() => handleSort("category")}
                   >
-                    <QrCode className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    <div className="flex items-center">
+                      {t('item.category')}
+                      {getSortIcon("category")}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 cursor-pointer"
+                  >
+                    <div className="flex items-center">
+                      {t('item.dimensions')}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400 cursor-pointer"
+                    onClick={() => handleSort("quantity")}
+                  >
+                    <div className="flex items-center">
+                      {t('item.quantity')}
+                      {getSortIcon("quantity")}
+                    </div>
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-400">
+                    {t('common.actions')}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredItems.length === 0 ? (
+                  <TableRow className="hover:bg-slate-800/40 border-b border-slate-800/60">
+                    <TableCell colSpan={6} className="px-4 py-10 text-center text-sm text-slate-500">
+                      Nenhum item encontrado. Adicione itens para começar.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredItems.map((item) => (
+                    <TableRow 
+                      key={item.id} 
+                      id={`item-${item.id}`}
+                      className={cn(
+                        "hover:bg-slate-800/40 border-b border-slate-800/60 transition-colors",
+                        item.quantity <= item.minQuantity ? "bg-red-900/10" : ""
+                      )}
+                    >
+                      <TableCell className="px-4 py-2 text-white">
+                        <div className="font-medium">{item.name}</div>
+                        <div className="text-xs text-slate-500">{item.code}</div>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-slate-300">
+                        {item.brand || "—"}
+                      </TableCell>
+                      <TableCell className="px-4 py-2">
+                        <Badge variant="outline" className={`bg-${getCategoryColor(item.category)}-500/10 text-${getCategoryColor(item.category)}-500 border-${getCategoryColor(item.category)}-500/30`}>
+                          {getCategoryLabel(item.category)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-slate-400">
+                        <div className="flex items-center gap-1">
+                          <span>
+                            {item.width.toFixed(2)}m × {item.length.toFixed(2)}m
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-2">
+                        <div className={cn(
+                          "px-2 py-1 rounded inline-flex items-center justify-center text-xs font-medium",
+                          item.quantity <= item.minQuantity 
+                            ? "bg-red-500/10 text-red-500" 
+                            : "bg-green-500/10 text-green-500"
+                        )}>
+                          {item.quantity}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-2 text-right">
+                        <div className="flex items-center justify-end space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleViewQR(item)}
+                            className="h-8 w-8 hover:bg-blue-500/10 hover:text-blue-500"
+                          >
+                            <QrCode className="h-4 w-4" />
+                          </Button>
+                          <Link to={`/item/${item.id}`}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 hover:bg-slate-700"
+                            >
+                              <EyeIcon className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-slate-700"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className="w-[160px] bg-slate-900 border border-slate-800"
+                            >
+                              <DropdownMenuItem
+                                className="text-red-500 hover:text-red-600 cursor-pointer"
+                                onClick={() => handleDelete(item.id)}
+                              >
+                                <TrashIcon className="mr-2 h-4 w-4" />
+                                <span>{t('common.delete')}</span>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
-
-      <AddItemDialog
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        mode="edit"
-        itemToEdit={selectedItem}
-      />
-
-      {selectedItem?.originId && (
-        <AddScrapDialog
-          open={editScrapDialogOpen}
-          onOpenChange={setEditScrapDialogOpen}
-          parentItemId={selectedItem.originId}
-          editingScrap={selectedItem}
-        />
-      )}
 
       {selectedItem && (
         <QRCodeDialog
@@ -271,6 +338,6 @@ export function ItemsTable({ filters = {
           item={selectedItem}
         />
       )}
-    </div>
+    </Card>
   );
 }
