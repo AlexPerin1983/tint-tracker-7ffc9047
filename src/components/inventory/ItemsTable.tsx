@@ -40,7 +40,7 @@ export function ItemsTable() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -78,7 +78,6 @@ export function ItemsTable() {
         let valueA: any = a[sortBy as keyof Item];
         let valueB: any = b[sortBy as keyof Item];
         
-        // Tratamento especial para campos específicos
         if (sortBy === "category") {
           return sortOrder === "asc" 
             ? valueA.localeCompare(valueB) 
@@ -139,21 +138,31 @@ export function ItemsTable() {
     );
   };
 
-  // Determine a categoria para um item
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case "Window Tinting":
-        return "Película de Janela";
+        switch (language) {
+          case 'pt': return "Película de Janela";
+          case 'es': return "Película para Ventanas";
+          case 'zh': return "窗膜";
+          case 'fr': return "Film pour Vitres";
+          default: return "Window Tinting";
+        }
       case "PPF":
         return "PPF";
       case "Wrap":
-        return "Envelopamento";
+        switch (language) {
+          case 'pt': return "Envelopamento";
+          case 'es': return "Envoltura";
+          case 'zh': return "车身改色膜";
+          case 'fr': return "Emballage";
+          default: return "Wrap";
+        }
       default:
         return category;
     }
   };
 
-  // Determinar a cor do badge com base na categoria
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "Window Tinting":
@@ -341,7 +350,7 @@ export function ItemsTable() {
           <AddItemDialog 
             open={editDialogOpen}
             onOpenChange={setEditDialogOpen}
-            editingItem={selectedItem}
+            editItem={selectedItem}
             mode="edit"
           />
         </>
