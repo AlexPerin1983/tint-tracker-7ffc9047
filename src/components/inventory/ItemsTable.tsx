@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useItems } from "@/hooks/use-items";
 import { Item } from "@/types/inventory";
@@ -222,41 +223,45 @@ export function ItemsTable() {
                           {formatDimensions(item)}
                         </div>
                       </div>
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleViewQR(item)}
-                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                        >
-                          <QrCode className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                          asChild
-                        >
-                          <Link to={`/item/${item.id}`}>
-                            <EyeIcon className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEditItem(item)}
-                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                        >
-                          <PencilIcon className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(item.id)}
-                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </Button>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleViewQR(item)}
+                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                          >
+                            <QrCode className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                            asChild
+                          >
+                            <Link to={`/item/${item.id}`}>
+                              <EyeIcon className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                        </div>
+                        <div className="flex justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditItem(item)}
+                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(item.id)}
+                            className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
