@@ -1,9 +1,11 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/types/inventory";
 import { formatDate } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { History, Scissors } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -12,9 +14,89 @@ interface TransactionsTableProps {
 
 export function TransactionsTable({ transactions, onRecordUsage }: TransactionsTableProps) {
   const isMobile = useIsMobile();
+  const { language } = useLanguage();
+  
   const consumptionTransactions = transactions
     .filter(t => t.type === 'corte')
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+  // Traduções para o título e labels
+  const getTitleLabel = () => {
+    switch (language) {
+      case 'pt': return "Histórico de Uso";
+      case 'es': return "Historial de Uso";
+      case 'zh': return "使用历史";
+      case 'fr': return "Historique d'Utilisation";
+      default: return "Usage History";
+    }
+  };
+
+  const getRecordUsageLabel = () => {
+    switch (language) {
+      case 'pt': return "Registrar Uso";
+      case 'es': return "Registrar Uso";
+      case 'zh': return "记录使用";
+      case 'fr': return "Enregistrer Utilisation";
+      default: return "Record Usage";
+    }
+  };
+
+  const getNoUsageLabel = () => {
+    switch (language) {
+      case 'pt': return "Nenhum uso registrado.";
+      case 'es': return "Ningún uso registrado.";
+      case 'zh': return "没有记录的使用。";
+      case 'fr': return "Aucune utilisation enregistrée.";
+      default: return "No usage recorded.";
+    }
+  };
+
+  const getTableLabels = () => {
+    switch (language) {
+      case 'pt': 
+        return {
+          date: "Data",
+          width: "Largura (m)",
+          length: "Comprimento (m)",
+          area: "Área (m²)",
+          dimensions: "Dimensões:"
+        };
+      case 'es': 
+        return {
+          date: "Fecha",
+          width: "Ancho (m)",
+          length: "Longitud (m)",
+          area: "Área (m²)",
+          dimensions: "Dimensiones:"
+        };
+      case 'zh': 
+        return {
+          date: "日期",
+          width: "宽度 (m)",
+          length: "长度 (m)",
+          area: "面积 (m²)",
+          dimensions: "尺寸："
+        };
+      case 'fr': 
+        return {
+          date: "Date",
+          width: "Largeur (m)",
+          length: "Longueur (m)",
+          area: "Surface (m²)",
+          dimensions: "Dimensions :"
+        };
+      default: 
+        return {
+          date: "Date",
+          width: "Width (m)",
+          length: "Length (m)",
+          area: "Area (m²)",
+          dimensions: "Dimensions:"
+        };
+    }
+  };
+
+  const tableLabels = getTableLabels();
 
   if (consumptionTransactions.length === 0) {
     return (
@@ -23,7 +105,7 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-5 h-5 text-primary" />
-              <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+              <CardTitle className="text-lg md:text-xl">{getTitleLabel()}</CardTitle>
             </div>
             <Button 
               variant="default"
@@ -31,13 +113,13 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
               className="bg-primary hover:bg-primary/90"
             >
               <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-              Record Usage
+              {getRecordUsageLabel()}
             </Button>
           </div>
         </CardHeader>
         <CardContent className="p-4 md:p-6 pt-0">
           <p className="text-sm text-muted-foreground">
-            No usage recorded.
+            {getNoUsageLabel()}
           </p>
         </CardContent>
       </Card>
@@ -50,7 +132,7 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <History className="w-5 h-5 text-primary" />
-            <CardTitle className="text-lg md:text-xl">Usage History</CardTitle>
+            <CardTitle className="text-lg md:text-xl">{getTitleLabel()}</CardTitle>
           </div>
           <Button 
             variant="default"
@@ -58,7 +140,7 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
             className="bg-primary hover:bg-primary/90"
           >
             <Scissors className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
-            Record Usage
+            {getRecordUsageLabel()}
           </Button>
         </div>
       </CardHeader>
@@ -77,13 +159,13 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Dimensions:</p>
+                    <p className="text-muted-foreground">{tableLabels.dimensions}</p>
                     <p className="font-medium">
                       {transaction.width.toFixed(2)}m x {transaction.length.toFixed(2)}m
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Area:</p>
+                    <p className="text-muted-foreground">{tableLabels.area}</p>
                     <p className="font-medium">{transaction.area.toFixed(2)}m²</p>
                   </div>
                 </div>
@@ -95,10 +177,10 @@ export function TransactionsTable({ transactions, onRecordUsage }: TransactionsT
             <table className="w-full text-sm">
               <thead className="text-xs uppercase bg-muted/50">
                 <tr>
-                  <th scope="col" className="px-4 py-3 text-left">Date</th>
-                  <th scope="col" className="px-4 py-3 text-right">Width (m)</th>
-                  <th scope="col" className="px-4 py-3 text-right">Length (m)</th>
-                  <th scope="col" className="px-4 py-3 text-right">Area (m²)</th>
+                  <th scope="col" className="px-4 py-3 text-left">{tableLabels.date}</th>
+                  <th scope="col" className="px-4 py-3 text-right">{tableLabels.width}</th>
+                  <th scope="col" className="px-4 py-3 text-right">{tableLabels.length}</th>
+                  <th scope="col" className="px-4 py-3 text-right">{tableLabels.area}</th>
                 </tr>
               </thead>
               <tbody>
