@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useItems } from "@/hooks/use-items";
 import { Item } from "@/types/inventory";
@@ -176,19 +175,8 @@ export function ItemsTable() {
   return (
     <Card className="border-slate-800/60 bg-slate-900/30 backdrop-blur">
       <div className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="relative flex-1 max-w-sm">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 h-4 w-4" />
-            <Input
-              placeholder={t('common.search')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 bg-slate-800/50 border-slate-700 text-slate-300 w-full"
-            />
-          </div>
-          <div className="text-sm font-medium text-slate-500">
-            {filteredItems.length} {t('filter.itemsFound')}
-          </div>
+        <div className="text-sm font-medium text-slate-500 mb-4">
+          {filteredItems.length} {t('filter.itemsFound')}
         </div>
 
         <div className="rounded-md overflow-hidden">
