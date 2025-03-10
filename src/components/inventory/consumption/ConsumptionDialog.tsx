@@ -33,9 +33,9 @@ export function ConsumptionDialog({ item, open, onClose }: ConsumptionDialogProp
     }}>
       <DialogContent className="sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[100dvh] sm:h-auto">
         <div className="flex items-center justify-end space-x-2 p-4 border-b border-slate-800">
-          <span className="text-sm text-[#8E9196] font-medium">Meters</span>
+          <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Meters</span>
           <Switch checked={useInches} onCheckedChange={handleUnitChange} />
-          <span className="text-sm text-[#8E9196] font-medium">Inches</span>
+          <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Inches</span>
         </div>
         <ConsumptionForm 
           item={item} 

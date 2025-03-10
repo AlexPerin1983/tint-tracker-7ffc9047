@@ -100,14 +100,14 @@ const DimensionsFields = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-end space-x-2 mb-6">
-        <span className="text-sm text-[#8E9196] font-medium">Meters</span>
+        <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Meters</span>
         <Switch 
           checked={useInches} 
           onCheckedChange={(value) => {
             setUseInches(value);
           }} 
         />
-        <span className="text-sm text-[#8E9196] font-medium">Inches</span>
+        <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Inches</span>
       </div>
 
       <DimensionField
