@@ -40,6 +40,8 @@ export const translations = {
     'common.search': 'Search...',
     'common.unknownError': 'Unknown error',
     'common.clearFilters': 'Clear Filters',
+    'common.actions': 'Actions',
+    'common.viewDetails': 'View Details',
     // Auth
     'auth.login': 'Login',
     'auth.logout': 'Logout',
@@ -73,6 +75,10 @@ export const translations = {
     'item.viewParentDetails': 'View Parent Roll Details',
     'item.remnantDetails': 'Remnant Details',
     'item.notFound': 'Item not found',
+    'item.roll': 'Roll',
+    'item.scrap': 'Scrap',
+    'item.scrapOf': 'Scrap of',
+    'item.minQuantityWarning': 'Low stock: Minimum quantity is {minQuantity}',
     // Units
     'units.meters': 'Meters',
     'units.inches': 'Inches',
@@ -96,12 +102,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Download QR Code',
     'qrcode.print': 'Print Details',
-    
-    // Common additions
-    'common.actions': 'Actions',
-    'common.clearFilters': 'Clear Filters',
-    'common.search': 'Search...',
-    'common.viewDetails': 'View Details',
     
     // Filter
     'filter.all': 'All',
@@ -138,6 +138,8 @@ export const translations = {
     'common.search': 'Pesquisar...',
     'common.unknownError': 'Erro desconhecido',
     'common.clearFilters': 'Limpar Filtros',
+    'common.actions': 'Ações',
+    'common.viewDetails': 'Ver Detalhes',
     // Auth
     'auth.login': 'Entrar',
     'auth.logout': 'Sair',
@@ -171,6 +173,10 @@ export const translations = {
     'item.viewParentDetails': 'Ver Detalhes do Rolo de Origem',
     'item.remnantDetails': 'Detalhes do Retalho',
     'item.notFound': 'Item não encontrado',
+    'item.roll': 'Bobina',
+    'item.scrap': 'Retalho',
+    'item.scrapOf': 'Retalho de',
+    'item.minQuantityWarning': 'Estoque baixo: Quantidade mínima é {minQuantity}',
     // Units
     'units.meters': 'Metros',
     'units.inches': 'Polegadas',
@@ -194,12 +200,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Baixar QR Code',
     'qrcode.print': 'Imprimir Detalhes',
-    
-    // Common additions
-    'common.actions': 'Ações',
-    'common.clearFilters': 'Limpar Filtros',
-    'common.search': 'Pesquisar...',
-    'common.viewDetails': 'Ver Detalhes',
     
     // Filter
     'filter.all': 'Todos',
@@ -236,6 +236,8 @@ export const translations = {
     'common.search': 'Buscar...',
     'common.unknownError': 'Error desconocido',
     'common.clearFilters': 'Limpiar Filtros',
+    'common.actions': 'Acciones',
+    'common.viewDetails': 'Ver Detalles',
     // Auth
     'auth.login': 'Iniciar sesión',
     'auth.logout': 'Cerrar sesión',
@@ -269,6 +271,10 @@ export const translations = {
     'item.viewParentDetails': 'Ver Detalles del Rollo Principal',
     'item.remnantDetails': 'Detalles del Resto',
     'item.notFound': 'Artículo no encontrado',
+    'item.roll': 'Rollo',
+    'item.scrap': 'Resto',
+    'item.scrapOf': 'Resto de',
+    'item.minQuantityWarning': 'Stock bajo: La cantidad mínima es {minQuantity}',
     // Units
     'units.meters': 'Metros',
     'units.inches': 'Pulgadas',
@@ -292,12 +298,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Descargar Código QR',
     'qrcode.print': 'Imprimir Detalles',
-    
-    // Common additions
-    'common.actions': 'Acciones',
-    'common.clearFilters': 'Limpiar Filtros',
-    'common.search': 'Buscar...',
-    'common.viewDetails': 'Ver Detalles',
     
     // Filter
     'filter.all': 'Todos',
@@ -334,6 +334,8 @@ export const translations = {
     'common.search': '搜索...',
     'common.unknownError': '未知错误',
     'common.clearFilters': '清除筛选',
+    'common.actions': '操作',
+    'common.viewDetails': '查看详情',
     // Auth
     'auth.login': '登录',
     'auth.logout': '登出',
@@ -367,6 +369,10 @@ export const translations = {
     'item.viewParentDetails': '查看父卷材详情',
     'item.remnantDetails': '边角料详情',
     'item.notFound': '未找到物品',
+    'item.roll': '卷材',
+    'item.scrap': '边角料',
+    'item.scrapOf': '边角料来源',
+    'item.minQuantityWarning': '库存不足：最低库存为 {minQuantity}',
     // Units
     'units.meters': '米',
     'units.inches': '英寸',
@@ -390,12 +396,6 @@ export const translations = {
     // QR Code
     'qrcode.download': '下载二维码',
     'qrcode.print': '打印详情',
-    
-    // Common additions
-    'common.actions': '操作',
-    'common.clearFilters': '清除筛选',
-    'common.search': '搜索...',
-    'common.viewDetails': '查看详情',
     
     // Filter
     'filter.all': '全部',
@@ -432,6 +432,8 @@ export const translations = {
     'common.search': 'بحث...',
     'common.unknownError': 'خطأ غير معروف',
     'common.clearFilters': 'مسح الفلاتر',
+    'common.actions': 'إجراءات',
+    'common.viewDetails': 'عرض التفاصيل',
     // Auth
     'auth.login': 'تسجيل الدخول',
     'auth.logout': 'تسجيل الخروج',
@@ -465,6 +467,10 @@ export const translations = {
     'item.viewParentDetails': 'عرض تفاصيل اللفة الأصلية',
     'item.remnantDetails': 'تفاصيل القصاصة',
     'item.notFound': 'لم يتم العثور على المنتج',
+    'item.roll': 'لفة',
+    'item.scrap': 'قصاصة',
+    'item.scrapOf': 'قصاصة من',
+    'item.minQuantityWarning': 'المخزون منخفض: الحد الأدنى للكمية هو {minQuantity}',
     // Units
     'units.meters': 'متر',
     'units.inches': 'بوصة',
@@ -488,12 +494,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'تنزيل رمز QR',
     'qrcode.print': 'طباعة التفاصيل',
-    
-    // Common additions
-    'common.actions': 'إجراءات',
-    'common.clearFilters': 'مسح الفلاتر',
-    'common.search': 'بحث...',
-    'common.viewDetails': 'عرض التفاصيل',
     
     // Filter
     'filter.all': 'الكل',
@@ -530,6 +530,8 @@ export const translations = {
     'common.search': 'Suchen...',
     'common.unknownError': 'Unbekannter Fehler',
     'common.clearFilters': 'Filter löschen',
+    'common.actions': 'Aktionen',
+    'common.viewDetails': 'Details anzeigen',
     // Auth
     'auth.login': 'Anmelden',
     'auth.logout': 'Abmelden',
@@ -563,6 +565,10 @@ export const translations = {
     'item.viewParentDetails': 'Hauptrollendetails anzeigen',
     'item.remnantDetails': 'Restdetails',
     'item.notFound': 'Artikel nicht gefunden',
+    'item.roll': 'Rolle',
+    'item.scrap': 'Rest',
+    'item.scrapOf': 'Rest von',
+    'item.minQuantityWarning': 'Niedriger Lagerbestand: Mindestmenge ist {minQuantity}',
     // Units
     'units.meters': 'Meter',
     'units.inches': 'Zoll',
@@ -586,12 +592,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'QR-Code herunterladen',
     'qrcode.print': 'Details drucken',
-    
-    // Common additions
-    'common.actions': 'Aktionen',
-    'common.clearFilters': 'Filter löschen',
-    'common.search': 'Suchen...',
-    'common.viewDetails': 'Details anzeigen',
     
     // Filter
     'filter.all': 'Alle',
@@ -628,6 +628,8 @@ export const translations = {
     'common.search': 'Rechercher...',
     'common.unknownError': 'Erreur inconnue',
     'common.clearFilters': 'Effacer les filtres',
+    'common.actions': 'Actions',
+    'common.viewDetails': 'Voir les détails',
     // Auth
     'auth.login': 'Connexion',
     'auth.logout': 'Déconnexion',
@@ -661,6 +663,10 @@ export const translations = {
     'item.viewParentDetails': 'Voir les détails du rouleau parent',
     'item.remnantDetails': 'Détails de la chute',
     'item.notFound': 'Article non trouvé',
+    'item.roll': 'Rouleau',
+    'item.scrap': 'Chute',
+    'item.scrapOf': 'Chute de',
+    'item.minQuantityWarning': 'Stock bas : La quantité minimale est {minQuantity}',
     // Units
     'units.meters': 'Mètres',
     'units.inches': 'Pouces',
@@ -684,12 +690,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'Télécharger le code QR',
     'qrcode.print': 'Imprimer les détails',
-    
-    // Common additions
-    'common.actions': 'Actions',
-    'common.clearFilters': 'Effacer les filtres',
-    'common.search': 'Rechercher...',
-    'common.viewDetails': 'Voir les détails',
     
     // Filter
     'filter.all': 'Tous',
@@ -726,6 +726,8 @@ export const translations = {
     'common.search': '検索...',
     'common.unknownError': '不明なエラー',
     'common.clearFilters': 'フィルターをクリア',
+    'common.actions': 'アクション',
+    'common.viewDetails': '詳細を表示',
     // Auth
     'auth.login': 'ログイン',
     'auth.logout': 'ログアウト',
@@ -759,6 +761,10 @@ export const translations = {
     'item.viewParentDetails': '親ロールの詳細を表示',
     'item.remnantDetails': '残りの詳細',
     'item.notFound': 'アイテムが見つかりません',
+    'item.roll': 'ロール',
+    'item.scrap': '端材',
+    'item.scrapOf': '端材元',
+    'item.minQuantityWarning': '在庫不足: 最小数量は {minQuantity} です',
     // Units
     'units.meters': 'メートル',
     'units.inches': 'インチ',
@@ -782,12 +788,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'QRコードをダウンロード',
     'qrcode.print': '詳細を印刷',
-    
-    // Common additions
-    'common.actions': 'アクション',
-    'common.clearFilters': 'フィルターをクリア',
-    'common.search': '検索...',
-    'common.viewDetails': '詳細を表示',
     
     // Filter
     'filter.all': 'すべて',
@@ -824,6 +824,8 @@ export const translations = {
     'common.search': '검색...',
     'common.unknownError': '알 수 없는 오류',
     'common.clearFilters': '필터 지우기',
+    'common.actions': '작업',
+    'common.viewDetails': '세부정보 보기',
     // Auth
     'auth.login': '로그인',
     'auth.logout': '로그아웃',
@@ -857,6 +859,10 @@ export const translations = {
     'item.viewParentDetails': '상위 롤 세부정보 보기',
     'item.remnantDetails': '잔여물 세부정보',
     'item.notFound': '아이템을 찾을 수 없음',
+    'item.roll': '롤',
+    'item.scrap': '스크랩',
+    'item.scrapOf': '스크랩 출처',
+    'item.minQuantityWarning': '재고 부족: 최소 수량은 {minQuantity}입니다',
     // Units
     'units.meters': '미터',
     'units.inches': '인치',
@@ -880,12 +886,6 @@ export const translations = {
     // QR Code
     'qrcode.download': 'QR 코드 다운로드',
     'qrcode.print': '세부정보 인쇄',
-    
-    // Common additions
-    'common.actions': '작업',
-    'common.clearFilters': '필터 지우기',
-    'common.search': '검색...',
-    'common.viewDetails': '세부정보 보기',
     
     // Filter
     'filter.all': '전체',
@@ -920,9 +920,18 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     document.documentElement.lang = language;
   }, [language]);
 
-  const t = (key: string): string => {
+  const t = (key: string, params?: Record<string, any>): string => {
     const langTranslations = translations[language] || translations.en;
-    return langTranslations[key] || translations.en[key] || key;
+    let text = langTranslations[key] || translations.en[key] || key;
+    
+    // Replace parameters if provided
+    if (params) {
+      Object.keys(params).forEach(paramKey => {
+        text = text.replace(`{${paramKey}}`, params[paramKey]);
+      });
+    }
+    
+    return text;
   };
 
   return (

@@ -85,7 +85,7 @@ export function ItemsTable({ filters = {
   };
 
   const handleClearFilters = () => {
-    const clearedFilters = {
+    const clearedFilters: Filters = {
       category: "all",
       name: "",
       minWidth: "",
@@ -263,6 +263,7 @@ export function ItemsTable({ filters = {
           open={editScrapDialogOpen}
           onOpenChange={setEditScrapDialogOpen}
           parentItemId={selectedItem.originId}
+          scrapToEdit={selectedItem}
         />
       )}
 
