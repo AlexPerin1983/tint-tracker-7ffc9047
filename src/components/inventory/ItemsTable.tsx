@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AddItemDialog from "@/components/inventory/AddItemDialog";
+import { cn } from "@/lib/utils";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
