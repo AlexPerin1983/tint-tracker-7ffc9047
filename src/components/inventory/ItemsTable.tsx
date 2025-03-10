@@ -1,4 +1,3 @@
-
 import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,13 +10,11 @@ import {
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
 import { Link, useLocation } from "react-router-dom";
-import { FilterBar } from "./FilterBar";
 import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
 import AddItemDialog from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
-import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ItemsTable() {
@@ -25,6 +22,10 @@ export function ItemsTable() {
   const { items, deleteItem } = useItems();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const highlightedRowRef = useRef<HTMLTableRowElement>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
+  const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>();
   const [filters, setFilters] = useState<Filters>({
     category: "all",
     name: "",
@@ -33,10 +34,6 @@ export function ItemsTable() {
     minLength: "",
     maxLength: "",
   });
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
-  const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | undefined>();
 
   useEffect(() => {
     const state = location.state as { highlightedItemId?: string };
@@ -117,10 +114,7 @@ export function ItemsTable() {
   };
 
   const isLowStock = (item: Item) => {
-    // Se minQuantity não estiver definido, não mostra alerta
     if (item.minQuantity === undefined || item.minQuantity === null) return false;
-    
-    // Se a quantidade atual for menor ou igual à quantidade mínima, mostra alerta
     return item.quantity <= item.minQuantity;
   };
 
@@ -147,13 +141,6 @@ export function ItemsTable() {
 
   return (
     <div className="space-y-4">
-      <FilterBar 
-        filters={filters}
-        onFilterChange={setFilters}
-        onClearFilters={handleClearFilters}
-        itemCount={filteredItems.length}
-      />
-
       <div className="rounded-md border border-muted">
         <Table>
           <TableHeader>
