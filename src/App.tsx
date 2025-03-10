@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 import { validateUser } from "@/services/sheets";
 import { useToast } from "@/components/ui/use-toast";
 import { PageViewTracker } from "@/components/analytics/PageViewTracker";
+import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import ItemDetails from "./pages/ItemDetails";
 import ScrapDetails from "./pages/ScrapDetails";
@@ -20,12 +22,13 @@ import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const AppContent = () => {
   const isMobile = useIsMobile();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const checkUserAuthorization = async (email: string) => {
     try {
@@ -35,8 +38,8 @@ const App = () => {
         setIsLoggedIn(false);
         setUserEmail("");
         toast({
-          title: "Acesso bloqueado",
-          description: "Seu acesso foi revogado. Por favor, faça login novamente.",
+          title: t('auth.accessBlocked'),
+          description: t('auth.accessRevokedMessage'),
           variant: "destructive",
         });
       }
@@ -81,8 +84,8 @@ const App = () => {
       setUserEmail(email);
       localStorage.setItem("userEmail", email);
       toast({
-        title: "Login realizado com sucesso",
-        description: "Bem-vindo de volta!",
+        title: t('auth.loginSuccess'),
+        description: t('auth.welcome'),
       });
     }
   };
@@ -96,44 +99,52 @@ const App = () => {
   }
 
   return (
+    <BrowserRouter>
+      <PageViewTracker />
+      <Routes>
+        <Route path="/landing" element={<Landing />} />
+        <Route
+          path="*"
+          element={
+            !isLoggedIn ? (
+              <LoginDialog onLogin={handleLogin} />
+            ) : (
+              <SidebarProvider>
+                <div className="min-h-screen flex w-full">
+                  <AppSidebar userEmail={userEmail} />
+                  <div className="flex-1 flex flex-col">
+                    <Header />
+                    <main className="flex-1 px-4 md:px-8 py-6 space-y-6">
+                      <div className={`${isMobile ? 'mt-16 mb-16' : 'mt-[4.5rem]'}`}>
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/item/:id" element={<ItemDetails />} />
+                          <Route path="/scrap/:id" element={<ScrapDetails />} />
+                          <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                      </div>
+                    </main>
+                    <Footer />
+                  </div>
+                </div>
+              </SidebarProvider>
+            )
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+const App = () => {
+  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <PageViewTracker />
-          <Routes>
-            <Route path="/landing" element={<Landing />} />
-            <Route
-              path="*"
-              element={
-                !isLoggedIn ? (
-                  <LoginDialog onLogin={handleLogin} />
-                ) : (
-                  <SidebarProvider>
-                    <div className="min-h-screen flex w-full">
-                      <AppSidebar userEmail={userEmail} />
-                      <div className="flex-1 flex flex-col">
-                        <Header />
-                        <main className="flex-1 px-4 md:px-8 py-6 space-y-6">
-                          <div className={`${isMobile ? 'mt-16 mb-16' : 'mt-[4.5rem]'}`}>
-                            <Routes>
-                              <Route path="/" element={<Index />} />
-                              <Route path="/item/:id" element={<ItemDetails />} />
-                              <Route path="/scrap/:id" element={<ScrapDetails />} />
-                              <Route path="*" element={<Navigate to="/" replace />} />
-                            </Routes>
-                          </div>
-                        </main>
-                        <Footer />
-                      </div>
-                    </div>
-                  </SidebarProvider>
-                )
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        <LanguageProvider>
+          <AppContent />
+        </LanguageProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

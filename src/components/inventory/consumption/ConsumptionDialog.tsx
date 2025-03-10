@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState, useEffect } from "react";
 import { ConsumptionForm } from "./ConsumptionForm";
 import { Item } from "@/types/inventory";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ConsumptionDialogProps {
   item: Item;
@@ -12,6 +13,8 @@ interface ConsumptionDialogProps {
 }
 
 export function ConsumptionDialog({ item, open, onClose }: ConsumptionDialogProps) {
+  const { t } = useLanguage();
+  
   // Load saved preference, default to true (inches) if not found
   const [useInches, setUseInches] = useState(() => {
     const savedPreference = localStorage.getItem('dimensionUnit');
@@ -33,9 +36,9 @@ export function ConsumptionDialog({ item, open, onClose }: ConsumptionDialogProp
     }}>
       <DialogContent className="sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[100dvh] sm:h-auto">
         <div className="flex items-center justify-end space-x-2 p-4 border-b border-slate-800">
-          <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Meters</span>
+          <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>{t('units.meters')}</span>
           <Switch checked={useInches} onCheckedChange={handleUnitChange} />
-          <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Inches</span>
+          <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>{t('units.inches')}</span>
         </div>
         <ConsumptionForm 
           item={item} 
