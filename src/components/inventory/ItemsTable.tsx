@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { useItems } from "@/hooks/use-items";
 import { Link, useLocation } from "react-router-dom";
-import { FilterBar } from "./FilterBar";
 import { useState, useEffect, useRef } from "react";
 import { Item, Filters } from "@/types/inventory";
 import AddItemDialog from "./AddItemDialog";
@@ -19,24 +18,36 @@ import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { FilterBar } from "./FilterBar";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-export function ItemsTable() {
+interface ItemsTableProps {
+  filters?: Filters;
+  onFilterChange?: (filters: Filters) => void;
+}
+
+export function ItemsTable({ filters = {
+  category: "all",
+  name: "",
+  minWidth: "",
+  maxWidth: "",
+  minLength: "",
+  maxLength: "",
+}, onFilterChange }: ItemsTableProps) {
   const location = useLocation();
   const { items, deleteItem } = useItems();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const highlightedRowRef = useRef<HTMLTableRowElement>(null);
-  const [filters, setFilters] = useState<Filters>({
-    category: "all",
-    name: "",
-    minWidth: "",
-    maxWidth: "",
-    minLength: "",
-    maxLength: "",
-  });
+  const [localFilters, setLocalFilters] = useState<Filters>(filters);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
+  const { t } = useLanguage();
+
+  useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
 
   useEffect(() => {
     const state = location.state as { highlightedItemId?: string };
@@ -67,20 +78,42 @@ export function ItemsTable() {
     return `${widthInches}" x ${lengthInches}" (${item.width.toFixed(2)}m x ${item.length.toFixed(2)}m)`;
   };
 
+  const handleFilterChange = (newFilters: Filters) => {
+    setLocalFilters(newFilters);
+    if (onFilterChange) {
+      onFilterChange(newFilters);
+    }
+  };
+
+  const handleClearFilters = () => {
+    const clearedFilters = {
+      category: "all",
+      name: "",
+      minWidth: "",
+      maxWidth: "",
+      minLength: "",
+      maxLength: "",
+    };
+    setLocalFilters(clearedFilters);
+    if (onFilterChange) {
+      onFilterChange(clearedFilters);
+    }
+  };
+
   const filterItems = (items: Item[]) => {
     return items.filter((item) => {
-      const matchCategory = filters.category === "all" || item.category === filters.category;
-      const matchName = !filters.name || 
-        item.name.toLowerCase().includes(filters.name.toLowerCase());
+      const matchCategory = localFilters.category === "all" || item.category === localFilters.category;
+      const matchName = !localFilters.name || 
+        item.name.toLowerCase().includes(localFilters.name.toLowerCase());
       
       const matchWidth = (
-        (!filters.minWidth || item.width >= parseFloat(filters.minWidth)) &&
-        (!filters.maxWidth || item.width <= parseFloat(filters.maxWidth))
+        (!localFilters.minWidth || item.width >= parseFloat(localFilters.minWidth)) &&
+        (!localFilters.maxWidth || item.width <= parseFloat(localFilters.maxWidth))
       );
       
       const matchLength = (
-        (!filters.minLength || item.length >= parseFloat(filters.minLength)) &&
-        (!filters.maxLength || item.length <= parseFloat(filters.maxLength))
+        (!localFilters.minLength || item.length >= parseFloat(localFilters.minLength)) &&
+        (!localFilters.maxLength || item.length <= parseFloat(localFilters.maxLength))
       );
 
       return matchCategory && matchName && matchWidth && matchLength;
@@ -88,17 +121,6 @@ export function ItemsTable() {
   };
 
   const filteredItems = filterItems(items);
-
-  const handleClearFilters = () => {
-    setFilters({
-      category: "all",
-      name: "",
-      minWidth: "",
-      maxWidth: "",
-      minLength: "",
-      maxLength: "",
-    });
-  };
 
   const handleEditClick = (item: Item) => {
     setSelectedItemId(item.id);
@@ -136,7 +158,7 @@ export function ItemsTable() {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Quantidade mínima: {item.minQuantity}</p>
+              <p>{t('item.minQuantityWarning', { minQuantity: item.minQuantity })}</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -147,23 +169,16 @@ export function ItemsTable() {
 
   return (
     <div className="space-y-4">
-      <FilterBar 
-        filters={filters}
-        onFilterChange={setFilters}
-        onClearFilters={handleClearFilters}
-        itemCount={filteredItems.length}
-      />
-
       <div className="rounded-md border border-muted">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead className="hidden md:table-cell">Name</TableHead>
-              <TableHead className="hidden md:table-cell">Category</TableHead>
-              <TableHead className="hidden md:table-cell">Dimensions</TableHead>
-              <TableHead className="hidden md:table-cell">Quantity</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t('item.code')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('item.name')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('item.category')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('item.dimensions')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('item.quantity')}</TableHead>
+              <TableHead className="text-right">{t('common.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -181,14 +196,14 @@ export function ItemsTable() {
                   <div className="flex flex-col">
                     <span>{item.code}</span>
                     <span className="text-xs text-muted-foreground">
-                      {item.type === 'bobina' ? 'Roll' : 'Scrap'} - {item.name.replace('Retalho de ', '')}
+                      {item.type === 'bobina' ? t('item.roll') : t('item.scrap')} - {item.name.replace('Retalho de ', '')}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {formatDimensions(item)}
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', 'Scrap of')}</TableCell>
+                <TableCell className="hidden md:table-cell">{item.name.replace('Retalho de', t('item.scrapOf'))}</TableCell>
                 <TableCell className="hidden md:table-cell">{item.category}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {formatDimensions(item)}
@@ -198,14 +213,14 @@ export function ItemsTable() {
                 </TableCell>
                 <TableCell className="text-right space-x-2">
                   <Link to={`/${item.type === 'bobina' ? 'item' : 'scrap'}/${item.id}`} onClick={() => setSelectedItemId(item.id)}>
-                    <Button variant="ghost" size="icon" title="View Details">
+                    <Button variant="ghost" size="icon" title={t('common.viewDetails')}>
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    title="Edit"
+                    title={t('common.edit')}
                     onClick={() => handleEditClick(item)}
                   >
                     <Edit className="h-4 w-4" />
@@ -214,7 +229,7 @@ export function ItemsTable() {
                     variant="ghost" 
                     size="icon" 
                     className="text-destructive" 
-                    title="Delete"
+                    title={t('common.delete')}
                     onClick={() => {
                       setSelectedItemId(item.id);
                       deleteItem(item.id);
@@ -225,7 +240,7 @@ export function ItemsTable() {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    title="QR Code"
+                    title={t('common.qrCode')}
                     onClick={() => handleQRCodeClick(item)}
                   >
                     <QrCode className="h-4 w-4" />
