@@ -168,6 +168,10 @@ export function ItemsTable() {
     }
   };
 
+  const formatDimensions = (item: Item) => {
+    return `${item.width?.toFixed(2)}m × ${item.length?.toFixed(2)}m`;
+  };
+
   return (
     <Card className="border-slate-800/60 bg-slate-900/30 backdrop-blur">
       <div className="p-4">
@@ -190,60 +194,69 @@ export function ItemsTable() {
           <div className="overflow-x-auto">
             {isMobile ? (
               <div className="space-y-2">
+                <div className="grid grid-cols-2 bg-slate-800/70 p-3 rounded-t-md">
+                  <div className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                    {t('item.code')}
+                  </div>
+                  <div className="text-xs font-medium uppercase tracking-wider text-slate-400 text-right">
+                    {t('common.actions')}
+                  </div>
+                </div>
+                
                 {filteredItems.map((item) => (
                   <div 
                     key={item.id}
                     id={`item-${item.id}`}
                     className={cn(
-                      "p-3 rounded-lg bg-slate-800/40 border border-slate-700/50",
+                      "p-3 rounded-md bg-slate-800/40 border-t border-slate-700/50",
                       item.quantity <= item.minQuantity ? "bg-red-900/10 border-red-500/20" : ""
                     )}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="grid grid-cols-2">
                       <div className="space-y-1">
                         <div className="font-medium text-white">{item.code}</div>
-                        <div className="text-sm text-slate-400">{item.name}</div>
-                        <div className="text-xs text-slate-500">{item.brand}</div>
+                        <div className="text-xs text-slate-400">
+                          {item.category === "Wrap" ? "Roll" : item.category} - {item.name}
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {formatDimensions(item)}
+                        </div>
                       </div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => handleViewQR(item)}
-                          className="h-8 w-8 hover:bg-blue-500/10 hover:text-blue-500"
+                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
                         >
                           <QrCode className="h-4 w-4" />
                         </Button>
-                        <Link to={`/item/${item.id}`}>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 hover:bg-slate-700"
-                          >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                          asChild
+                        >
+                          <Link to={`/item/${item.id}`}>
                             <EyeIcon className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => handleEditItem(item)}
-                          className="h-8 w-8 hover:bg-blue-500/10 hover:text-blue-500"
+                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
                         >
                           <PencilIcon className="h-4 w-4" />
                         </Button>
-                      </div>
-                    </div>
-                    <div className="mt-2 flex items-center justify-between">
-                      <Badge variant="outline" className={`bg-${getCategoryColor(item.category)}-500/10 text-${getCategoryColor(item.category)}-500 border-${getCategoryColor(item.category)}-500/30`}>
-                        {getCategoryLabel(item.category)}
-                      </Badge>
-                      <div className={cn(
-                        "px-2 py-1 rounded text-xs font-medium",
-                        item.quantity <= item.minQuantity 
-                          ? "bg-red-500/10 text-red-500" 
-                          : "bg-green-500/10 text-green-500"
-                      )}>
-                        {item.quantity}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(item.id)}
+                          className="h-8 w-8 text-slate-300 hover:bg-slate-700"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </div>
