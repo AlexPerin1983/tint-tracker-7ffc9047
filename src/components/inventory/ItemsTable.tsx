@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useItems } from "@/hooks/use-items";
 import { Item } from "@/types/inventory";
@@ -29,7 +28,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AddItemDialog } from "@/components/inventory/AddItemDialog";
+import AddItemDialog from "@/components/inventory/AddItemDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
