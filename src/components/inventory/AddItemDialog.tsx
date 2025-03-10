@@ -22,15 +22,16 @@ import ItemForm from "./form/ItemForm";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  brand: z.string().min(1, "Brand is required"),
+  name: z.string().min(1, "Nome é obrigatório"),
+  brand: z.string().min(1, "Marca é obrigatória"),
   category: z.enum(["Window Tinting", "PPF", "Wrap"] as const),
-  width: z.number().min(0.01, "Width must be greater than 0"),
-  length: z.number().min(0.01, "Length must be greater than 0"),
-  quantity: z.number().min(1, "Quantity must be greater than 0"),
-  minQuantity: z.number().min(1, "Minimum quantity must be greater than 0"),
+  width: z.number().min(0.01, "Largura deve ser maior que 0"),
+  length: z.number().min(0.01, "Comprimento deve ser maior que 0"),
+  quantity: z.number().min(1, "Quantidade deve ser maior que 0"),
+  minQuantity: z.number().min(1, "Quantidade mínima deve ser maior que 0"),
   price: z.number().optional(),
   observation: z.string().optional(),
 });
@@ -50,6 +51,7 @@ export default function AddItemDialog({
 }: AddItemDialogProps) {
   const { addItem, updateItem } = useItems();
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
   
   const form = useForm<ItemFormData>({
     resolver: zodResolver(formSchema),
@@ -128,7 +130,7 @@ export default function AddItemDialog({
               <Plus className="w-4 h-4 text-blue-500" />
             </div>
             <DialogTitleComponent className="text-white text-base font-medium">
-              {mode === "edit" ? "Edit Item" : "Add New Item"}
+              {mode === "edit" ? "Editar Item" : "Adicionar Novo Item"}
             </DialogTitleComponent>
           </div>
         </DialogHeaderComponent>
@@ -153,14 +155,14 @@ export default function AddItemDialog({
               className="flex-1 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-300"
             >
               <X className="w-4 h-4 mr-2" />
-              Cancel
+              Cancelar
             </Button>
             <Button
               onClick={form.handleSubmit(onSubmit)}
               className="flex-1 bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300"
             >
               <Plus className="w-4 h-4 mr-2" />
-              {mode === "edit" ? "Save" : "Add"}
+              {mode === "edit" ? "Salvar" : "Adicionar"}
             </Button>
           </div>
         </div>

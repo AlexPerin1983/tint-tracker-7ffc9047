@@ -1,3 +1,4 @@
+
 import { Eye, Edit, Trash2, QrCode, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -235,7 +236,7 @@ export function ItemsTable({ filters = {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    title={t('common.qrCode')}
+                    title="QR Code"
                     onClick={() => handleQRCodeClick(item)}
                   >
                     <QrCode className="h-4 w-4" />

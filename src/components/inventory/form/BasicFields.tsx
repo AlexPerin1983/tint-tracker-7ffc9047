@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BasicFieldsProps {
   form: any;
@@ -12,13 +13,15 @@ interface BasicFieldsProps {
 const BasicFields = ({
   form
 }: BasicFieldsProps) => {
+  const { t } = useLanguage();
+  
   return <TabsContent value="basic" className="space-y-6 mt-4">
       <FormField control={form.control} name="name" render={({
       field
     }) => <FormItem>
-            <FormLabel>Product Name</FormLabel>
+            <FormLabel>Nome do Produto</FormLabel>
             <FormControl>
-              <Input placeholder="Ex: Window Film Classic" {...field} />
+              <Input placeholder="Ex: Película Classic" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>} />
@@ -26,7 +29,7 @@ const BasicFields = ({
       <FormField control={form.control} name="brand" render={({
       field
     }) => <FormItem>
-            <FormLabel>Brand</FormLabel>
+            <FormLabel>Marca</FormLabel>
             <FormControl>
               <Input placeholder="Ex: 3M, Llumar, XPEL" {...field} />
             </FormControl>
@@ -36,17 +39,17 @@ const BasicFields = ({
       <FormField control={form.control} name="category" render={({
       field
     }) => <FormItem>
-            <FormLabel>Category</FormLabel>
+            <FormLabel>Categoria</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder="Selecione a categoria" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="Window Tinting">Window Tinting</SelectItem>
+                <SelectItem value="Window Tinting">Película de Janela</SelectItem>
                 <SelectItem value="PPF">PPF</SelectItem>
-                <SelectItem value="Wrap">Wrap</SelectItem>
+                <SelectItem value="Wrap">Envelopamento</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage />
@@ -64,8 +67,8 @@ const BasicFields = ({
                   <FormMessage />
                 </FormItem>} />
             <div className="flex flex-col items-center gap-1">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">In Stock</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Em Estoque</span>
             </div>
           </div>
         </div>
@@ -81,8 +84,8 @@ const BasicFields = ({
                   <FormMessage />
                 </FormItem>} />
             <div className="flex flex-col items-center gap-1">
-              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTY</span>
-              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alert</span>
+              <span className="text-blue-500 text-sm font-medium uppercase tracking-wider rotate-180 [writing-mode:vertical-lr]">QTD</span>
+              <span className="text-slate-400 text-xs rotate-180 [writing-mode:vertical-lr]">Alerta</span>
             </div>
           </div>
         </div>

@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { Scissors } from "lucide-react";
 import DimensionsFields from "./form/DimensionsFields";
 import { Textarea } from "@/components/ui/textarea";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AddScrapDialogProps {
   open: boolean;
@@ -28,12 +29,13 @@ export function AddScrapDialog({
 }: AddScrapDialogProps) {
   const { addScrap, items, refetchItems } = useItems();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const parentItem = items.find(item => item.id === parentItemId);
   const existingScraps = items.filter(item => item.originId === parentItemId);
 
   const formSchema = z.object({
-    width: z.number().min(0.01, "Width must be greater than 0").max(parentItem?.width || 0, `Maximum width is ${parentItem?.width}m`),
-    length: z.number().min(0.01, "Length must be greater than 0").max(parentItem?.length || 0, `Maximum length is ${parentItem?.length}m`),
+    width: z.number().min(0.01, "Largura deve ser maior que 0").max(parentItem?.width || 0, `Largura máxima é ${parentItem?.width}m`),
+    length: z.number().min(0.01, "Comprimento deve ser maior que 0").max(parentItem?.length || 0, `Comprimento máximo é ${parentItem?.length}m`),
     observation: z.string().optional()
   });
 
@@ -60,8 +62,8 @@ export function AddScrapDialog({
   const onSubmit = async (data: ScrapFormData) => {
     if (!parentItem) {
       toast({
-        title: "Error",
-        description: "Parent item not found",
+        title: "Erro",
+        description: "Item pai não encontrado",
         variant: "destructive"
       });
       return;
@@ -73,8 +75,8 @@ export function AddScrapDialog({
 
     if (totalScrapArea + newScrapArea > parentArea) {
       toast({
-        title: "Error",
-        description: "Total scrap area exceeds available parent item area",
+        title: "Erro",
+        description: "Área total dos retalhos excede a área disponível do item pai",
         variant: "destructive"
       });
       return;
@@ -89,15 +91,15 @@ export function AddScrapDialog({
       });
       await refetchItems();
       toast({
-        title: "Success",
+        title: "Sucesso",
         description: "Retalho criado com sucesso!"
       });
       onOpenChange(false);
       form.reset();
     } catch (error) {
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Error adding scrap",
+        title: "Erro",
+        description: error instanceof Error ? error.message : "Erro ao adicionar retalho",
         variant: "destructive"
       });
     }
@@ -130,12 +132,12 @@ export function AddScrapDialog({
 
               <div className="bg-[#1A1F2C] p-6 rounded-xl border border-slate-700 space-y-4 hover:border-blue-500/50 transition-colors">
                 <div className="flex items-center justify-between">
-                  <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Observation</span>
-                  <span className="text-xs text-slate-400">Optional</span>
+                  <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">Observação</span>
+                  <span className="text-xs text-slate-400">Opcional</span>
                 </div>
                 <div className="space-y-4">
                   <Textarea 
-                    placeholder="Additional information about the scrap" 
+                    placeholder="Informações adicionais sobre o retalho" 
                     className="bg-slate-800/50 border-slate-700 text-slate-200 resize-none min-h-[100px]" 
                     {...form.register("observation")} 
                   />
@@ -151,10 +153,10 @@ export function AddScrapDialog({
                   onClick={() => onOpenChange(false)} 
                   className="flex-1 bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-200"
                 >
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button type="submit" className="flex-1 bg-blue-500 hover:bg-blue-600">
-                  Save
+                  Salvar
                 </Button>
               </div>
             </DialogFooter>
