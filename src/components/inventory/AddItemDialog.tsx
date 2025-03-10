@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Item, ItemFormData } from "@/types/inventory";
 import { useItems } from "@/hooks/use-items";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ItemForm from "./form/ItemForm";
 import { Plus, X } from "lucide-react";
@@ -39,28 +39,40 @@ export default function AddItemDialog({
 }: AddItemDialogProps) {
   const { addItem, updateItem } = useItems();
   const isMobile = useIsMobile();
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   
-  // Ajuste a validação do formulário com base no idioma
+  // Obter mensagens de erro localizadas para o esquema de validação
   const getFormSchema = () => {
     const errorMessages = {
       nameRequired: language === 'pt' ? "Nome é obrigatório" : 
                     language === 'es' ? "Nombre es obligatorio" : 
+                    language === 'zh' ? "名称是必填项" :
+                    language === 'fr' ? "Le nom est requis" :
                     "Name is required",
       brandRequired: language === 'pt' ? "Marca é obrigatória" : 
                      language === 'es' ? "Marca es obligatoria" : 
+                     language === 'zh' ? "品牌是必填项" :
+                     language === 'fr' ? "La marque est requise" :
                      "Brand is required",
       widthMin: language === 'pt' ? "Largura deve ser maior que 0" : 
                 language === 'es' ? "El ancho debe ser mayor que 0" : 
+                language === 'zh' ? "宽度必须大于0" :
+                language === 'fr' ? "La largeur doit être supérieure à 0" :
                 "Width must be greater than 0",
       lengthMin: language === 'pt' ? "Comprimento deve ser maior que 0" : 
                  language === 'es' ? "La longitud debe ser mayor que 0" : 
+                 language === 'zh' ? "长度必须大于0" :
+                 language === 'fr' ? "La longueur doit être supérieure à 0" :
                  "Length must be greater than 0",
       quantityMin: language === 'pt' ? "Quantidade deve ser maior que 0" : 
                    language === 'es' ? "La cantidad debe ser mayor que 0" : 
+                   language === 'zh' ? "数量必须大于0" :
+                   language === 'fr' ? "La quantité doit être supérieure à 0" :
                    "Quantity must be greater than 0",
       minQuantityMin: language === 'pt' ? "Quantidade mínima deve ser maior que 0" : 
                       language === 'es' ? "La cantidad mínima debe ser mayor que 0" : 
+                      language === 'zh' ? "最小数量必须大于0" :
+                      language === 'fr' ? "La quantité minimale doit être supérieure à 0" :
                       "Minimum quantity must be greater than 0",
     };
 
@@ -147,8 +159,8 @@ export default function AddItemDialog({
         className: "sm:max-w-[600px] bg-[#111318] border-none p-0 flex flex-col h-[90vh] overflow-hidden"
       };
 
-  // Textos traduzidos
-  const getTexts = () => {
+  // Textos traduzidos para o modal
+  const texts = useMemo(() => {
     switch (language) {
       case 'pt':
         return {
@@ -165,6 +177,14 @@ export default function AddItemDialog({
           cancel: "Cancelar",
           add: "Añadir",
           save: "Guardar"
+        };
+      case 'zh':
+        return {
+          addItem: "添加新项目",
+          editItem: "编辑项目",
+          cancel: "取消",
+          add: "添加",
+          save: "保存"
         };
       case 'fr':
         return {
@@ -183,9 +203,7 @@ export default function AddItemDialog({
           save: "Save"
         };
     }
-  };
-  
-  const texts = getTexts();
+  }, [language]);
 
   return (
     <DialogComponent open={open} onOpenChange={onOpenChange}>

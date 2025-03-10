@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { TabsContent } from "@/components/ui/tabs";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useMemo } from "react";
 
 interface BasicFieldsProps {
   form: any;
@@ -13,9 +14,9 @@ interface BasicFieldsProps {
 const BasicFields = ({
   form
 }: BasicFieldsProps) => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   
-  const getCategoryOptions = () => {
+  const categoryOptions = useMemo(() => {
     switch (language) {
       case 'pt':
         return [
@@ -35,6 +36,12 @@ const BasicFields = ({
           { value: "PPF", label: "PPF" },
           { value: "Wrap", label: "Emballage" }
         ];
+      case 'zh':
+        return [
+          { value: "Window Tinting", label: "窗膜" },
+          { value: "PPF", label: "漆面保护膜" },
+          { value: "Wrap", label: "车身改色膜" }
+        ];
       default:
         return [
           { value: "Window Tinting", label: "Window Tinting" },
@@ -42,9 +49,9 @@ const BasicFields = ({
           { value: "Wrap", label: "Wrap" }
         ];
     }
-  };
+  }, [language]);
   
-  const getFieldLabels = () => {
+  const labels = useMemo(() => {
     switch (language) {
       case 'pt':
         return {
@@ -71,6 +78,19 @@ const BasicFields = ({
           stock: "En Stock",
           minQuantity: "CANT",
           alert: "Alerta"
+        };
+      case 'zh':
+        return {
+          name: "产品名称",
+          brand: "品牌",
+          category: "类别",
+          categoryPlaceholder: "选择类别",
+          productPlaceholder: "例：经典膜",
+          brandPlaceholder: "例：3M, Llumar, XPEL",
+          quantity: "数量",
+          stock: "库存",
+          minQuantity: "数量",
+          alert: "警报"
         };
       case 'fr':
         return {
@@ -99,10 +119,7 @@ const BasicFields = ({
           alert: "Alert"
         };
     }
-  };
-  
-  const labels = getFieldLabels();
-  const categoryOptions = getCategoryOptions();
+  }, [language]);
   
   return <TabsContent value="basic" className="space-y-6 mt-4">
       <FormField control={form.control} name="name" render={({

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TabsContent } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useMemo } from "react";
 
 interface PriceFieldsProps {
   form: any;
@@ -12,9 +13,9 @@ interface PriceFieldsProps {
 const PriceFields = ({
   form
 }: PriceFieldsProps) => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   
-  const getFieldLabels = () => {
+  const labels = useMemo(() => {
     switch (language) {
       case 'pt':
         return {
@@ -29,6 +30,13 @@ const PriceFields = ({
           pricePlaceholder: "Ej: $10,50",
           observation: "Observaciones Adicionales",
           observationPlaceholder: "El artículo está ubicado en el estante..."
+        };
+      case 'zh':
+        return {
+          price: "每平方米价格 (¥)",
+          pricePlaceholder: "例: ¥10.50",
+          observation: "附加说明",
+          observationPlaceholder: "物品位于货架上..."
         };
       case 'fr':
         return {
@@ -45,9 +53,7 @@ const PriceFields = ({
           observationPlaceholder: "The item is located on the shelf..."
         };
     }
-  };
-  
-  const labels = getFieldLabels();
+  }, [language]);
   
   return <TabsContent value="price" className="space-y-4 mt-4">
       <FormField control={form.control} name="price" render={({

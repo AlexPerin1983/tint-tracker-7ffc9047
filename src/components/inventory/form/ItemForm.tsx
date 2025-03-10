@@ -3,7 +3,7 @@ import { Form } from "@/components/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package2, Ruler, DollarSign } from "lucide-react";
 import FormFields from "./FormFields";
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ItemFormProps {
@@ -18,12 +18,13 @@ const ItemForm = memo(({
   onSubmit
 }: ItemFormProps) => {
   const [activeTab, setActiveTab] = useState("basic");
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Previne a submissão automática
   };
   
+  // Obter rótulos localizados para as abas
   const getTabLabels = () => {
     switch (language) {
       case 'pt':
