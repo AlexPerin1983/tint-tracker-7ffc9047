@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { convertToInches, convertToMeters, formatDisplayValue } from './utils/dimensionsUtils';
 import { PresetDimensions } from "./PresetDimensions";
 import { PresetLengths } from "./PresetLengths";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DimensionFieldProps {
   form: any;
@@ -29,7 +30,40 @@ export const DimensionField = ({
   onInputChange,
 }: DimensionFieldProps) => {
   const isLength = fieldName === "length";
-  const title = isLength ? "Roll Length" : "Roll Width";
+  const { language } = useLanguage();
+  
+  // Tradução do título com base no idioma
+  const getTitle = () => {
+    if (isLength) {
+      switch (language) {
+        case 'pt': return "Comprimento do Rolo";
+        case 'es': return "Longitud del Rollo";
+        case 'zh': return "卷长度";
+        case 'fr': return "Longueur du Rouleau";
+        default: return "Roll Length";
+      }
+    } else {
+      switch (language) {
+        case 'pt': return "Largura do Rolo";
+        case 'es': return "Ancho del Rollo";
+        case 'zh': return "卷宽度";
+        case 'fr': return "Largeur du Rouleau";
+        default: return "Roll Width";
+      }
+    }
+  };
+  
+  // Texto para "Max" com base no idioma
+  const getMaxText = () => {
+    switch (language) {
+      case 'pt': return "Máx";
+      case 'es': return "Máx";
+      case 'zh': return "最大";
+      case 'fr': return "Max";
+      default: return "Max";
+    }
+  };
+  
   const [inputValue, setInputValue] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -73,9 +107,9 @@ export const DimensionField = ({
   return (
     <div className={`space-y-4 ${isLength ? 'mb-8' : ''} p-6 bg-[#1A1F2C]/50 rounded-xl backdrop-blur-sm border border-slate-700/50 hover:border-blue-500/30 transition-colors`}>
       <div className="flex items-center justify-between">
-        <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">{title}</span>
+        <span className="text-blue-500 text-sm font-medium uppercase tracking-wider">{getTitle()}</span>
         <span className="text-xs text-slate-400 bg-slate-700/50 px-3 py-1 rounded-full">
-          Max: {useInches ? `${convertToInches(maxValue).toFixed(2)}"` : `${maxValue}m`}
+          {getMaxText()}: {useInches ? `${convertToInches(maxValue).toFixed(2)}"` : `${maxValue}m`}
         </span>
       </div>
       <FormField

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { DimensionField } from './DimensionField';
 import { convertToInches, convertToMeters, DIMENSION_LIMITS } from './utils/dimensionsUtils';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DimensionsFieldsProps {
   form: any;
@@ -11,6 +12,26 @@ interface DimensionsFieldsProps {
 const DimensionsFields = ({
   form
 }: DimensionsFieldsProps) => {
+  const { language } = useLanguage();
+  
+  // Tradução das unidades de medida
+  const getUnitLabels = () => {
+    switch (language) {
+      case 'pt': 
+        return { meters: "Metros", inches: "Polegadas" };
+      case 'es': 
+        return { meters: "Metros", inches: "Pulgadas" };
+      case 'zh': 
+        return { meters: "米", inches: "英寸" };
+      case 'fr': 
+        return { meters: "Mètres", inches: "Pouces" };
+      default: 
+        return { meters: "Meters", inches: "Inches" };
+    }
+  };
+  
+  const unitLabels = getUnitLabels();
+  
   // Load saved preference, default to false (meters) if not found
   const [useInches, setUseInches] = useState(() => {
     const savedPreference = localStorage.getItem('dimensionUnit');
@@ -100,14 +121,14 @@ const DimensionsFields = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-end space-x-2 mb-6">
-        <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Meters</span>
+        <span className={`text-sm font-medium ${!useInches ? "text-blue-400" : "text-[#8E9196]"}`}>{unitLabels.meters}</span>
         <Switch 
           checked={useInches} 
           onCheckedChange={(value) => {
             setUseInches(value);
           }} 
         />
-        <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>Inches</span>
+        <span className={`text-sm font-medium ${useInches ? "text-blue-400" : "text-[#8E9196]"}`}>{unitLabels.inches}</span>
       </div>
 
       <DimensionField
