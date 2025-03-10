@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'en' | 'pt' | 'es' | 'zh' | 'ar' | 'de' | 'fr' | 'ja' | 'ko';
@@ -666,4 +667,295 @@ export const translations = {
     'item.price': 'Prix par m²',
     'item.location': 'Emplacement',
     'item.createdAt': 'Créé le',
-    'item.updatedAt': 'Dern
+    'item.updatedAt': 'Dernière mise à jour',
+    'item.code': 'Code',
+    'item.actions': 'Actions',
+    'item.name': 'Nom du produit',
+    'item.materialType': 'Type de matériau',
+    'item.rollSize': 'Taille du rouleau',
+    'item.area': 'Surface en m²',
+    'item.quantity': 'Quantité',
+    'item.inventoryStatus': 'État de l\'inventaire',
+    'item.productInfo': 'Informations sur le produit',
+    'item.parentRoll': 'Rouleau parent',
+    'item.viewParentDetails': 'Voir les détails du rouleau parent',
+    'item.remnantDetails': 'Détails du reste',
+    'item.notFound': 'Article non trouvé',
+    'item.roll': 'Rouleau',
+    'item.scrap': 'Chute',
+    'item.scrapOf': 'Chute de',
+    'item.minQuantityWarning': 'Stock bas: La quantité minimale est {minQuantity}',
+    // Units
+    'units.meters': 'Mètres',
+    'units.inches': 'Pouces',
+    // Consumption
+    'consumption.record': 'Enregistrer l\'utilisation',
+    // User
+    'user.active': 'Utilisateur actif',
+    // Contact
+    'contact.title': 'Contactez-nous',
+    // Support
+    'support.title': 'Support',
+    'support.customSoftware': 'Logiciel personnalisé',
+    'support.websiteDev': 'Développement de site web',
+    'support.reportBug': 'Signaler un bug',
+    'support.softwareMessage': 'Bonjour, je suis un utilisateur avec l\'e-mail "{email}". J\'ai besoin d\'un devis pour développer un outil personnalisé pour gérer mon entreprise. J\'attends votre réponse!',
+    'support.websiteMessage': 'Bonjour, je suis un utilisateur avec l\'e-mail {email}. J\'ai besoin d\'un devis pour développer un site web. J\'attends votre réponse!',
+    'support.bugMessage': 'Rapport de bug de l\'utilisateur {email}: Je voudrais signaler un problème que j\'ai rencontré lors de l\'utilisation de l\'application. Voici les détails: [Veuillez décrire le bug, les étapes pour le reproduire et toute information pertinente]',
+    // Links
+    'links.store': 'Boutique Los_Pelikooss',
+    'links.quickLinks': 'Liens rapides',
+    // QR Code
+    'qrcode.download': 'Télécharger le QR Code',
+    'qrcode.print': 'Imprimer les détails',
+    
+    // Filter
+    'filter.all': 'Tous',
+    'filter.category': 'Catégorie',
+    'filter.filtersCleared': 'Filtres effacés!',
+    'filter.filtersApplied': 'Filtres appliqués avec succès!',
+    'filter.itemsFound': 'éléments trouvés',
+    'filter.lengthRange': 'Plage de longueur',
+    'filter.widthRange': 'Plage de largeur',
+    'filter.max': 'Max',
+    'filter.to': 'à',
+    
+    // Inventory
+    'inventory.noItems': 'Aucun élément trouvé. Ajoutez des éléments pour commencer.',
+  },
+  ja: {
+    // Header
+    'app.title': 'QRトラッキングシステム',
+    // Navigation
+    'nav.home': 'ホーム',
+    'nav.scanner': 'スキャナー',
+    'nav.inventory': '在庫',
+    'nav.dashboard': 'ダッシュボード',
+    'nav.rollsManagement': 'ロール管理',
+    'nav.scrapsManagement': '端材管理',
+    'nav.dashboardDescription': '開発中 - 2024年第2四半期リリース予定',
+    'nav.rollsDescription': '近日公開 - 発売日は後日発表',
+    'nav.scrapsDescription': 'ベータテスト中 - まもなく利用可能',
+    'nav.navigation': 'ナビゲーション',
+    // Common
+    'common.back': '戻る',
+    'common.save': '保存',
+    'common.cancel': 'キャンセル',
+    'common.add': '追加',
+    'common.edit': '編集',
+    'common.delete': '削除',
+    'common.search': '検索...',
+    'common.unknownError': '不明なエラー',
+    'common.clearFilters': 'フィルターをクリア',
+    'common.actions': 'アクション',
+    'common.viewDetails': '詳細を表示',
+    // Auth
+    'auth.login': 'ログイン',
+    'auth.logout': 'ログアウト',
+    'auth.welcome': 'おかえりなさい！',
+    'auth.loginSuccess': 'ログイン成功',
+    'auth.logoutSuccess': 'ログアウト成功',
+    'auth.disconnected': 'システムから切断されました',
+    'auth.logoutError': 'ログアウト中にエラーが発生しました',
+    'auth.accessBlocked': 'アクセスがブロックされました',
+    'auth.accessRevokedMessage': 'アクセス権が取り消されました。再度ログインしてください。',
+    // Items
+    'item.details': 'アイテム詳細',
+    'item.addItem': 'アイテムを追加',
+    'item.brand': 'ブランド',
+    'item.category': 'カテゴリー',
+    'item.dimensions': '寸法',
+    'item.price': '平方メートルあたりの価格',
+    'item.location': '場所',
+    'item.createdAt': '作成日',
+    'item.updatedAt': '最終更新',
+    'item.code': 'コード',
+    'item.actions': 'アクション',
+    'item.name': '製品名',
+    'item.materialType': '材料タイプ',
+    'item.rollSize': 'ロールサイズ',
+    'item.area': '面積（平方メートル）',
+    'item.quantity': '数量',
+    'item.inventoryStatus': '在庫状況',
+    'item.productInfo': '製品情報',
+    'item.parentRoll': '親ロール',
+    'item.viewParentDetails': '親ロールの詳細を表示',
+    'item.remnantDetails': '端材の詳細',
+    'item.notFound': 'アイテムが見つかりません',
+    'item.roll': 'ロール',
+    'item.scrap': '端材',
+    'item.scrapOf': 'の端材',
+    'item.minQuantityWarning': '在庫が少なくなっています：最小数量は {minQuantity} です',
+    // Units
+    'units.meters': 'メートル',
+    'units.inches': 'インチ',
+    // Consumption
+    'consumption.record': '使用を記録',
+    // User
+    'user.active': 'アクティブユーザー',
+    // Contact
+    'contact.title': 'お問い合わせ',
+    // Support
+    'support.title': 'サポート',
+    'support.customSoftware': 'カスタムソフトウェア',
+    'support.websiteDev': 'ウェブサイト開発',
+    'support.reportBug': 'バグを報告',
+    'support.softwareMessage': 'こんにちは、メールアドレスが「{email}」のユーザーです。私のビジネスを管理するためのカスタムツール開発の見積もりが必要です。ご連絡をお待ちしています！',
+    'support.websiteMessage': 'こんにちは、メールアドレスが{email}のユーザーです。ウェブサイト開発の見積もりが必要です。ご連絡をお待ちしています！',
+    'support.bugMessage': 'ユーザー{email}からのバグレポート：アプリケーション使用中に発生した問題を報告したいと思います。詳細は以下の通りです：[バグの説明、再現手順、およびその他の関連情報を記入してください]',
+    // Links
+    'links.store': 'Los_Pelikoossストア',
+    'links.quickLinks': 'クイックリンク',
+    // QR Code
+    'qrcode.download': 'QRコードをダウンロード',
+    'qrcode.print': '詳細を印刷',
+    
+    // Filter
+    'filter.all': 'すべて',
+    'filter.category': 'カテゴリー',
+    'filter.filtersCleared': 'フィルターがクリアされました！',
+    'filter.filtersApplied': 'フィルターが正常に適用されました！',
+    'filter.itemsFound': 'アイテムが見つかりました',
+    'filter.lengthRange': '長さ範囲',
+    'filter.widthRange': '幅範囲',
+    'filter.max': '最大',
+    'filter.to': 'から',
+    
+    // Inventory
+    'inventory.noItems': 'アイテムが見つかりません。始めるにはいくつかのアイテムを追加してください。',
+  },
+  ko: {
+    // Header
+    'app.title': 'QR 추적 시스템',
+    // Navigation
+    'nav.home': '홈',
+    'nav.scanner': '스캐너',
+    'nav.inventory': '재고',
+    'nav.dashboard': '대시보드',
+    'nav.rollsManagement': '롤 관리',
+    'nav.scrapsManagement': '스크랩 관리',
+    'nav.dashboardDescription': '개발 중 - 2024년 2분기 출시 예정',
+    'nav.rollsDescription': '출시 예정 - 출시일 추후 공지',
+    'nav.scrapsDescription': '베타 테스트 중 - 곧 이용 가능',
+    'nav.navigation': '탐색',
+    // Common
+    'common.back': '뒤로',
+    'common.save': '저장',
+    'common.cancel': '취소',
+    'common.add': '추가',
+    'common.edit': '편집',
+    'common.delete': '삭제',
+    'common.search': '검색...',
+    'common.unknownError': '알 수 없는 오류',
+    'common.clearFilters': '필터 지우기',
+    'common.actions': '작업',
+    'common.viewDetails': '세부 정보 보기',
+    // Auth
+    'auth.login': '로그인',
+    'auth.logout': '로그아웃',
+    'auth.welcome': '환영합니다!',
+    'auth.loginSuccess': '로그인 성공',
+    'auth.logoutSuccess': '로그아웃 성공',
+    'auth.disconnected': '시스템에서 연결이 끊겼습니다',
+    'auth.logoutError': '로그아웃 중 오류 발생',
+    'auth.accessBlocked': '접근 차단됨',
+    'auth.accessRevokedMessage': '접근 권한이 취소되었습니다. 다시 로그인하세요.',
+    // Items
+    'item.details': '아이템 세부 정보',
+    'item.addItem': '아이템 추가',
+    'item.brand': '브랜드',
+    'item.category': '카테고리',
+    'item.dimensions': '치수',
+    'item.price': '평방미터당 가격',
+    'item.location': '위치',
+    'item.createdAt': '생성일',
+    'item.updatedAt': '마지막 업데이트',
+    'item.code': '코드',
+    'item.actions': '작업',
+    'item.name': '제품명',
+    'item.materialType': '재질 유형',
+    'item.rollSize': '롤 크기',
+    'item.area': '면적(평방미터)',
+    'item.quantity': '수량',
+    'item.inventoryStatus': '재고 상태',
+    'item.productInfo': '제품 정보',
+    'item.parentRoll': '부모 롤',
+    'item.viewParentDetails': '부모 롤 세부 정보 보기',
+    'item.remnantDetails': '잔여물 세부 정보',
+    'item.notFound': '아이템을 찾을 수 없음',
+    'item.roll': '롤',
+    'item.scrap': '스크랩',
+    'item.scrapOf': '스크랩 출처',
+    'item.minQuantityWarning': '재고 부족: 최소 수량은 {minQuantity}입니다',
+    // Units
+    'units.meters': '미터',
+    'units.inches': '인치',
+    // Consumption
+    'consumption.record': '사용량 기록',
+    // User
+    'user.active': '활성 사용자',
+    // Contact
+    'contact.title': '문의하기',
+    // Support
+    'support.title': '지원',
+    'support.customSoftware': '맞춤형 소프트웨어',
+    'support.websiteDev': '웹사이트 개발',
+    'support.reportBug': '버그 신고',
+    'support.softwareMessage': '안녕하세요, 이메일이 "{email}"인 사용자입니다. 제 비즈니스를 관리하기 위한 맞춤형 도구 개발에 대한 견적이 필요합니다. 연락 기다리겠습니다!',
+    'support.websiteMessage': '안녕하세요, 이메일이 {email}인 사용자입니다. 웹사이트 개발에 대한 견적이 필요합니다. 연락 기다리겠습니다!',
+    'support.bugMessage': '사용자 {email}의 버그 신고: 애플리케이션 사용 중 발생한 문제를 신고하고 싶습니다. 세부 정보는 다음과 같습니다: [버그에 대한 설명, 재현 단계 및 관련 정보를 입력하세요]',
+    // Links
+    'links.store': 'Los_Pelikooss 스토어',
+    'links.quickLinks': '빠른 링크',
+    // QR Code
+    'qrcode.download': 'QR 코드 다운로드',
+    'qrcode.print': '세부 정보 인쇄',
+    
+    // Filter
+    'filter.all': '전체',
+    'filter.category': '카테고리',
+    'filter.filtersCleared': '필터가 지워졌습니다!',
+    'filter.filtersApplied': '필터가 성공적으로 적용되었습니다!',
+    'filter.itemsFound': '항목 찾음',
+    'filter.lengthRange': '길이 범위',
+    'filter.widthRange': '너비 범위',
+    'filter.max': '최대',
+    'filter.to': '~',
+    
+    // Inventory
+    'inventory.noItems': '아이템을 찾을 수 없습니다. 시작하려면 몇 가지 아이템을 추가하세요.',
+  }
+};
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  // Try to get the language from localStorage, default to 'en'
+  const [language, setLanguage] = useState<Language>(() => {
+    const savedLanguage = localStorage.getItem('language');
+    return (savedLanguage as Language) || 'en';
+  });
+
+  // Save language preference to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
+  // Get translation for a given key
+  const t = (key: string): string => {
+    const lang = translations[language] || translations.en;
+    return lang[key as keyof typeof lang] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = (): LanguageContextType => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};
