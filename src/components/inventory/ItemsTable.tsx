@@ -16,24 +16,22 @@ import AddItemDialog from "./AddItemDialog";
 import { QRCodeDialog } from "./qrcode/QRCodeDialog";
 import { AddScrapDialog } from "./AddScrapDialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-export function ItemsTable() {
+interface ItemsTableProps {
+  filters: Filters;
+}
+
+export function ItemsTable({ filters }: ItemsTableProps) {
   const location = useLocation();
   const { items, deleteItem } = useItems();
+  const { t } = useLanguage();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const highlightedRowRef = useRef<HTMLTableRowElement>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editScrapDialogOpen, setEditScrapDialogOpen] = useState(false);
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
-  const [filters, setFilters] = useState<Filters>({
-    category: "all",
-    name: "",
-    minWidth: "",
-    maxWidth: "",
-    minLength: "",
-    maxLength: "",
-  });
 
   useEffect(() => {
     const state = location.state as { highlightedItemId?: string };
@@ -145,12 +143,12 @@ export function ItemsTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead className="hidden md:table-cell">Name</TableHead>
-              <TableHead className="hidden md:table-cell">Category</TableHead>
-              <TableHead className="hidden md:table-cell">Dimensions</TableHead>
-              <TableHead className="hidden md:table-cell">Quantity</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t('table.code')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('table.name')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('table.category')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('table.dimensions')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('table.quantity')}</TableHead>
+              <TableHead className="text-right">{t('table.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

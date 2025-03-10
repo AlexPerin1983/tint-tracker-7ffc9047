@@ -52,7 +52,7 @@ const Index = () => {
         onClearFilters={handleClearFilters}
       />
 
-      <ItemsTable />
+      <ItemsTable filters={filters} />
 
       <AddItemDialog
         open={showAddItem}
