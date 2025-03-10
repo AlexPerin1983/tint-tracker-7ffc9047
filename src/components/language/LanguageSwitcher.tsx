@@ -8,7 +8,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const languages = [
   { code: 'en', name: 'English' },
   { code: 'pt', name: 'Português' },
-  { code: 'es', name: 'Español' }
+  { code: 'es', name: 'Español' },
+  { code: 'zh', name: '中文' },
+  { code: 'ar', name: 'العربية' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'fr', name: 'Français' },
+  { code: 'ja', name: '日本語' },
+  { code: 'ko', name: '한국어' }
 ];
 
 export function LanguageSwitcher() {
@@ -26,7 +32,7 @@ export function LanguageSwitcher() {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => setLanguage(lang.code as 'en' | 'pt' | 'es')}
+            onClick={() => setLanguage(lang.code as any)}
             className={language === lang.code ? 'bg-slate-700/50 text-white' : ''}
           >
             {lang.name}
