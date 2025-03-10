@@ -29,11 +29,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { AddItemDialog } from "@/components/inventory/AddItemDialog";
 
 export function ItemsTable() {
   const { items, deleteItem } = useItems();
   const [searchTerm, setSearchTerm] = useState("");
   const [qrCodeDialogOpen, setQrCodeDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -122,6 +124,11 @@ export function ItemsTable() {
   const handleViewQR = (item: Item) => {
     setSelectedItem(item);
     setQrCodeDialogOpen(true);
+  };
+  
+  const handleEditItem = (item: Item) => {
+    setSelectedItem(item);
+    setEditDialogOpen(true);
   };
 
   const getSortIcon = (column: string) => {
@@ -297,29 +304,22 @@ export function ItemsTable() {
                               <EyeIcon className="h-4 w-4" />
                             </Button>
                           </Link>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 hover:bg-slate-700"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="w-[160px] bg-slate-900 border border-slate-800"
-                            >
-                              <DropdownMenuItem
-                                className="text-red-500 hover:text-red-600 cursor-pointer"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <TrashIcon className="mr-2 h-4 w-4" />
-                                <span>{t('common.delete')}</span>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditItem(item)}
+                            className="h-8 w-8 hover:bg-blue-500/10 hover:text-blue-500"
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(item.id)}
+                            className="h-8 w-8 hover:bg-red-500/10 hover:text-red-500"
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -332,11 +332,20 @@ export function ItemsTable() {
       </div>
 
       {selectedItem && (
-        <QRCodeDialog
-          open={qrCodeDialogOpen}
-          onOpenChange={setQrCodeDialogOpen}
-          item={selectedItem}
-        />
+        <>
+          <QRCodeDialog
+            open={qrCodeDialogOpen}
+            onOpenChange={setQrCodeDialogOpen}
+            item={selectedItem}
+          />
+          
+          <AddItemDialog 
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            editingItem={selectedItem}
+            mode="edit"
+          />
+        </>
       )}
     </Card>
   );

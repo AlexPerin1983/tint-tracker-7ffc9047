@@ -31,9 +31,6 @@ const ScrapDetails = () => {
     navigate('/', { state: { highlightedItemId: id } });
   };
 
-  // Aqui estamos apenas passando o próprio objeto scrap como editingScrap
-  // Não precisamos criar um objeto parcial, já que o scrap já é do tipo Item
-
   return (
     <div className="container mx-auto px-4 md:px-8 py-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
