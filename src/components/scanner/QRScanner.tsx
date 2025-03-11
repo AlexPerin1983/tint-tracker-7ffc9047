@@ -1,10 +1,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { QrCode, Camera } from "lucide-react";
+import { QrCode, Camera, ScanLine, ImagePlus } from "lucide-react";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { Button } from "@/components/ui/button";
 
 interface QRScannerProps {
   open: boolean;
@@ -15,123 +16,178 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
+  const [isStarting, setIsStarting] = useState(false);
+  const [cameraInitialized, setCameraInitialized] = useState(false);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
   const scannerInitialized = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scannerAttempts = useRef(0);
 
-  useEffect(() => {
-    // Limpeza do scanner anterior
-    const cleanupScanner = () => {
-      if (scannerRef.current) {
-        try {
-          scannerRef.current.clear().catch(err => {
-            console.error("Erro ao limpar scanner:", err);
-          });
-          scannerRef.current = null;
-          scannerInitialized.current = false;
-        } catch (error) {
-          console.error("Erro ao desmontar scanner:", error);
-        }
+  // Função para limpar o scanner
+  const cleanupScanner = () => {
+    if (scannerRef.current) {
+      try {
+        scannerRef.current.clear().catch(err => {
+          console.error("Erro ao limpar scanner:", err);
+        });
+        scannerRef.current = null;
+        scannerInitialized.current = false;
+        setCameraInitialized(false);
+      } catch (error) {
+        console.error("Erro ao desmontar scanner:", error);
       }
-    };
+    }
+  };
 
-    // Só inicializa quando o modal estiver aberto
-    if (open) {
-      // Pequeno timeout para garantir que o DOM está pronto
-      const timer = setTimeout(() => {
-        if (!scannerInitialized.current && containerRef.current) {
-          try {
-            const qrElementId = "qr-reader";
-            // Verifica se o elemento já existe
-            if (!document.getElementById(qrElementId)) {
-              // Cria o elemento se não existir
-              const qrElement = document.createElement("div");
-              qrElement.id = qrElementId;
-              qrElement.style.width = "100%";
-              qrElement.style.height = "100%";
-              containerRef.current.innerHTML = "";
-              containerRef.current.appendChild(qrElement);
-            }
+  // Função para inicializar o scanner
+  const initScanner = () => {
+    if (!containerRef.current || scannerInitialized.current) return;
+    
+    setIsStarting(true);
+    setError(null);
+    
+    try {
+      const qrElementId = "qr-reader";
+      // Remove qualquer instância anterior
+      const oldElement = document.getElementById(qrElementId);
+      if (oldElement) {
+        oldElement.remove();
+      }
+      
+      // Cria o elemento para o scanner
+      const qrElement = document.createElement("div");
+      qrElement.id = qrElementId;
+      qrElement.style.width = "100%";
+      qrElement.style.height = "100%";
+      containerRef.current.innerHTML = "";
+      containerRef.current.appendChild(qrElement);
+      
+      // Configurações do scanner
+      scannerRef.current = new Html5QrcodeScanner(
+        qrElementId,
+        { 
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1,
+          showTorchButtonIfSupported: true,
+          showZoomSliderIfSupported: true,
+          formatsToSupport: [0, 1], // QR_CODE e AZTEC
+        },
+        false
+      );
+      
+      // Renderiza o scanner
+      scannerRef.current.render(
+        (qrCodeMessage) => {
+          // Callback de sucesso
+          handleScanSuccess(qrCodeMessage);
+        }, 
+        (errorMessage) => {
+          // Callback de erro (não mostraremos erros de leitura)
+          console.log("Erro ao ler QR code:", errorMessage);
+        }
+      );
+      
+      // Verifica se o scanner foi iniciado corretamente observando elementos do DOM
+      setTimeout(() => {
+        const cameraElements = document.querySelectorAll('#qr-reader video, #qr-reader canvas');
+        if (cameraElements.length > 0) {
+          setCameraInitialized(true);
+          scannerInitialized.current = true;
+          setIsStarting(false);
+          console.log("Câmera inicializada com sucesso!");
+        } else {
+          // Se após o timeout não encontrarmos elementos de vídeo/canvas, consideramos que falhou
+          scannerAttempts.current += 1;
+          if (scannerAttempts.current < 3) {
+            console.log(`Tentativa ${scannerAttempts.current} de iniciar a câmera falhou. Tentando novamente...`);
+            cleanupScanner();
+            setTimeout(initScanner, 500);
+          } else {
+            setError("Não foi possível acessar a câmera. Verifique as permissões do navegador.");
+            setIsStarting(false);
+            console.error("Falha ao inicializar a câmera após múltiplas tentativas");
+          }
+        }
+      }, 1500);
+      
+    } catch (error) {
+      console.error("Erro ao inicializar scanner:", error);
+      setError('Erro ao inicializar a câmera');
+      setIsStarting(false);
+      toast({
+        variant: "destructive",
+        title: "Erro na Câmera",
+        description: "Não foi possível inicializar a câmera. Verifique as permissões.",
+      });
+    }
+  };
 
-            scannerRef.current = new Html5QrcodeScanner(
-              qrElementId,
-              { 
-                fps: 10,
-                qrbox: { width: 250, height: 250 },
-                aspectRatio: 1,
-                showTorchButtonIfSupported: true,
-                showZoomSliderIfSupported: true,
-              },
-              false
-            );
+  // Tratamento de QR code lido com sucesso
+  const handleScanSuccess = (qrCodeMessage: string) => {
+    try {
+      const cleanValue = qrCodeMessage.trim();
+      console.log("QR Code lido:", cleanValue);
 
-            scannerRef.current.render((qrCodeMessage) => {
-              // Processar o QR code lido
-              try {
-                const cleanValue = qrCodeMessage.trim();
-                console.log("QR Code lido:", cleanValue);
-
-                if (cleanValue.includes('tint-tracker:')) {
-                  const parts = cleanValue.split(':');
-                  if (parts.length === 3) {
-                    const [_prefix, type, id] = parts;
-                    if (type === 'item') {
-                      cleanupScanner();
-                      onOpenChange(false);
-                      navigate(`/item/${id}`);
-                    } else if (type === 'scrap') {
-                      cleanupScanner();
-                      onOpenChange(false);
-                      navigate(`/scrap/${id}`);
-                    } else {
-                      setError('QR Code inválido');
-                      toast({
-                        variant: "destructive",
-                        title: "QR Code Inválido",
-                        description: "Formato de QR code não reconhecido.",
-                      });
-                    }
-                  }
-                } else if (cleanValue.includes('BOB')) {
-                  cleanupScanner();
-                  onOpenChange(false);
-                  navigate(`/item/${cleanValue}`);
-                } else if (cleanValue.includes('RET')) {
-                  cleanupScanner();
-                  onOpenChange(false);
-                  navigate(`/scrap/${cleanValue}`);
-                } else {
-                  setError('QR Code inválido');
-                  toast({
-                    variant: "destructive",
-                    title: "QR Code Inválido",
-                    description: "Este QR code não é válido para o sistema.",
-                  });
-                }
-              } catch (error) {
-                console.error("Erro ao processar QR Code:", error);
-                toast({
-                  variant: "destructive",
-                  title: "Erro",
-                  description: "Erro ao processar o QR Code.",
-                });
-              }
-            }, (error) => {
-              console.error("Erro no scanner:", error);
-            });
-
-            scannerInitialized.current = true;
-          } catch (error) {
-            console.error("Erro ao inicializar scanner:", error);
-            setError('Erro ao inicializar a câmera');
+      if (cleanValue.includes('tint-tracker:')) {
+        const parts = cleanValue.split(':');
+        if (parts.length === 3) {
+          const [_prefix, type, id] = parts;
+          if (type === 'item') {
+            cleanupScanner();
+            onOpenChange(false);
+            navigate(`/item/${id}`);
+          } else if (type === 'scrap') {
+            cleanupScanner();
+            onOpenChange(false);
+            navigate(`/scrap/${id}`);
+          } else {
+            setError('QR Code inválido');
             toast({
               variant: "destructive",
-              title: "Erro na Câmera",
-              description: "Não foi possível inicializar a câmera. Verifique as permissões.",
+              title: "QR Code Inválido",
+              description: "Formato de QR code não reconhecido.",
             });
           }
         }
-      }, 300); // Pequeno atraso para garantir que o DOM está pronto
+      } else if (cleanValue.includes('BOB')) {
+        cleanupScanner();
+        onOpenChange(false);
+        navigate(`/item/${cleanValue}`);
+      } else if (cleanValue.includes('RET')) {
+        cleanupScanner();
+        onOpenChange(false);
+        navigate(`/scrap/${cleanValue}`);
+      } else {
+        setError('QR Code inválido');
+        toast({
+          variant: "destructive",
+          title: "QR Code Inválido",
+          description: "Este QR code não é válido para o sistema.",
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao processar QR Code:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Erro ao processar o QR Code.",
+      });
+    }
+  };
+
+  // Inicializa o scanner quando o modal é aberto
+  useEffect(() => {
+    if (open) {
+      // Resetamos as tentativas quando o modal é aberto
+      scannerAttempts.current = 0;
+      
+      // Pequeno timeout para garantir que o DOM está pronto
+      const timer = setTimeout(() => {
+        if (!scannerInitialized.current) {
+          initScanner();
+        }
+      }, 300);
 
       return () => {
         clearTimeout(timer);
@@ -143,17 +199,26 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
     return () => {
       cleanupScanner();
     };
-  }, [open, navigate, onOpenChange, toast]);
+  }, [open]);
+
+  // Função para upload de imagem QR
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Implementação pendente para leitura de QR a partir de imagem
+    // Esta funcionalidade poderá ser implementada posteriormente
+    toast({
+      title: "Funcionalidade em desenvolvimento",
+      description: "A leitura de QR Code a partir de imagens será implementada em breve.",
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => {
       if (!newOpen) {
         // Limpar scanner antes de fechar
-        if (scannerRef.current) {
-          scannerRef.current.clear().catch(console.error);
-          scannerRef.current = null;
-          scannerInitialized.current = false;
-        }
+        cleanupScanner();
       }
       onOpenChange(newOpen);
     }}>
@@ -163,6 +228,9 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
             <QrCode className="h-6 w-6 text-primary" />
             Leitor QR Code
           </DialogTitle>
+          <DialogDescription className="text-center">
+            Posicione o QR Code dentro da área marcada para escaneamento
+          </DialogDescription>
         </DialogHeader>
         
         <div className="w-full space-y-4">
@@ -174,10 +242,50 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           
           <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-muted">
             <div ref={containerRef} className="w-full h-full">
-              {/* A div para o scanner será injetada aqui */}
-              {!scannerInitialized.current && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Camera className="h-12 w-12 text-muted-foreground animate-pulse" />
+              {!cameraInitialized && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                  {isStarting ? (
+                    <>
+                      <Camera className="h-12 w-12 text-muted-foreground animate-pulse mb-4" />
+                      <div className="text-center text-muted-foreground">
+                        Iniciando câmera...
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Camera className="h-12 w-12 text-muted-foreground mb-4" />
+                      <Button 
+                        onClick={initScanner}
+                        className="mb-4"
+                      >
+                        <Camera className="mr-2 h-4 w-4" />
+                        Permitir acesso à câmera
+                      </Button>
+                      
+                      <div className="text-xs text-muted-foreground text-center">
+                        ou
+                      </div>
+                      
+                      <label htmlFor="qr-file-upload" className="cursor-pointer">
+                        <div className="mt-4 flex items-center text-sm text-primary underline">
+                          <ImagePlus className="mr-1 h-4 w-4" /> 
+                          Escanear uma imagem
+                        </div>
+                        <input 
+                          id="qr-file-upload" 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={handleFileUpload}
+                        />
+                      </label>
+                    </>
+                  )}
+                </div>
+              )}
+              {cameraInitialized && (
+                <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+                  <ScanLine className="h-64 w-64 text-primary/30 animate-pulse" />
                 </div>
               )}
             </div>
