@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { QrCode } from "lucide-react";
+import { QrCode, Camera } from "lucide-react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
 interface QRScannerProps {
@@ -17,6 +17,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const [error, setError] = useState<string | null>(null);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
   const scannerInitialized = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Limpeza do scanner anterior
@@ -38,21 +39,28 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
     if (open) {
       // Pequeno timeout para garantir que o DOM está pronto
       const timer = setTimeout(() => {
-        if (!scannerInitialized.current) {
+        if (!scannerInitialized.current && containerRef.current) {
           try {
-            const qrElement = document.getElementById("qr-reader");
-            if (!qrElement) {
-              console.error("Elemento qr-reader não encontrado!");
-              setError("Erro ao inicializar a câmera");
-              return;
+            const qrElementId = "qr-reader";
+            // Verifica se o elemento já existe
+            if (!document.getElementById(qrElementId)) {
+              // Cria o elemento se não existir
+              const qrElement = document.createElement("div");
+              qrElement.id = qrElementId;
+              qrElement.style.width = "100%";
+              qrElement.style.height = "100%";
+              containerRef.current.innerHTML = "";
+              containerRef.current.appendChild(qrElement);
             }
 
             scannerRef.current = new Html5QrcodeScanner(
-              "qr-reader",
+              qrElementId,
               { 
                 fps: 10,
                 qrbox: { width: 250, height: 250 },
                 aspectRatio: 1,
+                showTorchButtonIfSupported: true,
+                showZoomSliderIfSupported: true,
               },
               false
             );
@@ -164,8 +172,15 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
             </div>
           )}
           
-          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg">
-            <div id="qr-reader" className="w-full h-full" />
+          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-muted">
+            <div ref={containerRef} className="w-full h-full">
+              {/* A div para o scanner será injetada aqui */}
+              {!scannerInitialized.current && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Camera className="h-12 w-12 text-muted-foreground animate-pulse" />
+                </div>
+              )}
+            </div>
           </div>
           
           <p className="text-sm text-muted-foreground text-center px-6">
