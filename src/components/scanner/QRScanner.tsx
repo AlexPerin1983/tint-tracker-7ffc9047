@@ -74,9 +74,6 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           showZoomSliderIfSupported: true,
           formatsToSupport: [0, 1], // QR_CODE e AZTEC
           rememberLastUsedCamera: true,
-          // Configurações específicas para iniciar a câmera automaticamente
-          showScanTypeSelector: false, // Oculta o seletor de tipo de escaneamento
-          supportedScanTypes: [1], // 1 para "Escaneamento de Câmera"
         },
         true // Define como true para iniciar automaticamente
       );
