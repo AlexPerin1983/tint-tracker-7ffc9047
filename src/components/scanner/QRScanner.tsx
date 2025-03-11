@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { QrCode, Camera } from "lucide-react";
+import { Camera } from "lucide-react";
 import { Html5Qrcode } from "html5-qrcode";
 
 interface QRScannerProps {
@@ -18,44 +18,42 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const [isStarting, setIsStarting] = useState(false);
   const [cameraInitialized, setCameraInitialized] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const qrBoxSize = 250;
 
   // Função para limpar o scanner
   const cleanupScanner = () => {
     if (scannerRef.current && scannerRef.current.isScanning) {
-      try {
-        scannerRef.current.stop().then(() => {
-          scannerRef.current = null;
+      scannerRef.current.stop()
+        .then(() => {
+          console.log("Scanner parado com sucesso");
+          if (scannerRef.current) {
+            scannerRef.current.clear();
+            scannerRef.current = null;
+          }
           setCameraInitialized(false);
-        }).catch(error => {
-          console.error("Erro ao parar scanner:", error);
+        })
+        .catch(err => {
+          console.error("Erro ao parar scanner:", err);
         });
-      } catch (error) {
-        console.error("Erro ao desmontar scanner:", error);
-      }
     }
   };
 
   // Função para inicializar o scanner
   const initScanner = async () => {
-    if (!containerRef.current || scannerRef.current) return;
-    
     setIsStarting(true);
     setError(null);
     
     try {
+      // Limpa qualquer instância anterior
+      if (scannerRef.current) {
+        await cleanupScanner();
+      }
+      
       // Cria uma nova instância do scanner
-      scannerRef.current = new Html5Qrcode("qr-reader");
+      const htmlScanner = new Html5Qrcode("qr-reader");
+      scannerRef.current = htmlScanner;
       
-      // Configurações da câmera
-      const config = {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1,
-        formatsToSupport: [0, 1] // QR_CODE e AZTEC
-      };
-      
-      // Recupera câmeras disponíveis
+      // Tenta obter as câmeras disponíveis
       const devices = await Html5Qrcode.getCameras();
       
       if (devices && devices.length > 0) {
@@ -67,51 +65,47 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         );
         
         const cameraId = rearCamera ? rearCamera.id : devices[0].id;
+        console.log("Usando câmera:", cameraId);
+        
+        // Configurações da câmera
+        const config = {
+          fps: 10,
+          qrbox: { width: qrBoxSize, height: qrBoxSize },
+          aspectRatio: 1.0,
+          formatsToSupport: [0, 1] // QR_CODE e AZTEC
+        };
         
         // Inicia o scanner
-        scannerRef.current.start(
+        await htmlScanner.start(
           cameraId,
           config,
-          (qrCodeMessage) => {
-            handleScanSuccess(qrCodeMessage);
-          },
+          (decodedText) => handleScanSuccess(decodedText),
           (errorMessage) => {
-            // Ignora erros de leitura, que são normais durante o escaneamento
-            if (errorMessage.includes("No QR code found")) {
+            // Ignora erros comuns durante o escaneamento
+            if (
+              typeof errorMessage === 'string' && 
+              errorMessage.includes("No QR code found")
+            ) {
               return;
             }
-            console.log("Erro ao ler QR code:", errorMessage);
+            console.log("QR Error:", errorMessage);
           }
-        ).then(() => {
-          setCameraInitialized(true);
-          setIsStarting(false);
-        }).catch((err) => {
-          console.error("Erro ao iniciar câmera:", err);
-          setError('Erro ao inicializar a câmera');
-          setIsStarting(false);
-          toast({
-            variant: "destructive",
-            title: "Erro na Câmera",
-            description: "Não foi possível inicializar a câmera. Verifique as permissões.",
-          });
-        });
-      } else {
-        setError('Nenhuma câmera encontrada');
+        );
+        
+        console.log("Câmera inicializada com sucesso");
+        setCameraInitialized(true);
         setIsStarting(false);
-        toast({
-          variant: "destructive",
-          title: "Câmera não encontrada",
-          description: "Nenhuma câmera foi detectada no seu dispositivo.",
-        });
+      } else {
+        throw new Error("Nenhuma câmera encontrada");
       }
-    } catch (error) {
-      console.error("Erro ao inicializar scanner:", error);
-      setError('Erro ao inicializar a câmera');
+    } catch (err) {
+      console.error("Erro ao inicializar câmera:", err);
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
       setIsStarting(false);
       toast({
         variant: "destructive",
         title: "Erro na Câmera",
-        description: "Não foi possível inicializar a câmera. Verifique as permissões.",
+        description: "Verifique se você permitiu o acesso à câmera.",
       });
     }
   };
@@ -135,7 +129,6 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
             onOpenChange(false);
             navigate(`/scrap/${id}`);
           } else {
-            setError('QR Code inválido');
             toast({
               variant: "destructive",
               title: "QR Code Inválido",
@@ -152,7 +145,6 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         onOpenChange(false);
         navigate(`/scrap/${cleanValue}`);
       } else {
-        setError('QR Code inválido');
         toast({
           variant: "destructive",
           title: "QR Code Inválido",
@@ -172,15 +164,22 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   // Inicializa o scanner quando o modal é aberto
   useEffect(() => {
     if (open) {
-      const timer = setTimeout(initScanner, 100);
+      // Pequeno delay para garantir que o DOM esteja pronto
+      const timer = setTimeout(() => {
+        initScanner();
+      }, 300);
       return () => clearTimeout(timer);
     } else {
       cleanupScanner();
     }
+  }, [open]);
+
+  // Cleanup ao desmontar
+  useEffect(() => {
     return () => {
       cleanupScanner();
     };
-  }, [open]);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => {
@@ -190,27 +189,25 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
       onOpenChange(newOpen);
     }}>
       <DialogContent className="sm:max-w-md">
-        <DialogTitle className="sr-only">Scanner de QR Code</DialogTitle>
+        <DialogTitle>Scanner de QR Code</DialogTitle>
         <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-black">
           <div id="qr-reader" className="w-full h-full"></div>
+          
           {!cameraInitialized && (
-            <div className="absolute inset-0 flex items-center justify-center p-4">
-              {isStarting ? (
-                <>
-                  <Camera className="h-12 w-12 text-white animate-pulse" />
-                  <span className="ml-2 text-white">Iniciando câmera...</span>
-                </>
-              ) : (
-                <div className="text-white text-center">
-                  <Camera className="h-12 w-12 mx-auto mb-4" />
-                  <p>Aguarde, inicializando a câmera...</p>
-                </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black">
+              <Camera className="h-12 w-12 text-white mb-4" />
+              <p className="text-white text-center">
+                {isStarting ? "Aguarde, inicializando a câmera..." : "Preparando acesso à câmera..."}
+              </p>
+              {error && (
+                <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
               )}
             </div>
           )}
+          
           {cameraInitialized && (
-            <div className="absolute inset-0 pointer-events-none z-10">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-primary rounded-md w-64 h-64" />
+            <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+              <div className="border-2 border-primary rounded-md" style={{ width: qrBoxSize, height: qrBoxSize }} />
             </div>
           )}
         </div>
