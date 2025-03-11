@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
@@ -15,82 +15,140 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const scannerInitialized = useRef(false);
 
   useEffect(() => {
-    let html5QrcodeScanner: Html5QrcodeScanner | null = null;
-
-    if (open) {
-      html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader",
-        { 
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          aspectRatio: 1,
-        },
-        false
-      );
-
-      html5QrcodeScanner.render((qrCodeMessage) => {
-        // Processar o QR code lido
+    // Limpeza do scanner anterior
+    const cleanupScanner = () => {
+      if (scannerRef.current) {
         try {
-          const cleanValue = qrCodeMessage.trim();
-          console.log("QR Code lido:", cleanValue);
+          scannerRef.current.clear().catch(err => {
+            console.error("Erro ao limpar scanner:", err);
+          });
+          scannerRef.current = null;
+          scannerInitialized.current = false;
+        } catch (error) {
+          console.error("Erro ao desmontar scanner:", error);
+        }
+      }
+    };
 
-          if (cleanValue.includes('tint-tracker:')) {
-            const parts = cleanValue.split(':');
-            if (parts.length === 3) {
-              const [_prefix, type, id] = parts;
-              if (type === 'item') {
-                onOpenChange(false);
-                navigate(`/item/${id}`);
-              } else if (type === 'scrap') {
-                onOpenChange(false);
-                navigate(`/scrap/${id}`);
-              } else {
-                setError('QR Code inválido');
+    // Só inicializa quando o modal estiver aberto
+    if (open) {
+      // Pequeno timeout para garantir que o DOM está pronto
+      const timer = setTimeout(() => {
+        if (!scannerInitialized.current) {
+          try {
+            const qrElement = document.getElementById("qr-reader");
+            if (!qrElement) {
+              console.error("Elemento qr-reader não encontrado!");
+              setError("Erro ao inicializar a câmera");
+              return;
+            }
+
+            scannerRef.current = new Html5QrcodeScanner(
+              "qr-reader",
+              { 
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1,
+              },
+              false
+            );
+
+            scannerRef.current.render((qrCodeMessage) => {
+              // Processar o QR code lido
+              try {
+                const cleanValue = qrCodeMessage.trim();
+                console.log("QR Code lido:", cleanValue);
+
+                if (cleanValue.includes('tint-tracker:')) {
+                  const parts = cleanValue.split(':');
+                  if (parts.length === 3) {
+                    const [_prefix, type, id] = parts;
+                    if (type === 'item') {
+                      cleanupScanner();
+                      onOpenChange(false);
+                      navigate(`/item/${id}`);
+                    } else if (type === 'scrap') {
+                      cleanupScanner();
+                      onOpenChange(false);
+                      navigate(`/scrap/${id}`);
+                    } else {
+                      setError('QR Code inválido');
+                      toast({
+                        variant: "destructive",
+                        title: "QR Code Inválido",
+                        description: "Formato de QR code não reconhecido.",
+                      });
+                    }
+                  }
+                } else if (cleanValue.includes('BOB')) {
+                  cleanupScanner();
+                  onOpenChange(false);
+                  navigate(`/item/${cleanValue}`);
+                } else if (cleanValue.includes('RET')) {
+                  cleanupScanner();
+                  onOpenChange(false);
+                  navigate(`/scrap/${cleanValue}`);
+                } else {
+                  setError('QR Code inválido');
+                  toast({
+                    variant: "destructive",
+                    title: "QR Code Inválido",
+                    description: "Este QR code não é válido para o sistema.",
+                  });
+                }
+              } catch (error) {
+                console.error("Erro ao processar QR Code:", error);
                 toast({
                   variant: "destructive",
-                  title: "QR Code Inválido",
-                  description: "Formato de QR code não reconhecido.",
+                  title: "Erro",
+                  description: "Erro ao processar o QR Code.",
                 });
               }
-            }
-          } else if (cleanValue.includes('BOB')) {
-            onOpenChange(false);
-            navigate(`/item/${cleanValue}`);
-          } else if (cleanValue.includes('RET')) {
-            onOpenChange(false);
-            navigate(`/scrap/${cleanValue}`);
-          } else {
-            setError('QR Code inválido');
+            }, (error) => {
+              console.error("Erro no scanner:", error);
+            });
+
+            scannerInitialized.current = true;
+          } catch (error) {
+            console.error("Erro ao inicializar scanner:", error);
+            setError('Erro ao inicializar a câmera');
             toast({
               variant: "destructive",
-              title: "QR Code Inválido",
-              description: "Este QR code não é válido para o sistema.",
+              title: "Erro na Câmera",
+              description: "Não foi possível inicializar a câmera. Verifique as permissões.",
             });
           }
-        } catch (error) {
-          console.error("Erro ao processar QR Code:", error);
-          toast({
-            variant: "destructive",
-            title: "Erro",
-            description: "Erro ao processar o QR Code.",
-          });
         }
-      }, (error) => {
-        console.error("Erro no scanner:", error);
-      });
+      }, 300); // Pequeno atraso para garantir que o DOM está pronto
+
+      return () => {
+        clearTimeout(timer);
+      };
+    } else {
+      cleanupScanner();
     }
 
     return () => {
-      if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear().catch(console.error);
-      }
+      cleanupScanner();
     };
   }, [open, navigate, onOpenChange, toast]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      if (!newOpen) {
+        // Limpar scanner antes de fechar
+        if (scannerRef.current) {
+          scannerRef.current.clear().catch(console.error);
+          scannerRef.current = null;
+          scannerInitialized.current = false;
+        }
+      }
+      onOpenChange(newOpen);
+    }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2 text-xl">
