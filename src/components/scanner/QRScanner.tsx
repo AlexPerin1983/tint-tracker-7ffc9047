@@ -45,6 +45,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
     
     setIsStarting(true);
     setError(null);
+    scannerAttempts.current = 0;
     
     try {
       const qrElementId = "qr-reader";
@@ -72,8 +73,12 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           showTorchButtonIfSupported: true,
           showZoomSliderIfSupported: true,
           formatsToSupport: [0, 1], // QR_CODE e AZTEC
+          rememberLastUsedCamera: true,
+          // Configurações específicas para iniciar a câmera automaticamente
+          showScanTypeSelector: false, // Oculta o seletor de tipo de escaneamento
+          supportedScanTypes: [1], // 1 para "Escaneamento de Câmera"
         },
-        false
+        true // Define como true para iniciar automaticamente
       );
       
       // Renderiza o scanner
@@ -89,27 +94,49 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
       );
       
       // Verifica se o scanner foi iniciado corretamente observando elementos do DOM
-      setTimeout(() => {
+      const checkCameraInit = () => {
         const cameraElements = document.querySelectorAll('#qr-reader video, #qr-reader canvas');
+        const permissionMessages = document.querySelectorAll('#qr-reader button');
+        
         if (cameraElements.length > 0) {
           setCameraInitialized(true);
           scannerInitialized.current = true;
           setIsStarting(false);
           console.log("Câmera inicializada com sucesso!");
-        } else {
-          // Se após o timeout não encontrarmos elementos de vídeo/canvas, consideramos que falhou
-          scannerAttempts.current += 1;
-          if (scannerAttempts.current < 3) {
-            console.log(`Tentativa ${scannerAttempts.current} de iniciar a câmera falhou. Tentando novamente...`);
-            cleanupScanner();
-            setTimeout(initScanner, 500);
+        } else if (permissionMessages.length > 0) {
+          // Se houver botões de permissão, provavelmente precisamos clicar em um deles
+          const startButton = Array.from(permissionMessages).find(button => 
+            (button as HTMLElement).innerText.includes('Start Scanning') || 
+            (button as HTMLElement).innerText.includes('Request Camera')
+          );
+          
+          if (startButton) {
+            console.log("Clicando no botão para iniciar a câmera...");
+            (startButton as HTMLElement).click();
+            // Verificar novamente após um tempo
+            setTimeout(checkCameraInit, 1000);
           } else {
-            setError("Não foi possível acessar a câmera. Verifique as permissões do navegador.");
-            setIsStarting(false);
-            console.error("Falha ao inicializar a câmera após múltiplas tentativas");
+            retry();
           }
+        } else {
+          retry();
         }
-      }, 1500);
+      };
+      
+      const retry = () => {
+        scannerAttempts.current += 1;
+        if (scannerAttempts.current < 3) {
+          console.log(`Tentativa ${scannerAttempts.current} de iniciar a câmera falhou. Tentando novamente...`);
+          setTimeout(checkCameraInit, 1000);
+        } else {
+          setError("Não foi possível acessar a câmera. Verifique as permissões do navegador.");
+          setIsStarting(false);
+          console.error("Falha ao inicializar a câmera após múltiplas tentativas");
+        }
+      };
+      
+      // Primeira verificação após um tempo para garantir que o DOM foi atualizado
+      setTimeout(checkCameraInit, 1000);
       
     } catch (error) {
       console.error("Erro ao inicializar scanner:", error);
@@ -176,7 +203,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
     }
   };
 
-  // Inicializa o scanner quando o modal é aberto
+  // Inicializa o scanner imediatamente quando o modal é aberto
   useEffect(() => {
     if (open) {
       // Resetamos as tentativas quando o modal é aberto
@@ -187,7 +214,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
         if (!scannerInitialized.current) {
           initScanner();
         }
-      }, 300);
+      }, 100);
 
       return () => {
         clearTimeout(timer);
@@ -240,20 +267,20 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
             </div>
           )}
           
-          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-muted">
+          <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-black">
             <div ref={containerRef} className="w-full h-full">
               {!cameraInitialized && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
                   {isStarting ? (
                     <>
-                      <Camera className="h-12 w-12 text-muted-foreground animate-pulse mb-4" />
-                      <div className="text-center text-muted-foreground">
+                      <Camera className="h-12 w-12 text-white animate-pulse mb-4" />
+                      <div className="text-center text-white">
                         Iniciando câmera...
                       </div>
                     </>
                   ) : (
                     <>
-                      <Camera className="h-12 w-12 text-muted-foreground mb-4" />
+                      <Camera className="h-12 w-12 text-white mb-4" />
                       <Button 
                         onClick={initScanner}
                         className="mb-4"
@@ -262,7 +289,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
                         Permitir acesso à câmera
                       </Button>
                       
-                      <div className="text-xs text-muted-foreground text-center">
+                      <div className="text-xs text-white text-center">
                         ou
                       </div>
                       
@@ -285,7 +312,9 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
               )}
               {cameraInitialized && (
                 <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
-                  <ScanLine className="h-64 w-64 text-primary/30 animate-pulse" />
+                  <div className="border-2 border-primary rounded-md w-64 h-64 flex items-center justify-center">
+                    <ScanLine className="h-full w-full text-primary/70 animate-pulse" />
+                  </div>
                 </div>
               )}
             </div>
