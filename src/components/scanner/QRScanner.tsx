@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { QrCode, Camera } from "lucide-react";
 import { Html5QrcodeScanner } from "html5-qrcode";
@@ -67,11 +67,13 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           formatsToSupport: [0, 1], // QR_CODE e AZTEC
           showTorchButtonIfSupported: false,
           showZoomSliderIfSupported: false,
+          rememberLastUsedCamera: true,
+          supportedScanTypes: [], // Desabilita seletor de tipo de scan
         },
         false
       );
       
-      // Renderiza o scanner
+      // Renderiza o scanner com callbacks
       scannerRef.current.render(
         (qrCodeMessage) => {
           handleScanSuccess(qrCodeMessage);
@@ -80,9 +82,6 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
           console.log("Erro ao ler QR code:", errorMessage);
         }
       );
-
-      // Inicia o scanner manualmente após renderizar
-      scannerRef.current.start();
       
       scannerInitialized.current = true;
       setCameraInitialized(true);
@@ -174,6 +173,7 @@ export function QRScanner({ open, onOpenChange }: QRScannerProps) {
       onOpenChange(newOpen);
     }}>
       <DialogContent className="sm:max-w-md">
+        <DialogTitle className="sr-only">Scanner de QR Code</DialogTitle>
         <div className="relative aspect-square w-full max-w-sm mx-auto overflow-hidden rounded-lg bg-black">
           <div ref={containerRef} className="w-full h-full">
             {!cameraInitialized && (
